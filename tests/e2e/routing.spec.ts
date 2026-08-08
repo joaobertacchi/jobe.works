@@ -21,6 +21,41 @@ for (const [url, heading] of publishedPages) {
   });
 }
 
+const englishPagesWithPortugueseSiblings = [
+  ["Home", "/en/", "/pt-BR/", "Modelo de site estático"],
+  ["About", "/en/about", "/pt-BR/about", "Sobre"],
+  ["Services", "/en/services", "/pt-BR/services", "Serviços"],
+  ["404", "/en/404", "/pt-BR/404", "Página não encontrada"],
+] as const;
+
+for (const [
+  pageName,
+  englishUrl,
+  portugueseUrl,
+  portugueseHeading,
+] of englishPagesWithPortugueseSiblings) {
+  test(`${pageName} language switch preserves logical page identity`, async ({
+    page,
+  }) => {
+    await page.goto(englishUrl);
+    const languageNavigation = page.getByRole("navigation", {
+      name: "Choose language",
+    });
+    await expect(languageNavigation.getByRole("link")).toHaveCount(1);
+    await expect(
+      languageNavigation.getByRole("link", { name: "Português" }),
+    ).toHaveAttribute("href", portugueseUrl);
+
+    await languageNavigation.getByRole("link", { name: "Português" }).click();
+
+    await expect(page).toHaveURL(portugueseUrl);
+    await expect(
+      page.getByRole("heading", { name: portugueseHeading }),
+    ).toBeVisible();
+    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+  });
+}
+
 test("keeps navigation in the active locale", async ({ page }) => {
   await page.goto("/pt-BR/");
   await page.getByRole("link", { name: "Sobre" }).click();

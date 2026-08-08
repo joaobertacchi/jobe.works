@@ -6,7 +6,7 @@ import {
   getCanonicalUrls,
   type CanonicalUrlManifest,
 } from "./app/routing/canonical-url-manifest";
-import { readCanonicalManifest } from "./scripts/canonical-manifest-file";
+import { readCanonicalManifest } from "./scripts/canonical-manifest-file.server";
 import { finalizeStaticBuild } from "./scripts/finalize-static-build";
 
 export function getPrerenderPaths(

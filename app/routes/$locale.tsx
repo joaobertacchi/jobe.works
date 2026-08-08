@@ -1,11 +1,27 @@
-import { isRouteErrorResponse, Link, Outlet, useParams } from "react-router";
+import {
+  isRouteErrorResponse,
+  Link,
+  Outlet,
+  useLoaderData,
+  useLocation,
+  useParams,
+} from "react-router";
 
-import { isSupportedLocale } from "../i18n/config";
+import { isSupportedLocale, locales, supportedLocales } from "../i18n/config";
 import { I18nProvider, useI18n } from "../i18n/i18n";
+import { getLocalizedUrlsForPathname } from "../routing/canonical-url-manifest";
+import { readCanonicalManifest } from "../../scripts/canonical-manifest-file.server";
 import type { Route } from "./+types/$locale";
 
 function LocalizedLayout() {
-  const { translate } = useI18n();
+  const manifest = useLoaderData<typeof loader>();
+  const { pathname } = useLocation();
+  const { locale, translate } = useI18n();
+  const canonicalPathname =
+    pathname.endsWith("/") && pathname !== `/${locale}/`
+      ? pathname.slice(0, -1)
+      : pathname;
+  const urls = getLocalizedUrlsForPathname(manifest, canonicalPathname);
   return (
     <>
       <header>
@@ -14,17 +30,33 @@ function LocalizedLayout() {
           <Link to="about">{translate("common.navigation.about")}</Link>
           <Link to="services">{translate("common.navigation.services")}</Link>
         </nav>
+        <nav aria-label={translate("common.languageSwitcherLabel")}>
+          {supportedLocales
+            .filter((targetLocale) => targetLocale !== locale)
+            .map((targetLocale) => (
+              <Link key={targetLocale} to={urls[targetLocale]}>
+                {locales[targetLocale].label}
+              </Link>
+            ))}
+        </nav>
       </header>
       <Outlet />
     </>
   );
 }
 
-export function clientLoader({ params }: Route.ClientLoaderArgs) {
+export function loader() {
+  return readCanonicalManifest();
+}
+
+export async function clientLoader({
+  params,
+  serverLoader,
+}: Route.ClientLoaderArgs) {
   if (!params.locale || !isSupportedLocale(params.locale)) {
     throw new Response(null, { status: 404 });
   }
-  return null;
+  return serverLoader();
 }
 
 function UnsupportedLocalePage() {

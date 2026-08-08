@@ -8,7 +8,7 @@ import type { CanonicalUrlManifest } from "../app/routing/canonical-url-manifest
 import {
   readCanonicalManifest,
   writeCanonicalManifest,
-} from "./canonical-manifest-file";
+} from "./canonical-manifest-file.server";
 
 const manifest = [
   {

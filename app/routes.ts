@@ -2,7 +2,7 @@ import type { RouteConfig } from "@react-router/dev/routes";
 import { flatRoutes } from "@react-router/fs-routes";
 
 import { createCanonicalUrlManifest } from "./routing/canonical-url-manifest";
-import { writeCanonicalManifest } from "../scripts/canonical-manifest-file";
+import { writeCanonicalManifest } from "../scripts/canonical-manifest-file.server";
 
 export const routes = await flatRoutes({
   ignoredRouteFiles: ["**/*.test.tsx"],
