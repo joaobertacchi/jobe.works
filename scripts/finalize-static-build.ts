@@ -1,7 +1,11 @@
 import { existsSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 
-import { locales, supportedLocales } from "../app/i18n/config";
+import {
+  isSupportedLocale,
+  locales,
+  supportedLocales,
+} from "../app/i18n/config";
 import {
   getCanonicalUrls,
   type CanonicalUrlManifest,
@@ -36,11 +40,24 @@ function validateLinks(
   artifact: string,
   publishedUrls: ReadonlySet<string>,
 ): void {
-  const anchorPattern = /<a\b[^>]*\bhref="(\/[^"#?]*)[^"]*"/g;
+  const anchorPattern = /<a\b[^>]*\bhref\s*=\s*(["'])(\/[^"'#?]*)[^"']*\1/gi;
   for (const match of html.matchAll(anchorPattern)) {
-    const href = match[1];
+    const href = match[2];
     if (href !== "/" && !publishedUrls.has(href)) {
       throw new Error(`Unknown internal link ${href} in ${artifact}`);
+    }
+  }
+}
+
+function validateLocaleDirectories(clientDirectory: string): void {
+  const localePattern = /^[a-z]{2}(?:-[A-Za-z]{2})?$/;
+  for (const entry of readdirSync(clientDirectory, { withFileTypes: true })) {
+    if (
+      entry.isDirectory() &&
+      localePattern.test(entry.name) &&
+      !isSupportedLocale(entry.name)
+    ) {
+      throw new Error(`Unsupported locale directory: ${entry.name}`);
     }
   }
 }
@@ -70,6 +87,7 @@ export function finalizeStaticBuild(
   manifest: CanonicalUrlManifest,
 ): void {
   const fallbackArtifact = "__spa-fallback.html";
+  validateLocaleDirectories(clientDirectory);
   const rootHtml = readRequiredHtml(clientDirectory, "index.html");
   const fallbackFile = join(clientDirectory, fallbackArtifact);
   if (

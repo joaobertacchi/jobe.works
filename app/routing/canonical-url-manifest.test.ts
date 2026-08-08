@@ -9,12 +9,15 @@ import {
 } from "./canonical-url-manifest";
 
 function localizedRoutes(children: RouteConfigEntry[]): RouteConfigEntry[] {
+  const localizedChildren = children.some((child) => child.index)
+    ? children
+    : [{ file: "routes/$locale._index.tsx", index: true }, ...children];
   return [
     { file: "routes/_index.tsx", index: true },
     {
       file: "routes/$locale.tsx",
       path: ":locale",
-      children,
+      children: localizedChildren,
     },
   ];
 }
@@ -94,6 +97,44 @@ describe("canonical URL manifest", () => {
 
     expect(() => createCanonicalUrlManifest(routes)).toThrow(
       "Duplicate logical page: about",
+    );
+  });
+
+  it("rejects a path-bearing parent without an index route", () => {
+    const routes = localizedRoutes([
+      {
+        file: "routes/docs.tsx",
+        path: "docs",
+        children: [{ file: "routes/docs.guide.tsx", path: "guide" }],
+      },
+    ]);
+
+    expect(() => createCanonicalUrlManifest(routes)).toThrow(
+      "Path-bearing parent requires an index route: :locale/docs",
+    );
+  });
+
+  it("rejects a locale root without an index route", () => {
+    const routes = [
+      {
+        file: "routes/$locale.tsx",
+        path: ":locale",
+        children: [{ file: "routes/$locale.about.tsx", path: "about" }],
+      },
+    ];
+
+    expect(() => createCanonicalUrlManifest(routes)).toThrow(
+      "Path-bearing parent requires an index route: :locale",
+    );
+  });
+
+  it("rejects non-structural splat routes", () => {
+    const routes = localizedRoutes([
+      { file: "routes/files.$.tsx", path: "files/*" },
+    ]);
+
+    expect(() => createCanonicalUrlManifest(routes)).toThrow(
+      "Unsupported public splat route: :locale/files/*",
     );
   });
 

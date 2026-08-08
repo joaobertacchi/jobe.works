@@ -34,6 +34,19 @@ test("returns real 404 responses for unpublished URLs", async ({ request }) => {
   expect((await request.get("/en/not-published")).status()).toBe(404);
 });
 
+test("uses the route error boundary for unsupported client navigation", async ({
+  page,
+}) => {
+  await page.goto("/en/about");
+  await page.evaluate(() => {
+    window.history.pushState(null, "", "/fr/about");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  });
+
+  await expect(page).toHaveURL("/fr/about");
+  await expect(page.getByRole("heading", { name: "404" })).toBeVisible();
+});
+
 test.describe("English browser locale", () => {
   test.use({ locale: "en-US" });
 

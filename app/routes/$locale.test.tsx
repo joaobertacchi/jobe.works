@@ -1,19 +1,38 @@
 import { render, screen } from "@testing-library/react";
-import { createMemoryRouter, RouterProvider } from "react-router";
+import {
+  createMemoryRouter,
+  isRouteErrorResponse,
+  RouterProvider,
+  useParams,
+  useRouteError,
+} from "react-router";
 import { describe, expect, it } from "vitest";
 
 import NotFound from "./$locale.404";
 import About from "./$locale.about";
 import Home from "./$locale._index";
 import Services from "./$locale.services";
-import LocaleLayout from "./$locale";
+import LocaleLayout, { clientLoader, ErrorBoundary } from "./$locale";
 
-function renderLocalizedRoute(pathname: string) {
+function TestErrorBoundary() {
+  return (
+    <ErrorBoundary error={useRouteError()} params={useParams() as never} />
+  );
+}
+
+function renderLocalizedRoute(pathname: string, validateLocale = false) {
   const router = createMemoryRouter(
     [
       {
         path: ":locale",
         Component: LocaleLayout,
+        ...(validateLocale
+          ? {
+              ErrorBoundary: TestErrorBoundary,
+              HydrateFallback: () => <p>Loading</p>,
+              loader: (args) => clientLoader(args as never),
+            }
+          : {}),
         children: [
           { index: true, Component: Home },
           { path: "about", Component: About },
@@ -25,6 +44,7 @@ function renderLocalizedRoute(pathname: string) {
     { initialEntries: [pathname] },
   );
   render(<RouterProvider router={router} />);
+  return router;
 }
 
 describe("localized route layout", () => {
@@ -57,9 +77,16 @@ describe("localized route layout", () => {
   });
 
   it("rejects an unsupported locale", async () => {
-    renderLocalizedRoute("/fr/about");
+    const router = renderLocalizedRoute("/fr/about", true);
 
     expect(await screen.findByText("404")).toBeVisible();
     expect(screen.queryByRole("heading", { name: "About" })).toBeNull();
+    expect(
+      Object.values(router.state.errors ?? {}).some(
+        (error) =>
+          (error instanceof Response || isRouteErrorResponse(error)) &&
+          error.status === 404,
+      ),
+    ).toBe(true);
   });
 });

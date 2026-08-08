@@ -72,7 +72,7 @@ describe("finalizeStaticBuild", () => {
     writeHtml(client, "/fr/about", html("fr"));
 
     expect(() => finalizeStaticBuild(client, manifest)).toThrow(
-      "Unexpected HTML artifact: fr/about/index.html",
+      "Unsupported locale directory: fr",
     );
   });
 
@@ -91,6 +91,30 @@ describe("finalizeStaticBuild", () => {
 
     expect(() => finalizeStaticBuild(client, manifest)).toThrow(
       "Unknown internal link /en/missing in en/about/index.html",
+    );
+  });
+
+  it("validates single-quoted anchor links with spaced attributes", () => {
+    const { client } = createCompleteBuild();
+    writeHtml(
+      client,
+      "/en/about",
+      "<html lang=\"en\"><body><a href = '/en/missing'>Link</a></body></html>",
+    );
+
+    expect(() => finalizeStaticBuild(client, manifest)).toThrow(
+      "Unknown internal link /en/missing in en/about/index.html",
+    );
+  });
+
+  it("rejects unsupported locale directories without HTML", () => {
+    const { client } = createCompleteBuild();
+    const localeDirectory = join(client, "fr");
+    mkdirSync(localeDirectory);
+    writeFileSync(join(localeDirectory, "asset.txt"), "unsupported locale");
+
+    expect(() => finalizeStaticBuild(client, manifest)).toThrow(
+      "Unsupported locale directory: fr",
     );
   });
 

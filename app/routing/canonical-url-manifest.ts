@@ -23,9 +23,17 @@ function collectLeafPatterns(
   return routes.flatMap((route) => {
     const pattern = route.index ? parent : joinPattern(parent, route.path);
     if (route.children?.length) {
+      if (route.path && !route.children.some((child) => child.index)) {
+        throw new Error(
+          `Path-bearing parent requires an index route: ${pattern}`,
+        );
+      }
       return collectLeafPatterns(route.children, pattern);
     }
-    if (!pattern || pattern.includes("*")) return [];
+    if (!pattern || pattern === ":locale/*") return [];
+    if (pattern.includes("*")) {
+      throw new Error(`Unsupported public splat route: ${pattern}`);
+    }
     return [pattern];
   });
 }

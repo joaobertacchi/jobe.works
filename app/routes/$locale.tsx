@@ -1,7 +1,8 @@
-import { Link, Outlet, useParams } from "react-router";
+import { isRouteErrorResponse, Link, Outlet, useParams } from "react-router";
 
 import { isSupportedLocale } from "../i18n/config";
 import { I18nProvider, useI18n } from "../i18n/i18n";
+import type { Route } from "./+types/$locale";
 
 function LocalizedLayout() {
   const { translate } = useI18n();
@@ -19,15 +20,41 @@ function LocalizedLayout() {
   );
 }
 
+export function clientLoader({ params }: Route.ClientLoaderArgs) {
+  if (!params.locale || !isSupportedLocale(params.locale)) {
+    throw new Response(null, { status: 404 });
+  }
+  return null;
+}
+
+function UnsupportedLocalePage() {
+  return (
+    <main>
+      <h1>404</h1>
+      <p>Page not found.</p>
+    </main>
+  );
+}
+
+export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  if (
+    (error instanceof Response || isRouteErrorResponse(error)) &&
+    error.status === 404
+  ) {
+    return <UnsupportedLocalePage />;
+  }
+  return (
+    <main>
+      <h1>Error</h1>
+      <p>An unexpected error occurred.</p>
+    </main>
+  );
+}
+
 export default function LocaleLayout() {
   const { locale } = useParams();
   if (!locale || !isSupportedLocale(locale)) {
-    return (
-      <main>
-        <h1>404</h1>
-        <p>Page not found.</p>
-      </main>
-    );
+    return <UnsupportedLocalePage />;
   }
 
   return (
