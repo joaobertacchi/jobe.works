@@ -18,11 +18,12 @@ This repository is an AI-agent harness for localized static marketing and conten
 
 ## Workflow
 
-1. Read the relevant accepted ADRs before changing architecture.
-2. Follow existing working examples.
-3. Add or update meaningful tests with behavior changes.
-4. Run `npm run check` and fix root causes before completion.
-5. Run `npm run test:e2e` for browser-relevant changes.
-6. Do not weaken validation, thresholds, or hooks to make changes pass.
+1. Activate the Node.js version in `.nvmrc` before installing dependencies or running validation.
+2. Read the relevant accepted ADRs before changing architecture.
+3. Follow existing working examples.
+4. Add or update meaningful tests with behavior changes.
+5. Run `npm run check` and fix root causes before completion.
+6. Run `npm run test:e2e` for browser-relevant changes.
+7. Do not weaken validation, thresholds, or hooks to make changes pass.
 
 CI wiring and later architectural layers are intentionally introduced in subsequent phases.

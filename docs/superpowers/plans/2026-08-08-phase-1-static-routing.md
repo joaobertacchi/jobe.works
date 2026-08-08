@@ -463,7 +463,7 @@ git commit -m "test: verify localized static routing"
 
 Run: `npm run check`
 
-Expected: formatting, lint, typecheck, unit tests, coverage, build, and static artifact validation all pass. The current shell may warn that Node 22.14.0 is below the repository's declared minimum 22.22.2; use a supported Node version if this becomes an error rather than weakening `engines`.
+Expected: formatting, lint, typecheck, unit tests, coverage, build, and static artifact validation all pass under the Node.js version pinned in `.nvmrc`, with no engine warning.
 
 - [ ] **Step 2: Run browser verification once more**
 

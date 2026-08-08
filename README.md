@@ -10,6 +10,7 @@ A React Router Framework foundation for building localized static marketing and 
 ## Commands
 
 ```bash
+nvm use                # activate the Node.js version pinned in .nvmrc
 npm ci                 # install the locked dependency graph
 npm run dev            # start local development
 npm run check          # run the canonical local quality gate
