@@ -30,7 +30,7 @@ The initial `npm run check` will run the checks meaningful in Phase 0:
 4. Vitest unit and component tests.
 5. Coverage with global thresholds of 80% statements, 75% branches, 80% functions, and 80% lines.
 6. A production build.
-7. A lightweight Phase 0 artifact check that asserts the prerendered entry HTML exists and no server build is emitted.
+7. A lightweight Phase 0 artifact finalizer that asserts the prerendered entry HTML exists and removes build-time server and SPA-fallback output from the deployable artifact.
 
 Prettier will also expose a separate write command. Validation failures must be fixed at their source; rules and thresholds will not be weakened.
 
