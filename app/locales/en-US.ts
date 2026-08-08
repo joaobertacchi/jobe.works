@@ -1,4 +1,4 @@
-import { Translation } from './types';
+import type { Translation } from "./types";
 
 const locale: Translation = {};
 

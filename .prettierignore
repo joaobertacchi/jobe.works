@@ -1,0 +1,11 @@
+.agents/
+.react-router/
+build/
+coverage/
+node_modules/
+playwright-report/
+test-results/
+package-lock.json
+docs/PRD.md
+docs/decisions_list.md
+docs/adrs/
