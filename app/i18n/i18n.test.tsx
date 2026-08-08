@@ -1,5 +1,5 @@
 import { render, renderHook, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 
 import { I18nProvider, useI18n } from "./i18n";
 import type { TranslationScope } from "./types";
@@ -11,6 +11,16 @@ function TranslationProbe() {
       {locale}: {translate("home.title")}
     </p>
   );
+}
+
+function I18nValueProbe({
+  onRender,
+}: {
+  onRender: (value: ReturnType<typeof useI18n>) => void;
+}) {
+  const value = useI18n();
+  onRender(value);
+  return null;
 }
 
 describe("i18n context", () => {
@@ -61,6 +71,42 @@ describe("i18n context", () => {
 
     expect(screen.getByText("en: Static website template")).toBeVisible();
     expect(screen.getByText("pt-BR: Modelo de site estático")).toBeVisible();
+  });
+
+  it("memoizes the locale-bound translator", () => {
+    const onRender = vi.fn();
+    const { rerender } = render(
+      <I18nProvider locale="en">
+        <I18nValueProbe onRender={onRender} />
+      </I18nProvider>,
+    );
+    const english = onRender.mock.calls.at(-1)?.[0] as ReturnType<
+      typeof useI18n
+    >;
+
+    rerender(
+      <I18nProvider locale="en">
+        <I18nValueProbe onRender={onRender} />
+      </I18nProvider>,
+    );
+    const rerenderedEnglish = onRender.mock.calls.at(-1)?.[0] as ReturnType<
+      typeof useI18n
+    >;
+
+    expect(rerenderedEnglish.translate).toBe(english.translate);
+
+    rerender(
+      <I18nProvider locale="pt-BR">
+        <I18nValueProbe onRender={onRender} />
+      </I18nProvider>,
+    );
+    const portuguese = onRender.mock.calls.at(-1)?.[0] as ReturnType<
+      typeof useI18n
+    >;
+
+    expect(portuguese.translate).not.toBe(english.translate);
+    expect(portuguese.translate("home.title")).toBe("Modelo de site estático");
+    expect(english.translate("home.title")).toBe("Static website template");
   });
 
   it("throws for a runtime missing translation", () => {

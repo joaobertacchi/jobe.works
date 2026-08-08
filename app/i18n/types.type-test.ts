@@ -9,6 +9,15 @@ declare const contextTranslate: ReturnType<typeof useI18n>["translate"];
 translate("about.title");
 translate("home.exampleCount", { count: 3 });
 
+// @ts-expect-error Callers cannot override the provider locale.
+translate("about.title", { locale: "pt-BR" });
+
+// @ts-expect-error Callers cannot override strict missing behavior.
+translate("about.title", { missingBehavior: "guess" });
+
+// @ts-expect-error Callers cannot provide fallback translation values.
+translate("about.title", { defaultValue: "Fallback" });
+
 // @ts-expect-error Invalid translation path.
 translate("about.missing");
 

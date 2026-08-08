@@ -1,5 +1,5 @@
 import { I18n } from "i18n-js";
-import { createContext, useContext, type ReactNode } from "react";
+import { createContext, useContext, useMemo, type ReactNode } from "react";
 
 import { defaultLocale, type SupportedLocale } from "./config";
 import { translations } from "./translations";
@@ -19,20 +19,22 @@ export function I18nProvider({
   children: ReactNode;
   locale: SupportedLocale;
 }) {
-  const i18n = new I18n(translations, {
-    locale,
-    defaultLocale,
-    enableFallback: false,
-    missingBehavior: "error",
-  });
-  const translate = ((scope: TranslationScope, options?: TranslationOptions) =>
-    i18n.t(scope, options) as string) as Translate;
+  const value = useMemo<I18nValue>(() => {
+    const i18n = new I18n(translations, {
+      locale,
+      defaultLocale,
+      enableFallback: false,
+      missingBehavior: "error",
+    });
+    const translate = ((
+      scope: TranslationScope,
+      options?: TranslationOptions,
+    ) => i18n.t(scope, options) as string) as Translate;
 
-  return (
-    <I18nContext.Provider value={{ locale, translate }}>
-      {children}
-    </I18nContext.Provider>
-  );
+    return { locale, translate };
+  }, [locale]);
+
+  return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }
 
 export function useI18n(): I18nValue {
