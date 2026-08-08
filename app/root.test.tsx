@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { Outlet } from "react-router";
 import { describe, expect, it } from "vitest";
 
-import App, { ErrorBoundary, Layout, links } from "./root";
+import App, { Document, ErrorBoundary, links } from "./root";
 
 function routeError(status: number, statusText = "") {
   return {
@@ -14,12 +14,12 @@ function routeError(status: number, statusText = "") {
 }
 
 describe("root document", () => {
-  it("defines the document shell and external font links", () => {
+  it("defines the localized document shell and external font links", () => {
     const child = <p>Page content</p>;
-    const document = Layout({ children: child });
+    const document = Document({ children: child, locale: "pt-BR" });
 
     expect(document.type).toBe("html");
-    expect(document.props.lang).toBe("en");
+    expect(document.props.lang).toBe("pt-BR");
     expect(document.props.children[1].props.children[0]).toBe(child);
     expect(links()).toHaveLength(3);
   });
