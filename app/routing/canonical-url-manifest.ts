@@ -128,3 +128,14 @@ export function getCanonicalUrls(manifest: CanonicalUrlManifest): string[] {
     supportedLocales.map((locale) => entry.urls[locale]),
   );
 }
+
+export function getLocalizedUrlsForPathname(
+  manifest: CanonicalUrlManifest,
+  pathname: string,
+): Record<SupportedLocale, string> {
+  const entry = manifest.find(({ urls }) =>
+    supportedLocales.some((locale) => urls[locale] === pathname),
+  );
+  if (!entry) throw new Error(`Canonical URL not found: ${pathname}`);
+  return entry.urls;
+}

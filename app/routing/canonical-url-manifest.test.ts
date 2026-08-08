@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
   createCanonicalUrlManifest,
   getCanonicalUrls,
+  getLocalizedUrlsForPathname,
   type CanonicalUrlManifest,
   validateCanonicalUrlManifest,
 } from "./canonical-url-manifest";
@@ -70,6 +71,56 @@ describe("canonical URL manifest", () => {
       "/en/services",
       "/pt-BR/services",
     ]);
+  });
+
+  it("resolves localized siblings for every canonical page identity", () => {
+    const manifest = createCanonicalUrlManifest(
+      localizedRoutes([
+        { file: "routes/$locale._index.tsx", index: true },
+        { file: "routes/$locale.about.tsx", path: "about" },
+        { file: "routes/$locale.services.tsx", path: "services" },
+        { file: "routes/$locale.404.tsx", path: "404" },
+        { file: "routes/$locale.$.tsx", path: "*" },
+      ]),
+    );
+
+    expect(getLocalizedUrlsForPathname(manifest, "/en/")).toEqual({
+      en: "/en/",
+      "pt-BR": "/pt-BR/",
+    });
+    expect(getLocalizedUrlsForPathname(manifest, "/en/about")).toEqual({
+      en: "/en/about",
+      "pt-BR": "/pt-BR/about",
+    });
+    expect(getLocalizedUrlsForPathname(manifest, "/en/services")).toEqual({
+      en: "/en/services",
+      "pt-BR": "/pt-BR/services",
+    });
+    expect(getLocalizedUrlsForPathname(manifest, "/en/404")).toEqual({
+      en: "/en/404",
+      "pt-BR": "/pt-BR/404",
+    });
+
+    const aboutUrls = getLocalizedUrlsForPathname(manifest, "/en/about");
+    expect(getLocalizedUrlsForPathname(manifest, "/pt-BR/about")).toBe(
+      aboutUrls,
+    );
+  });
+
+  it("rejects a pathname absent from the canonical manifest", () => {
+    const manifest = createCanonicalUrlManifest(
+      localizedRoutes([
+        { file: "routes/$locale._index.tsx", index: true },
+        { file: "routes/$locale.about.tsx", path: "about" },
+        { file: "routes/$locale.services.tsx", path: "services" },
+        { file: "routes/$locale.404.tsx", path: "404" },
+        { file: "routes/$locale.$.tsx", path: "*" },
+      ]),
+    );
+
+    expect(() =>
+      getLocalizedUrlsForPathname(manifest, "/en/not-published"),
+    ).toThrow("Canonical URL not found: /en/not-published");
   });
 
   it.each([
