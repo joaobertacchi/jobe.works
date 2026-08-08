@@ -1,3 +1,5 @@
+import { resolve } from "node:path";
+
 import type { Config } from "@react-router/dev/config";
 
 import {
@@ -5,6 +7,7 @@ import {
   type CanonicalUrlManifest,
 } from "./app/routing/canonical-url-manifest";
 import { readCanonicalManifest } from "./scripts/canonical-manifest-file";
+import { finalizeStaticBuild } from "./scripts/finalize-static-build";
 
 export function getPrerenderPaths(
   staticPaths: readonly string[],
@@ -20,5 +23,11 @@ export default {
   ssr: false,
   prerender({ getStaticPaths }) {
     return getPrerenderPaths(getStaticPaths(), readCanonicalManifest());
+  },
+  buildEnd() {
+    finalizeStaticBuild(
+      resolve(process.cwd(), "build/client"),
+      readCanonicalManifest(),
+    );
   },
 } satisfies Config;

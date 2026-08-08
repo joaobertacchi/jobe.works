@@ -22,6 +22,7 @@ describe("React Router static configuration", () => {
   it("disables runtime SSR and prerenders canonical URLs", () => {
     expect(config.ssr).toBe(false);
     expect(config.prerender).toEqual(expect.any(Function));
+    expect(config.buildEnd).toEqual(expect.any(Function));
     expect(getPrerenderPaths(["/", "/:locale/about"], manifest)).toEqual([
       "/",
       "/en/",

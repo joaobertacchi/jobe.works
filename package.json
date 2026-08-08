@@ -6,7 +6,7 @@
     "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
   },
   "scripts": {
-    "build": "react-router build && node scripts/finalize-static-build-cli.mjs",
+    "build": "react-router build",
     "check": "npm run format:check && npm run lint && npm run typecheck && npm run test && npm run coverage && npm run build",
     "coverage": "vitest run --coverage",
     "dev": "react-router dev",

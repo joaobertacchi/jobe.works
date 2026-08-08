@@ -12,7 +12,7 @@ export default defineConfig({
     environment: "jsdom",
     include: [
       "app/**/*.test.{ts,tsx}",
-      "scripts/**/*.test.mjs",
+      "scripts/**/*.test.{mjs,ts}",
       "tests/**/*.test.ts",
     ],
     setupFiles: ["./tests/setup.ts"],
@@ -22,7 +22,7 @@ export default defineConfig({
         "app/locales/types.ts",
         "scripts/*-cli.mjs",
       ],
-      include: ["app/**/*.{ts,tsx}", "scripts/**/*.mjs"],
+      include: ["app/**/*.{ts,tsx}", "scripts/**/*.{mjs,ts}"],
       provider: "v8",
       reporter: ["text", "html"],
       thresholds: {
