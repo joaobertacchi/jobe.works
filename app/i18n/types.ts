@@ -39,7 +39,14 @@ type PluralPaths<T> = {
 export type PlainTranslationScope = PlainPaths<Translation>;
 export type PluralTranslationScope = PluralPaths<Translation>;
 export type TranslationScope = PlainTranslationScope | PluralTranslationScope;
-export type TranslationOptions = { count?: number };
+export type TranslationOptions = {
+  count?: number;
+  defaultValue?: never;
+  defaults?: never;
+  locale?: never;
+  missingBehavior?: never;
+  scope?: never;
+};
 
 export type Translate = {
   (scope: PlainTranslationScope, options?: TranslationOptions): string;

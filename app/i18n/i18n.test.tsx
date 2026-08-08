@@ -125,6 +125,30 @@ describe("i18n context", () => {
     );
   });
 
+  it("sanitizes runtime translation options", () => {
+    const missingScope = "home.missing" as TranslationScope;
+    const { result } = renderHook(() => useI18n(), {
+      wrapper: ({ children }) => (
+        <I18nProvider locale="en">{children}</I18nProvider>
+      ),
+    });
+    const translate = result.current.translate as (
+      scope: TranslationScope,
+      options: Record<string, unknown>,
+    ) => string;
+
+    expect(() =>
+      translate(missingScope, {
+        count: 2,
+        locale: "pt-BR",
+        missingBehavior: "guess",
+        defaultValue: "Fallback",
+        defaults: [{ message: "Fallback" }],
+        scope: "home",
+      }),
+    ).toThrow("Missing translation: en.home.missing");
+  });
+
   it("requires consumers to be inside the provider", () => {
     expect(() => renderHook(() => useI18n())).toThrow(
       "useI18n must be used within I18nProvider",

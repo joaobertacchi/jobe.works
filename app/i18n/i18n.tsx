@@ -29,7 +29,11 @@ export function I18nProvider({
     const translate = ((
       scope: TranslationScope,
       options?: TranslationOptions,
-    ) => i18n.t(scope, options) as string) as Translate;
+    ) =>
+      i18n.t(
+        scope,
+        options?.count === undefined ? undefined : { count: options.count },
+      ) as string) as Translate;
 
     return { locale, translate };
   }, [locale]);

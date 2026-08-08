@@ -18,6 +18,18 @@ translate("about.title", { missingBehavior: "guess" });
 // @ts-expect-error Callers cannot provide fallback translation values.
 translate("about.title", { defaultValue: "Fallback" });
 
+const unsafeOptions = {
+  count: 2,
+  locale: "pt-BR",
+  missingBehavior: "guess",
+  defaultValue: "Fallback",
+  defaults: [{ message: "Fallback" }],
+  scope: "home",
+};
+
+// @ts-expect-error Predeclared options cannot override translation behavior.
+translate("home.exampleCount", unsafeOptions);
+
 // @ts-expect-error Invalid translation path.
 translate("about.missing");
 
