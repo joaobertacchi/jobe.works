@@ -12,12 +12,39 @@ export type Translation = {
   notFound: NotFoundTranslation;
 };
 
-type Paths<T> = {
-  [Key in keyof T & string]: T[Key] extends string
+export type Plural = {
+  zero: string;
+  one: string;
+  other: string;
+};
+
+type PlainPaths<T> = {
+  [Key in keyof T & string]: T[Key] extends Plural
+    ? never
+    : T[Key] extends string
+      ? Key
+      : T[Key] extends Record<string, unknown>
+        ? `${Key}.${PlainPaths<T[Key]>}`
+        : never;
+}[keyof T & string];
+
+type PluralPaths<T> = {
+  [Key in keyof T & string]: T[Key] extends Plural
     ? Key
     : T[Key] extends Record<string, unknown>
-      ? `${Key}.${Paths<T[Key]>}`
+      ? `${Key}.${PluralPaths<T[Key]>}`
       : never;
 }[keyof T & string];
 
-export type TranslationScope = Paths<Translation>;
+export type PlainTranslationScope = PlainPaths<Translation>;
+export type PluralTranslationScope = PluralPaths<Translation>;
+export type TranslationScope = PlainTranslationScope | PluralTranslationScope;
+export type TranslationOptions = Record<string, string | number>;
+
+export type Translate = {
+  (scope: PlainTranslationScope, options?: TranslationOptions): string;
+  (
+    scope: PluralTranslationScope,
+    options: TranslationOptions & { count: number },
+  ): string;
+};
