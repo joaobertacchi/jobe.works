@@ -1,8 +1,10 @@
 import type { SupportedLocale } from "./config";
+import type { useI18n } from "./i18n";
 import type { Translate, Translation, TranslationScope } from "./types";
 import type { HomeTranslation } from "./translations/home";
 
 declare const translate: Translate;
+declare const contextTranslate: ReturnType<typeof useI18n>["translate"];
 
 translate("about.title");
 translate("home.exampleCount", { count: 3 });
@@ -15,6 +17,9 @@ translate("home.exampleCount.zero");
 
 // @ts-expect-error Plural translations require a numeric count.
 translate("home.exampleCount");
+
+// @ts-expect-error Context plural translations also require a numeric count.
+contextTranslate("home.exampleCount");
 
 const servicesTitle: TranslationScope = "services.title";
 

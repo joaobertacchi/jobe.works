@@ -7,8 +7,7 @@ import type { Translate, TranslationOptions, TranslationScope } from "./types";
 
 type I18nValue = {
   locale: SupportedLocale;
-  translate: Translate &
-    ((scope: TranslationScope, options?: TranslationOptions) => string);
+  translate: Translate;
 };
 
 const I18nContext = createContext<I18nValue | null>(null);
@@ -27,7 +26,7 @@ export function I18nProvider({
     missingBehavior: "error",
   });
   const translate = ((scope: TranslationScope, options?: TranslationOptions) =>
-    i18n.t(scope, options) as string) as I18nValue["translate"];
+    i18n.t(scope, options) as string) as Translate;
 
   return (
     <I18nContext.Provider value={{ locale, translate }}>

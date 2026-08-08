@@ -1,12 +1,12 @@
 import { useI18n } from "../i18n/i18n";
-import type { TranslationScope } from "../i18n/types";
+import type { PlainTranslationScope } from "../i18n/types";
 
 export function ContentPage({
   description,
   title,
 }: {
-  description: TranslationScope;
-  title: TranslationScope;
+  description: PlainTranslationScope;
+  title: PlainTranslationScope;
 }) {
   const { translate } = useI18n();
   return (

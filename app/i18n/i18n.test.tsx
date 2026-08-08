@@ -70,8 +70,11 @@ describe("i18n context", () => {
         <I18nProvider locale="en">{children}</I18nProvider>
       ),
     });
+    const translate = result.current.translate as (
+      scope: TranslationScope,
+    ) => string;
 
-    expect(() => result.current.translate(missingScope)).toThrow(
+    expect(() => translate(missingScope)).toThrow(
       "Missing translation: en.home.missing",
     );
   });
