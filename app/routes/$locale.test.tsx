@@ -13,7 +13,11 @@ import NotFound from "./$locale.404";
 import About from "./$locale.about";
 import Home from "./$locale._index";
 import Services from "./$locale.services";
-import LocaleLayout, { clientLoader, ErrorBoundary } from "./$locale";
+import LocaleLayout, {
+  clientLoader,
+  ErrorBoundary,
+  getLoaderDataForBuildRequest,
+} from "./$locale";
 
 const canonicalManifest = [
   {
@@ -48,6 +52,13 @@ function TestErrorBoundary() {
   );
 }
 
+function getLoaderData(pathname: string) {
+  return getLoaderDataForBuildRequest(
+    canonicalManifest,
+    `https://example.test${pathname}`,
+  );
+}
+
 function renderLocalizedRoute(pathname: string, validateLocale = false) {
   const router = createMemoryRouter(
     [
@@ -60,9 +71,10 @@ function renderLocalizedRoute(pathname: string, validateLocale = false) {
           ? (args) =>
               clientLoader({
                 ...args,
-                serverLoader: async () => canonicalManifest,
+                serverLoader: async () =>
+                  getLoaderData(new URL(args.request.url).pathname),
               } as never)
-          : () => canonicalManifest,
+          : ({ request }) => getLoaderData(new URL(request.url).pathname),
         children: [
           { index: true, Component: Home },
           { path: "about", Component: About },
@@ -100,14 +112,6 @@ describe("localized route layout", () => {
       "/pt-BR/about",
     );
     expect(screen.queryByRole("link", { name: "English" })).toBeNull();
-  });
-
-  it("uses canonical siblings for directory-style prerender paths", async () => {
-    renderLocalizedRoute("/en/about/");
-
-    expect(
-      await screen.findByRole("link", { name: "Português" }),
-    ).toHaveAttribute("href", "/pt-BR/about");
   });
 
   it("binds Brazilian Portuguese content", async () => {
@@ -182,21 +186,61 @@ describe("localized route layout", () => {
 });
 
 describe("localized route clientLoader", () => {
-  it("returns the exact prerendered server loader manifest", async () => {
-    const serverLoader = vi.fn().mockResolvedValue(canonicalManifest);
+  it("returns the exact prerendered server loader payload", async () => {
+    const loaderData = getLoaderData("/en/about");
+    const serverLoader = vi.fn().mockResolvedValue(loaderData);
 
     await expect(
       clientLoader({ params: { locale: "en" }, serverLoader } as never),
-    ).resolves.toBe(canonicalManifest);
+    ).resolves.toBe(loaderData);
     expect(serverLoader).toHaveBeenCalledOnce();
   });
 
   it("rejects an unsupported locale without loading prerendered data", async () => {
-    const serverLoader = vi.fn().mockResolvedValue(canonicalManifest);
+    const serverLoader = vi.fn().mockResolvedValue(getLoaderData("/en/about"));
 
     await expect(
       clientLoader({ params: { locale: "fr" }, serverLoader } as never),
     ).rejects.toMatchObject({ status: 404 });
     expect(serverLoader).not.toHaveBeenCalled();
+  });
+});
+
+describe("localized route build loader data", () => {
+  it("maps a prerender data request to exact manifest URLs", () => {
+    const data = getLoaderDataForBuildRequest(
+      canonicalManifest,
+      "https://example.test/en/about.data",
+    );
+
+    expect(data.urls).toBe(canonicalManifest[1].urls);
+  });
+
+  it("maps a Home prerender data request to its trailing-slash URLs", () => {
+    const data = getLoaderDataForBuildRequest(
+      canonicalManifest,
+      "https://example.test/en/_.data",
+    );
+
+    expect(data.urls).toBe(canonicalManifest[0].urls);
+  });
+
+  it("maps a directory-style prerender request to exact manifest URLs", () => {
+    const data = getLoaderDataForBuildRequest(
+      canonicalManifest,
+      "https://example.test/en/about/",
+    );
+
+    expect(data.manifest).toBe(canonicalManifest);
+    expect(data.urls).toBe(canonicalManifest[1].urls);
+  });
+
+  it("preserves the canonical Home trailing slash", () => {
+    const data = getLoaderDataForBuildRequest(
+      canonicalManifest,
+      "https://example.test/en/",
+    );
+
+    expect(data.urls).toBe(canonicalManifest[0].urls);
   });
 });

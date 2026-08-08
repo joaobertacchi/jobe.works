@@ -3,25 +3,21 @@ import {
   Link,
   Outlet,
   useLoaderData,
-  useLocation,
   useParams,
 } from "react-router";
 
 import { isSupportedLocale, locales, supportedLocales } from "../i18n/config";
 import { I18nProvider, useI18n } from "../i18n/i18n";
-import { getLocalizedUrlsForPathname } from "../routing/canonical-url-manifest";
+import {
+  type CanonicalUrlManifest,
+  getLocalizedUrlsForPathname,
+} from "../routing/canonical-url-manifest";
 import { readCanonicalManifest } from "../../scripts/canonical-manifest-file.server";
 import type { Route } from "./+types/$locale";
 
 function LocalizedLayout() {
-  const manifest = useLoaderData<typeof loader>();
-  const { pathname } = useLocation();
+  const { urls } = useLoaderData<typeof loader>();
   const { locale, translate } = useI18n();
-  const canonicalPathname =
-    pathname.endsWith("/") && pathname !== `/${locale}/`
-      ? pathname.slice(0, -1)
-      : pathname;
-  const urls = getLocalizedUrlsForPathname(manifest, canonicalPathname);
   return (
     <>
       <header>
@@ -45,8 +41,31 @@ function LocalizedLayout() {
   );
 }
 
-export function loader() {
-  return readCanonicalManifest();
+export function getLoaderDataForBuildRequest(
+  manifest: CanonicalUrlManifest,
+  requestUrl: string,
+) {
+  const pathname = new URL(requestUrl).pathname;
+  let canonicalPathname = pathname;
+  if (pathname.endsWith("/_.data")) {
+    canonicalPathname = pathname.slice(0, -"_.data".length);
+  } else if (pathname.endsWith(".data")) {
+    canonicalPathname = pathname.slice(0, -".data".length);
+  } else if (
+    pathname.endsWith("/") &&
+    pathname.split("/").filter(Boolean).length > 1
+  ) {
+    canonicalPathname = pathname.slice(0, -1);
+  }
+
+  return {
+    manifest,
+    urls: getLocalizedUrlsForPathname(manifest, canonicalPathname),
+  };
+}
+
+export function loader({ request }: Route.LoaderArgs) {
+  return getLoaderDataForBuildRequest(readCanonicalManifest(), request.url);
 }
 
 export async function clientLoader({
