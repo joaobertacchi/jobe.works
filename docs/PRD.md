@@ -1,282 +1,478 @@
-# Product Requirements Document — Static Website AI Harness
+# PRD.md
 
-## 1. Overview
+# AI-Agent Static Website Template
 
-This project provides a reusable foundation for building production-quality static marketing and content websites.
+## Product Definition
 
-The primary user of the project is not only a human developer, but also an AI coding agent. The project should therefore serve as an opinionated harness that reduces architectural ambiguity, promotes reuse, and mechanically enforces best practices wherever practical.
+## Overview
 
-The harness should make it possible for AI agents, including smaller and less capable models, to create and modify websites reliably without gradually degrading the architecture.
+This project is a reusable template repository designed to enable AI agents to create and evolve high-quality static websites.
 
-## 2. Product Goals
+The template is not a website framework.
 
-The project must:
+It is an **AI-agent development harness** providing:
 
-1. Provide a reusable foundation for multiple websites.
-2. Use React as a foundational dependency.
-3. Produce static websites suitable for marketing and content use cases.
-4. Support localization from the beginning.
-5. Provide a clear component and design-system architecture.
-6. Promote component reuse across the website.
-7. Minimize architectural degrees of freedom for AI agents.
-8. Provide deterministic validation through linting, formatting, type checking, testing, build validation, and architectural checks.
-9. Provide strong SEO foundations.
-10. Support analytics and marketing campaign tracking.
-11. Support integrations with third-party services such as form processors and email/marketing platforms.
-12. Remain provider-neutral for deployment.
+- a production-ready technical foundation;
+- clear architectural conventions;
+- examples;
+- deterministic validation;
+- architectural review mechanisms.
 
-## 3. Primary Use Case
+Users fork the repository and customize it to create their own websites.
 
-An AI coding agent receives instructions such as:
+---
 
-- create a website;
-- add a landing page;
-- add a new localized page;
-- add a marketing section;
-- create a contact form;
-- instrument a conversion event;
-- change the site's visual identity;
-- reuse or extend an existing component.
+# Target Users
 
-The harness should guide the agent toward the intended architecture and reject invalid implementations through deterministic checks when possible.
+## Primary Users
 
-## 4. Target Websites
+Developers and technical teams who want to create marketing, company, product, or content websites using AI-assisted development.
 
-Primary targets include:
+Typical users:
 
-- company websites;
-- consulting/service websites;
-- product marketing websites;
-- landing pages;
-- portfolios;
-- content-heavy marketing sites;
-- blogs and similar content sections.
+- solo founders;
+- small engineering teams;
+- software consultants;
+- developers creating websites for clients.
 
-Application-style products with significant backend requirements are not the primary use case.
+---
 
-## 5. Deployment Model
+# Product Goal
 
-The production build must generate static artifacts consisting of:
+Enable an AI agent to create and maintain production-quality static websites with minimal human intervention.
 
-- HTML;
-- CSS;
-- JavaScript;
-- images;
-- fonts;
-- other static assets.
+The template should reduce:
 
-The generated artifact must be deployable without a Node.js or application runtime.
+- architectural decisions;
+- setup effort;
+- repeated implementation choices;
+- validation mistakes;
+- inconsistent patterns.
 
-A representative deployment architecture is:
+---
 
-```text
-Static build
-    ↓
-nginx
-    ↓
-Cloudflare
-    ├── HTTPS
-    ├── CDN
-    └── caching
-```
+# Non-Goals
 
-The architecture must remain provider-neutral and should also be deployable to conventional static hosting providers.
+The template is not intended to provide:
 
-## 6. Backend Policy
+- a CMS;
+- a backend platform;
+- a SaaS website builder;
+- a deployment platform;
+- a complete design system;
+- business-specific components;
+- industry-specific templates.
 
-An application backend is explicitly outside the normal architecture.
+The template provides the foundation.
 
-AI agents must not default to creating:
+Each fork evolves its own:
 
-- API endpoints;
-- application servers;
-- server actions;
-- server-side form handlers;
-- persistent server-side infrastructure.
+- brand;
+- design system;
+- pages;
+- content;
+- integrations.
 
-Integrations should prefer browser-safe third-party services.
+---
 
-Backend or serverless functions may be introduced as an explicit escape hatch for exceptional integrations that cannot reasonably be implemented using static-site-compatible approaches.
+# Core Product Principles
 
-This must be an intentional architectural decision rather than something an agent introduces opportunistically.
+## Static by Default
 
-## 7. React Requirement
+The generated website should be:
 
-React is a foundational dependency.
+- statically generated;
+- deployable as static files;
+- independent from a runtime backend.
 
-A significant motivation is ecosystem maturity and AI-model familiarity. Common, widely represented technologies are preferred where this improves the reliability of code generated by smaller or cheaper AI models.
+Server-side functionality is allowed only when a specific requirement justifies it.
 
-Framework-specific knowledge is acceptable when the framework is sufficiently widespread.
+---
 
-## 8. Framework Requirements
+## Agent First
 
-The selected framework must:
+The repository is optimized for AI-agent development.
 
-- use React naturally;
-- support complete static generation;
-- support provider-neutral deployment;
-- support SEO-friendly static HTML;
-- have strong ecosystem maturity;
-- be well represented in LLM training data;
-- support localization;
-- support marketing/content websites well;
-- allow third-party browser integrations;
-- support deterministic validation of static-site constraints.
+The template provides:
 
-Current shortlist:
+- concise instructions;
+- examples instead of extensive manuals;
+- typed contracts;
+- deterministic validation;
+- architectural decisions.
 
-1. Next.js with static export.
-2. React Router Framework with prerendering.
+---
 
-The final choice is pending.
+## Convention Over Configuration
 
-## 9. SEO
+The template prefers:
 
-SEO readiness is a first-class requirement.
+- established ecosystem patterns;
+- predictable file organization;
+- minimal configuration;
+- explicit decisions.
 
-The harness should eventually provide standardized support for:
+---
 
-- page titles;
-- meta descriptions;
-- canonical URLs;
-- Open Graph metadata;
-- social sharing metadata;
-- sitemap generation;
-- robots.txt;
-- `hreflang`;
-- localized metadata;
-- structured data where applicable;
-- SEO validation.
+## Avoid Premature Abstraction
 
-SEO requirements should be enforceable mechanically where practical.
+The template encourages:
 
-## 10. Localization
+- reuse where patterns exist;
+- simple implementations;
+- abstractions only when justified.
 
-Localization is mandatory.
+The goal is a small conceptual surface that AI agents can understand.
 
-The architecture must support:
+---
+
+# Technical Foundation
+
+## Framework
+
+The template uses:
+
+- React Router Framework;
+- static prerendering;
+- TypeScript;
+- TSX components.
+
+---
+
+## Routing
+
+Requirements:
+
+- localized routes;
+- deterministic prerendering;
+- static 404 pages;
+- no SPA fallback for missing routes.
+
+---
+
+## Localization
+
+The template supports:
 
 - multiple locales;
-- statically generated localized routes;
-- translated UI strings;
-- localized long-form content;
-- SEO metadata per locale;
-- `hreflang`;
-- detection of missing translations where practical.
+- locale-prefixed routes;
+- typed TypeScript dictionaries;
+- page/feature-scoped translations.
 
-The exact routing and translation-storage models remain undecided.
+Characteristics:
 
-## 11. Design System and Component Reuse
+- missing translations detected by TypeScript;
+- fallback locale behavior;
+- no runtime translation loading requirement.
 
-The project must provide a structured reusable component architecture.
+---
 
-The design should distinguish, at minimum, concepts such as:
+## UI Architecture
 
-- design tokens;
-- primitives;
-- reusable components;
-- composed sections/patterns;
-- layouts;
-- pages;
-- site-specific components.
+The template provides:
 
-The exact taxonomy and directory layout remain undecided.
+```
+ui/
+components/
+sections/
+domain/
+routes/
+```
 
-Agents should preferentially reuse existing components rather than create duplicates.
+with layered responsibilities.
 
-## 12. Analytics and Marketing
+The design system emerges through usage.
 
-Analytics and marketing tracking are mandatory capabilities.
+Each fork creates its own design system.
 
-The architecture must be capable of supporting:
+---
 
-- page-view analytics;
-- user-behavior tracking;
-- conversion events;
-- campaign attribution;
-- advertising/marketing pixels;
-- multiple analytics or marketing providers when necessary.
+## Styling
 
-The harness should consider whether vendor-specific APIs are exposed directly or hidden behind a common abstraction.
+The template uses:
 
-Consent/privacy requirements must also be addressed.
+- TailwindCSS;
+- token-based styling;
+- light/dark theme support.
 
-## 13. Third-Party Integrations
+---
 
-Static sites must be able to integrate with external services, including:
+## Content
 
-- form submission services;
-- email platforms;
-- newsletter providers;
-- CRM systems;
-- marketing automation platforms;
-- external webhooks.
+Website copy uses typed localization dictionaries.
 
-The normal integration path should not require a project-owned backend.
+The template does not provide:
 
-## 14. AI-Agent Requirements
+- blog infrastructure;
+- CMS integration;
+- content management workflows.
 
-The project should explicitly optimize for AI coding agents.
+These can be added later if required.
 
-Important properties include:
+---
 
-- predictable architecture;
-- few valid ways of solving the same problem;
-- clear component boundaries;
-- discoverable reusable components;
-- explicit instructions;
-- actionable error messages;
-- deterministic validation;
-- low repository context requirements;
-- established technologies with strong representation in model training data.
+# SEO Requirements
 
-Documentation alone should not be relied upon when an architectural rule can instead be enforced mechanically.
+SEO is a first-class concern.
 
-## 15. Validation
+The template requires:
 
-The final harness should expose a canonical validation command, conceptually:
+- explicit metadata;
+- localized metadata;
+- canonical URLs;
+- sitemap generation;
+- locale alternate links;
+- validation of SEO invariants.
+
+SEO behavior must be deterministic at build time.
+
+---
+
+# Analytics and Marketing
+
+The template supports:
+
+- centralized analytics abstraction;
+- typed analytics events;
+- provider-specific implementations behind the abstraction.
+
+Marketing-related functionality includes:
+
+- campaign attribution support;
+- consent-aware tracking;
+- lead-generation integrations.
+
+Analytics providers are configured through environment variables.
+
+---
+
+# Privacy
+
+The template follows LGPD-oriented principles:
+
+- consent before non-essential tracking;
+- privacy-first defaults;
+- centralized analytics handling;
+- transparent data collection.
+
+---
+
+# Integrations
+
+The template does not abstract every third-party service.
+
+Rule:
+
+- use direct provider integration when a single provider is selected;
+- create abstractions only when multiple implementations or architectural needs justify them.
+
+Examples:
+
+Allowed:
+
+```
+app/integrations/contact-form/
+app/integrations/email/
+```
+
+Not required:
+
+```
+GenericProviderFactory
+UniversalIntegrationManager
+```
+
+---
+
+# Quality System
+
+The template includes:
+
+## Local Validation
+
+Canonical command:
 
 ```bash
 npm run check
 ```
 
-Potential checks include:
+Validates:
 
 - formatting;
-- linting;
-- architecture validation;
-- TypeScript validation;
+- lint;
+- TypeScript;
 - tests;
-- static production build;
-- SEO checks;
-- accessibility checks;
-- broken-link validation.
+- coverage;
+- complexity;
+- build;
+- static validation.
 
-The exact toolchain remains undecided.
+---
 
-## 16. Non-Goals
+## Testing
 
-The base project is not intended to provide:
+The template uses:
 
-- a general-purpose application backend;
-- database infrastructure;
-- authentication infrastructure;
-- server-rendered dynamic applications;
-- provider-specific deployment requirements.
+- Vitest;
+- React Testing Library;
+- Playwright.
 
-These capabilities may be added by specific derived projects when deliberately required.
+Playwright runs in CI.
 
-## 17. Success Criteria
+Default browser:
 
-The harness will ultimately be considered successful if an AI coding agent can perform common website-development tasks while:
+- Chromium.
 
-- producing a valid static build;
-- following architectural conventions;
-- reusing the design system;
-- preserving localization;
-- preserving SEO requirements;
-- integrating external services appropriately;
-- passing automated quality checks;
-- requiring limited corrective intervention from a human developer.
+---
 
-Quantitative evaluation criteria will be defined later.
+## Quality Thresholds
+
+Initial policies:
+
+Coverage:
+
+```
+Statements: 80%
+Branches:   75%
+Functions:  80%
+Lines:      80%
+```
+
+Cyclomatic complexity:
+
+```
+Maximum: 10 per function
+```
+
+---
+
+# Agent Workflow
+
+The expected workflow is:
+
+```
+Understand task
+      ↓
+Read AGENTS.md
+      ↓
+Inspect examples
+      ↓
+Consult ADRs when needed
+      ↓
+Implement
+      ↓
+npm run check
+      ↓
+Architecture review
+      ↓
+Fix findings
+      ↓
+Complete
+```
+
+---
+
+# Documentation Model
+
+The repository contains:
+
+```
+AGENTS.md
+
+docs/
+  PRD.md
+  decisions_list.md
+  adrs/
+```
+
+Responsibilities:
+
+## AGENTS.md
+
+Operational instructions.
+
+## PRD.md
+
+Product definition.
+
+## ADRs
+
+Architectural rationale.
+
+## Examples
+
+Primary implementation documentation.
+
+---
+
+# Architecture Review
+
+The template includes an architecture-review subagent model.
+
+Purpose:
+
+Detect issues not captured by deterministic tooling.
+
+Examples:
+
+- unnecessary abstractions;
+- ADR violations;
+- duplicated patterns;
+- conceptual complexity;
+- inconsistent architecture.
+
+Review outcome:
+
+| Severity | Effect |
+|-|-|
+| High | Blocking |
+| Medium | Blocking |
+| Low | Advisory |
+
+---
+
+# Dependency Policy
+
+Dependencies are allowed when justified.
+
+Rules:
+
+- prefer mature ecosystem solutions;
+- avoid reinventing existing capabilities;
+- evaluate build vs buy;
+- major architectural dependencies require ADRs.
+
+---
+
+# Evaluation Model
+
+Template effectiveness is measured separately through an evaluation repository.
+
+Evaluation measures:
+
+- task completion rate;
+- time to validated completion;
+- validation iterations;
+- architecture findings;
+- human intervention;
+- regression across template versions.
+
+Success requires:
+
+- validation passing;
+- Playwright passing;
+- architecture review passing.
+
+---
+
+# Future Evolution
+
+Possible future additions:
+
+- stronger evaluation automation;
+- additional static validators;
+- more benchmark tasks;
+- more accessibility checks;
+- additional deployment guidance.
+
+These should be added only when justified by real usage.
