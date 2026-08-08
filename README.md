@@ -4,7 +4,7 @@ A React Router Framework foundation for building localized static marketing and 
 
 ## Requirements
 
-- Node.js 22.22.2 or newer
+- Node.js 22.22.2+, 24.15.0+, or 26+
 - npm
 
 ## Commands

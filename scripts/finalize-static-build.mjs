@@ -7,7 +7,14 @@ export function finalizeStaticBuild(clientDirectory) {
     throw new Error("Missing prerendered entry: build/client/index.html");
   }
 
+  const fallback = join(clientDirectory, "__spa-fallback.html");
+  if (!existsSync(fallback)) {
+    throw new Error(
+      "Missing prerender evidence: build/client/__spa-fallback.html",
+    );
+  }
+
   const serverDirectory = join(dirname(clientDirectory), "server");
   rmSync(serverDirectory, { force: true, recursive: true });
-  rmSync(join(clientDirectory, "__spa-fallback.html"), { force: true });
+  rmSync(fallback);
 }

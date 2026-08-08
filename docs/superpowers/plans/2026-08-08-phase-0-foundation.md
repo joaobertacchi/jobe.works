@@ -65,13 +65,13 @@ Add this top-level field to `package.json`:
 
 ```json
 "engines": {
-  "node": ">=22.22.2"
+  "node": "^22.22.2 || ^24.15.0 || >=26.0.0"
 }
 ```
 
 Run: `node --version`
 
-Expected: Node `v22.22.2` or newer. If the shell still reports the repository's current `v22.14.0`, activate the version from `.nvmrc` before dependency installation; do not weaken the engine requirement. Node `22.22.2` is the minimum version shared by React Router 8 and jsdom 30.
+Expected: Node satisfies `^22.22.2 || ^24.15.0 || >=26.0.0`. If the shell still reports the repository's current `v22.14.0`, activate the version from `.nvmrc` before dependency installation; do not weaken the engine requirement. Node `22.22.2` is the minimum version shared by React Router 8 and jsdom 30.
 
 - [ ] **Step 2: Remove production server dependencies and install the accepted quality tools**
 
@@ -79,7 +79,7 @@ Run:
 
 ```bash
 npm uninstall @react-router/node @react-router/serve
-npm install --save-dev @eslint/js@^10 eslint@^10 eslint-config-prettier@^10 eslint-plugin-react-hooks@^7 globals@^17 prettier@^3 typescript-eslint@^8 vitest@^4 @vitest/coverage-v8@^4 jsdom@^30 @testing-library/react@^16 @testing-library/jest-dom@^7 @playwright/test@^1.62 husky@^9
+npm install --save-dev @eslint/js@^10 eslint@^10 eslint-config-prettier@^10 eslint-plugin-react-hooks@^7 globals@^17 prettier@^3 typescript-eslint@^8 vitest@^4 @vitest/coverage-v8@^4 jsdom@^30 @testing-library/react@^16 @testing-library/jest-dom@^7 @playwright/test@^1.62 husky@^9 sirv-cli@^3
 ```
 
 Expected: `package.json` has no production server-runtime packages. React Router may retain `isbot` for its build-time prerender entry; it is not used by the deployed static artifact. `package-lock.json` updates successfully with no engine warning under the selected Node version.
@@ -98,7 +98,7 @@ Replace the `scripts` object in `package.json` with:
   "format:check": "prettier --check . --ignore-unknown",
   "lint": "eslint .",
   "prepare": "husky",
-  "preview": "vite preview --outDir build/client --host 127.0.0.1 --port 4173 --strictPort",
+  "preview": "sirv build/client --dev --host 127.0.0.1 --port 4173",
   "test": "vitest run",
   "test:e2e": "playwright test",
   "test:e2e:ui": "playwright test --ui",
@@ -316,6 +316,11 @@ Create `tests/setup.ts`:
 
 ```ts
 import "@testing-library/jest-dom/vitest";
+
+import { cleanup } from "@testing-library/react";
+import { afterEach } from "vitest";
+
+afterEach(cleanup);
 ```
 
 Create `vitest.config.ts`:
@@ -333,9 +338,19 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
-    include: ["app/**/*.test.{ts,tsx}", "scripts/**/*.test.mjs"],
+    include: [
+      "app/**/*.test.{ts,tsx}",
+      "scripts/**/*.test.mjs",
+      "tests/**/*.test.ts",
+    ],
     setupFiles: ["./tests/setup.ts"],
     coverage: {
+      exclude: [
+        "**/*.test.{ts,tsx,mjs}",
+        "app/locales/types.ts",
+        "scripts/*-cli.mjs",
+      ],
+      include: ["app/**/*.{ts,tsx}", "scripts/**/*.mjs"],
       provider: "v8",
       reporter: ["text", "html"],
       thresholds: {
@@ -358,7 +373,7 @@ npm run test
 npm run coverage
 ```
 
-Expected: the home route test passes and all four global coverage thresholds pass. Coverage uses Vitest 4's V8 provider and includes imported source files; do not add exclusions to make it pass.
+Expected: the home route test passes and all four global coverage thresholds pass. Coverage uses Vitest 4's V8 provider and explicitly collects application and runtime-script source; do not add exclusions to make it pass.
 
 - [ ] **Step 5: Commit the unit-test harness**
 
@@ -413,6 +428,7 @@ describe("finalizeStaticBuild", () => {
     writeFileSync(join(client, "index.html"), "<!doctype html>");
     const server = join(root, "server");
     mkdirSync(server);
+    writeFileSync(join(client, "__spa-fallback.html"), "<!doctype html>");
 
     finalizeStaticBuild(client);
 
@@ -428,6 +444,15 @@ describe("finalizeStaticBuild", () => {
     finalizeStaticBuild(client);
 
     expect(existsSync(fallback)).toBe(false);
+  });
+
+  it("rejects output without evidence of prerendering", () => {
+    const { client } = createBuildDirectory();
+    writeFileSync(join(client, "index.html"), "<!doctype html>");
+
+    expect(() => finalizeStaticBuild(client)).toThrow(
+      "Missing prerender evidence: build/client/__spa-fallback.html",
+    );
   });
 });
 ```
@@ -452,9 +477,16 @@ export function finalizeStaticBuild(clientDirectory) {
     throw new Error("Missing prerendered entry: build/client/index.html");
   }
 
+  const fallback = join(clientDirectory, "__spa-fallback.html");
+  if (!existsSync(fallback)) {
+    throw new Error(
+      "Missing prerender evidence: build/client/__spa-fallback.html",
+    );
+  }
+
   const serverDirectory = join(dirname(clientDirectory), "server");
   rmSync(serverDirectory, { force: true, recursive: true });
-  rmSync(join(clientDirectory, "__spa-fallback.html"), { force: true });
+  rmSync(fallback);
 }
 ```
 
@@ -588,6 +620,12 @@ test("loads the prerendered homepage", async ({ page }) => {
   await expect(page.getByRole("main")).toBeVisible();
   await expect(page.getByText("What's next?")).toBeVisible();
 });
+
+test("returns 404 for an unknown static path", async ({ request }) => {
+  const response = await request.get("/definitely-not-prerendered");
+
+  expect(response.status()).toBe(404);
+});
 ```
 
 - [ ] **Step 3: Run the browser test before configuration and verify RED**
@@ -633,7 +671,7 @@ export default defineConfig({
 
 Run: `npm run test:e2e`
 
-Expected: one test passes in the `chromium` project, the page is served from `build/client`, and no unexpected `console.error` or `pageerror` occurs.
+Expected: both tests pass in the `chromium` project, the page is served from `build/client`, unknown paths return 404, and no unexpected `console.error` or `pageerror` occurs.
 
 - [ ] **Step 6: Confirm Playwright stays outside the local gate**
 
@@ -702,7 +740,7 @@ A React Router Framework foundation for building localized static marketing and 
 
 ## Requirements
 
-- Node.js 22.22.2 or newer
+- Node.js 22.22.2+, 24.15.0+, or 26+
 - npm
 
 ## Commands
@@ -770,7 +808,7 @@ The hook must run and pass during this commit; never bypass it.
 
 Run: `npm ci`
 
-Expected: dependencies install successfully, Husky's prepare script installs hooks, and there are no Node engine warnings under Node 22.22.2 or newer.
+Expected: dependencies install successfully, Husky's prepare script installs hooks, and there are no Node engine warnings under a version allowed by `^22.22.2 || ^24.15.0 || >=26.0.0`.
 
 - [ ] **Step 2: Run the canonical local gate from a clean install**
 

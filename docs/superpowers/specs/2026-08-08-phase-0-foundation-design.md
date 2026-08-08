@@ -38,7 +38,7 @@ Prettier will also expose a separate write command. Validation failures must be 
 
 Vitest will use jsdom and React Testing Library. One meaningful component smoke test will verify the existing page behavior and prove the unit-test setup works.
 
-Playwright will use Chromium only and run headlessly by default. It will retain traces and videos on failure and screenshots only on failure. One browser smoke test will load the production static artifact through Vite's static preview server, proving Chromium can launch and the artifact does not depend on a React Router application runtime.
+Playwright will use Chromium only and run headlessly by default. It will retain traces and videos on failure and screenshots only on failure. Browser tests will load the production artifact through a conventional static server without history fallback, proving Chromium can launch, the artifact does not depend on a React Router application runtime, and unknown paths return 404.
 
 The repository will expose automated and interactive Playwright scripts. Playwright remains outside `npm run check`, matching ADR 021.
 

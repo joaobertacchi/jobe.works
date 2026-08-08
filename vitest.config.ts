@@ -10,9 +10,19 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
-    include: ["app/**/*.test.{ts,tsx}", "scripts/**/*.test.mjs"],
+    include: [
+      "app/**/*.test.{ts,tsx}",
+      "scripts/**/*.test.mjs",
+      "tests/**/*.test.ts",
+    ],
     setupFiles: ["./tests/setup.ts"],
     coverage: {
+      exclude: [
+        "**/*.test.{ts,tsx,mjs}",
+        "app/locales/types.ts",
+        "scripts/*-cli.mjs",
+      ],
+      include: ["app/**/*.{ts,tsx}", "scripts/**/*.mjs"],
       provider: "v8",
       reporter: ["text", "html"],
       thresholds: {

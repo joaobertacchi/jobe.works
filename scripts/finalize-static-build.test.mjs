@@ -27,6 +27,7 @@ describe("finalizeStaticBuild", () => {
     writeFileSync(join(client, "index.html"), "<!doctype html>");
     const server = join(root, "server");
     mkdirSync(server);
+    writeFileSync(join(client, "__spa-fallback.html"), "<!doctype html>");
 
     finalizeStaticBuild(client);
 
@@ -42,5 +43,14 @@ describe("finalizeStaticBuild", () => {
     finalizeStaticBuild(client);
 
     expect(existsSync(fallback)).toBe(false);
+  });
+
+  it("rejects output without evidence of prerendering", () => {
+    const { client } = createBuildDirectory();
+    writeFileSync(join(client, "index.html"), "<!doctype html>");
+
+    expect(() => finalizeStaticBuild(client)).toThrow(
+      "Missing prerender evidence: build/client/__spa-fallback.html",
+    );
   });
 });
