@@ -386,7 +386,11 @@ describe("localized route clientLoader", () => {
     const serverLoader = vi.fn().mockResolvedValue(loaderData);
 
     await expect(
-      clientLoader({ params: { locale: "en" }, serverLoader } as never),
+      clientLoader({
+        params: { locale: "en" },
+        serverLoader,
+        url: new URL("https://example.test/en/about"),
+      } as never),
     ).resolves.toBe(loaderData);
     expect(serverLoader).toHaveBeenCalledOnce();
   });
@@ -400,16 +404,60 @@ describe("localized route clientLoader", () => {
     expect(serverLoader).not.toHaveBeenCalled();
   });
 
-  it("returns an empty switcher payload for a missing prerendered path", async () => {
+  it("returns an empty switcher payload for a missing splat path", async () => {
     const serverLoader = vi
       .fn()
       .mockRejectedValue(new Response(null, { status: 404 }));
 
     await expect(
-      clientLoader({ params: { locale: "en" }, serverLoader } as never),
+      clientLoader({
+        params: { locale: "en", "*": "not-published" },
+        serverLoader,
+      } as never),
     ).resolves.toEqual({ urls: null });
     expect(serverLoader).toHaveBeenCalledOnce();
   });
+
+  it("propagates a missing prerendered path without a splat match", async () => {
+    const response = new Response(null, { status: 404 });
+    const serverLoader = vi.fn().mockRejectedValue(response);
+
+    await expect(
+      clientLoader({ params: { locale: "en" }, serverLoader } as never),
+    ).rejects.toBe(response);
+    expect(serverLoader).toHaveBeenCalledOnce();
+  });
+
+  it("propagates non-404 errors for a splat match", async () => {
+    const error = new Error("Static data failed");
+    const serverLoader = vi.fn().mockRejectedValue(error);
+
+    await expect(
+      clientLoader({
+        params: { locale: "en", "*": "not-published" },
+        serverLoader,
+      } as never),
+    ).rejects.toBe(error);
+    expect(serverLoader).toHaveBeenCalledOnce();
+  });
+
+  it.each(["/en/about/", "/en/About"])(
+    "rejects successful static data for noncanonical alias %s",
+    async (pathname) => {
+      const serverLoader = vi
+        .fn()
+        .mockResolvedValue(getLoaderData("/en/about"));
+
+      await expect(
+        clientLoader({
+          params: { locale: "en" },
+          serverLoader,
+          url: new URL(`https://example.test${pathname}`),
+        } as never),
+      ).rejects.toMatchObject({ status: 404 });
+      expect(serverLoader).toHaveBeenCalledOnce();
+    },
+  );
 });
 
 describe("localized route build loader data", () => {

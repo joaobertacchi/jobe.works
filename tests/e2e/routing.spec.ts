@@ -116,6 +116,35 @@ test("returns real 404 responses for unpublished URLs", async ({ request }) => {
   expect((await request.get("/pt-BR/not-published")).status()).toBe(404);
 });
 
+test.describe("unpublished aliases", () => {
+  test.use({
+    allowedBrowserErrors: [
+      "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    ],
+  });
+
+  for (const alias of ["/en/about/", "/en/About"] as const) {
+    test(`rejects client navigation to ${alias}`, async ({ page }) => {
+      await page.goto("/en/services");
+      await page.evaluate(async (url) => {
+        const router = Reflect.get(window, "__reactRouterDataRouter") as {
+          navigate(to: string): Promise<void>;
+          revalidate(): void;
+        };
+        await router.navigate(url);
+        router.revalidate();
+      }, alias);
+
+      await expect(page).toHaveURL(alias);
+      await expect(page.getByRole("heading", { name: "404" })).toBeVisible();
+      await expect(
+        page.getByText("Page not found.", { exact: true }),
+      ).toBeVisible();
+      await expect(page.getByRole("heading", { name: "About" })).toHaveCount(0);
+    });
+  }
+});
+
 const supportedLocaleCatchAllPages = [
   [
     "/en/about",

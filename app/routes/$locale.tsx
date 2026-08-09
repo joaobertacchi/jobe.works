@@ -49,16 +49,22 @@ export function loader({ url }: Route.LoaderArgs) {
 export async function clientLoader({
   params,
   serverLoader,
+  url,
 }: Route.ClientLoaderArgs) {
   if (!params.locale || !isSupportedLocale(params.locale)) {
     throw new Response(null, { status: 404 });
   }
   try {
-    return await serverLoader();
+    const data = await serverLoader();
+    if (!Object.values(data.urls).includes(url.pathname)) {
+      throw new Response(null, { status: 404 });
+    }
+    return data;
   } catch (error) {
     if (
       (error instanceof Response || isRouteErrorResponse(error)) &&
-      error.status === 404
+      error.status === 404 &&
+      "*" in params
     ) {
       return { urls: null };
     }
