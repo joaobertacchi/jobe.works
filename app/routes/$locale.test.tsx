@@ -13,10 +13,11 @@ import NotFound from "./$locale.404";
 import About from "./$locale.about";
 import Home from "./$locale._index";
 import Services from "./$locale.services";
+import LocalizedCatchAll from "./$locale.$";
 import LocaleLayout, {
   clientLoader,
   ErrorBoundary,
-  getLoaderDataForBuildRequest,
+  getLoaderDataForPathname,
 } from "./$locale";
 
 const canonicalManifest = [
@@ -53,10 +54,7 @@ function TestErrorBoundary() {
 }
 
 function getLoaderData(pathname: string) {
-  return getLoaderDataForBuildRequest(
-    canonicalManifest,
-    `https://example.test${pathname}`,
-  );
+  return getLoaderDataForPathname(canonicalManifest, pathname);
 }
 
 function renderLocalizedRoute(pathname: string, validateLocale = false) {
@@ -71,8 +69,13 @@ function renderLocalizedRoute(pathname: string, validateLocale = false) {
           ? (args) =>
               clientLoader({
                 ...args,
-                serverLoader: async () =>
-                  getLoaderData(new URL(args.request.url).pathname),
+                serverLoader: async () => {
+                  try {
+                    return getLoaderData(new URL(args.request.url).pathname);
+                  } catch {
+                    throw new Response(null, { status: 404 });
+                  }
+                },
               } as never)
           : ({ request }) => getLoaderData(new URL(request.url).pathname),
         children: [
@@ -80,6 +83,11 @@ function renderLocalizedRoute(pathname: string, validateLocale = false) {
           { path: "about", Component: About },
           { path: "services", Component: Services },
           { path: "404", Component: NotFound },
+          {
+            path: "*",
+            Component: LocalizedCatchAll,
+            handle: { languageSwitcher: false },
+          },
         ],
       },
     ],
@@ -183,6 +191,43 @@ describe("localized route layout", () => {
       ),
     ).toBe(true);
   });
+
+  it.each([
+    [
+      "/en/about",
+      "/en/not-published",
+      "About",
+      "Page not found",
+      "The requested page does not exist.",
+    ],
+    [
+      "/pt-BR/about",
+      "/pt-BR/not-published",
+      "Sobre",
+      "Página não encontrada",
+      "A página solicitada não existe.",
+    ],
+  ])(
+    "renders localized catch-all content after navigating from %s to %s",
+    async (initialUrl, unknownUrl, initialHeading, heading, description) => {
+      const router = renderLocalizedRoute(initialUrl, true);
+      expect(
+        await screen.findByRole("heading", { name: initialHeading }),
+      ).toBeVisible();
+
+      await router.navigate(unknownUrl);
+
+      expect(router.state.location.pathname).toBe(unknownUrl);
+      expect(
+        await screen.findByRole("heading", { name: heading }),
+      ).toBeVisible();
+      expect(screen.getByText(description)).toBeVisible();
+      expect(screen.queryByText("An unexpected error occurred.")).toBeNull();
+      expect(
+        screen.queryByRole("navigation", { name: /language|idioma/i }),
+      ).toBeNull();
+    },
+  );
 });
 
 describe("localized route clientLoader", () => {
@@ -204,44 +249,49 @@ describe("localized route clientLoader", () => {
     ).rejects.toMatchObject({ status: 404 });
     expect(serverLoader).not.toHaveBeenCalled();
   });
+
+  it("returns an empty switcher payload for a missing prerendered path", async () => {
+    const serverLoader = vi
+      .fn()
+      .mockRejectedValue(new Response(null, { status: 404 }));
+
+    await expect(
+      clientLoader({ params: { locale: "en" }, serverLoader } as never),
+    ).resolves.toEqual({ urls: null });
+    expect(serverLoader).toHaveBeenCalledOnce();
+  });
 });
 
 describe("localized route build loader data", () => {
-  it("maps a prerender data request to exact manifest URLs", () => {
-    const data = getLoaderDataForBuildRequest(
-      canonicalManifest,
-      "https://example.test/en/about.data",
-    );
-
-    expect(data).toEqual({ urls: canonicalManifest[1].urls });
-    expect(data).not.toHaveProperty("manifest");
-  });
-
-  it("maps a Home prerender data request to its trailing-slash URLs", () => {
-    const data = getLoaderDataForBuildRequest(
-      canonicalManifest,
-      "https://example.test/en/_.data",
-    );
-
-    expect(data.urls).toBe(canonicalManifest[0].urls);
-  });
-
-  it("maps a directory-style prerender request to exact manifest URLs", () => {
-    const data = getLoaderDataForBuildRequest(
-      canonicalManifest,
-      "https://example.test/en/about/",
-    );
+  it("maps a normalized pathname to exact manifest URLs", () => {
+    const data = getLoaderDataForPathname(canonicalManifest, "/en/about");
 
     expect(data).toEqual({ urls: canonicalManifest[1].urls });
     expect(data).not.toHaveProperty("manifest");
   });
 
   it("preserves the canonical Home trailing slash", () => {
-    const data = getLoaderDataForBuildRequest(
-      canonicalManifest,
-      "https://example.test/en/",
-    );
+    const data = getLoaderDataForPathname(canonicalManifest, "/en/");
 
     expect(data.urls).toBe(canonicalManifest[0].urls);
+  });
+
+  it("preserves a valid logical .data pathname", () => {
+    const dataUrls = {
+      en: "/en/release.data",
+      "pt-BR": "/pt-BR/release.data",
+    };
+    const manifest = [
+      ...canonicalManifest,
+      {
+        id: "release.data",
+        kind: "page",
+        pattern: "/:locale/release.data",
+        urls: dataUrls,
+      },
+    ] satisfies CanonicalUrlManifest;
+    const data = getLoaderDataForPathname(manifest, "/en/release.data");
+
+    expect(data).toEqual({ urls: dataUrls });
   });
 });

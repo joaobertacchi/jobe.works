@@ -3,6 +3,7 @@ import {
   Link,
   Outlet,
   useLoaderData,
+  useMatches,
   useParams,
 } from "react-router";
 
@@ -16,7 +17,12 @@ import { readCanonicalManifest } from "../../scripts/canonical-manifest-file.ser
 import type { Route } from "./+types/$locale";
 
 function LocalizedLayout() {
-  const { urls } = useLoaderData<typeof loader>();
+  const { urls } = useLoaderData<typeof clientLoader>();
+  const hideLanguageSwitcher = useMatches().some(
+    ({ handle }) =>
+      (handle as { languageSwitcher?: boolean } | undefined)
+        ?.languageSwitcher === false,
+  );
   const { locale, translate } = useI18n();
   return (
     <>
@@ -26,45 +32,34 @@ function LocalizedLayout() {
           <Link to="about">{translate("common.navigation.about")}</Link>
           <Link to="services">{translate("common.navigation.services")}</Link>
         </nav>
-        <nav aria-label={translate("common.languageSwitcherLabel")}>
-          {supportedLocales
-            .filter((targetLocale) => targetLocale !== locale)
-            .map((targetLocale) => (
-              <Link key={targetLocale} to={urls[targetLocale]}>
-                {locales[targetLocale].label}
-              </Link>
-            ))}
-        </nav>
+        {urls !== null && !hideLanguageSwitcher ? (
+          <nav aria-label={translate("common.languageSwitcherLabel")}>
+            {supportedLocales
+              .filter((targetLocale) => targetLocale !== locale)
+              .map((targetLocale) => (
+                <Link key={targetLocale} to={urls[targetLocale]}>
+                  {locales[targetLocale].label}
+                </Link>
+              ))}
+          </nav>
+        ) : null}
       </header>
       <Outlet />
     </>
   );
 }
 
-export function getLoaderDataForBuildRequest(
+export function getLoaderDataForPathname(
   manifest: CanonicalUrlManifest,
-  requestUrl: string,
+  pathname: string,
 ) {
-  const pathname = new URL(requestUrl).pathname;
-  let canonicalPathname = pathname;
-  if (pathname.endsWith("/_.data")) {
-    canonicalPathname = pathname.slice(0, -"_.data".length);
-  } else if (pathname.endsWith(".data")) {
-    canonicalPathname = pathname.slice(0, -".data".length);
-  } else if (
-    pathname.endsWith("/") &&
-    pathname.split("/").filter(Boolean).length > 1
-  ) {
-    canonicalPathname = pathname.slice(0, -1);
-  }
-
   return {
-    urls: getLocalizedUrlsForPathname(manifest, canonicalPathname),
+    urls: getLocalizedUrlsForPathname(manifest, pathname),
   };
 }
 
-export function loader({ request }: Route.LoaderArgs) {
-  return getLoaderDataForBuildRequest(readCanonicalManifest(), request.url);
+export function loader({ url }: Route.LoaderArgs) {
+  return getLoaderDataForPathname(readCanonicalManifest(), url.pathname);
 }
 
 export async function clientLoader({
@@ -74,7 +69,17 @@ export async function clientLoader({
   if (!params.locale || !isSupportedLocale(params.locale)) {
     throw new Response(null, { status: 404 });
   }
-  return serverLoader();
+  try {
+    return await serverLoader();
+  } catch (error) {
+    if (
+      (error instanceof Response || isRouteErrorResponse(error)) &&
+      error.status === 404
+    ) {
+      return { urls: null };
+    }
+    throw error;
+  }
 }
 
 function UnsupportedLocalePage() {

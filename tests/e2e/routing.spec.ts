@@ -108,7 +108,53 @@ test("keeps navigation in the active locale", async ({ page }) => {
 test("returns real 404 responses for unpublished URLs", async ({ request }) => {
   expect((await request.get("/fr/about")).status()).toBe(404);
   expect((await request.get("/en/not-published")).status()).toBe(404);
+  expect((await request.get("/pt-BR/not-published")).status()).toBe(404);
 });
+
+const supportedLocaleCatchAllPages = [
+  [
+    "/en/about",
+    "/en/not-published",
+    "Page not found",
+    "The requested page does not exist.",
+    "Choose language",
+  ],
+  [
+    "/pt-BR/about",
+    "/pt-BR/not-published",
+    "Página não encontrada",
+    "A página solicitada não existe.",
+    "Escolher idioma",
+  ],
+] as const;
+
+for (const [
+  initialUrl,
+  unknownUrl,
+  heading,
+  description,
+  switcherLabel,
+] of supportedLocaleCatchAllPages) {
+  test(`renders localized catch-all after client navigation to ${unknownUrl}`, async ({
+    page,
+  }) => {
+    await page.goto(initialUrl);
+    await page.evaluate((url) => {
+      window.history.pushState(null, "", url);
+      window.dispatchEvent(new PopStateEvent("popstate"));
+    }, unknownUrl);
+
+    await expect(page).toHaveURL(unknownUrl);
+    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+    await expect(page.getByText(description, { exact: true })).toBeVisible();
+    await expect(page.getByText("An unexpected error occurred.")).toHaveCount(
+      0,
+    );
+    await expect(
+      page.getByRole("navigation", { name: switcherLabel }),
+    ).toHaveCount(0);
+  });
+}
 
 test("uses the route error boundary for unsupported client navigation", async ({
   page,
