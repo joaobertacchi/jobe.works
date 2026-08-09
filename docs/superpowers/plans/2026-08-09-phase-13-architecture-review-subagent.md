@@ -2,9 +2,9 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Add a dedicated, read-only OpenCode subagent that reviews the current implementation phase for architectural compliance without treating unfinished future phases as defects.
+**Goal:** Add a dedicated, read-only OpenCode subagent pinned to `openai/gpt-5.6-sol` with the `medium` variant that reviews the current implementation phase for architectural compliance without treating unfinished future phases as defects.
 
-**Architecture:** Store the complete review contract in one provider-neutral project-agent file under `.opencode/agents/`. The reviewer receives explicit phase scope, acceptance criteria, changed files, future-phase exclusions, and deterministic validation results; it selectively loads relevant ADRs and returns blocking or advisory YAML findings without editing the repository.
+**Architecture:** Store the complete review contract in one project-agent file under `.opencode/agents/`, with OpenCode's separate `model` and `variant` frontmatter fields selecting the reviewer model. The reviewer receives explicit phase scope, acceptance criteria, changed files, future-phase exclusions, and deterministic validation results; it selectively loads relevant ADRs and returns blocking or advisory YAML findings without editing the repository.
 
 **Tech Stack:** OpenCode project-agent Markdown, YAML frontmatter, Git, existing npm validation
 
@@ -12,24 +12,26 @@
 
 ## File Structure
 
-- Create `.opencode/agents/architecture-review.md`: OpenCode discovery metadata, read-only permissions, review workflow, phase-scoping rules, architecture checklist, non-goals, and structured output contract.
+- Modify `.opencode/agents/architecture-review.md`: add the pinned model and variant while preserving discovery metadata, read-only permissions, review workflow, phase-scoping rules, architecture checklist, non-goals, and structured output contract.
 
 No test, command wrapper, dependency, hash guard, CI integration, or secondary agent-runtime definition is added.
 
-### Task 1: Define The Architecture Review Subagent
+### Task 1: Pin The Architecture Reviewer Model
 
 **Files:**
 
-- Create: `.opencode/agents/architecture-review.md`
+- Modify: `.opencode/agents/architecture-review.md:1-9`
 
-- [ ] **Step 1: Create the project-agent definition**
+- [ ] **Step 1: Update the project-agent definition**
 
-Create `.opencode/agents/architecture-review.md` with exactly this initial contract:
+Update `.opencode/agents/architecture-review.md` to this complete contract:
 
 ````markdown
 ---
 description: Reviews current-phase changes for compliance with accepted project architecture after deterministic validation.
 mode: subagent
+model: openai/gpt-5.6-sol
+variant: medium
 permission:
   edit: deny
   bash: deny
@@ -154,7 +156,7 @@ git diff --check
 git diff -- ".opencode/agents/architecture-review.md"
 ```
 
-Expected: the agent file is the only new implementation file, `git diff --check` produces no output, and the diff matches the approved contract without auxiliary infrastructure.
+Expected: the agent file is the only modified implementation file, `git diff --check` produces no output, and the diff adds only the approved model and variant without auxiliary infrastructure.
 
 ### Task 2: Validate And Review Phase 13
 
@@ -174,7 +176,17 @@ source "$HOME/.nvm/nvm.sh" && nvm use
 
 Expected: Node.js `v22.22.2` is active from `.nvmrc`.
 
-- [ ] **Step 2: Run canonical deterministic validation**
+- [ ] **Step 2: Verify the resolved OpenCode agent configuration**
+
+Run:
+
+```bash
+opencode debug config
+```
+
+Expected: the resolved `architecture-review` agent entry contains `"model": "openai/gpt-5.6-sol"` and `"variant": "medium"`.
+
+- [ ] **Step 3: Run canonical deterministic validation**
 
 Run:
 
@@ -184,7 +196,7 @@ npm run check
 
 Expected: formatting, linting, type checking, 191 or more tests, coverage thresholds, and the production static build all pass.
 
-- [ ] **Step 3: Run the new subagent from a fresh OpenCode process**
+- [ ] **Step 4: Run the new subagent from a fresh OpenCode process**
 
 OpenCode does not hot-reload project-agent definitions. Run a fresh process and require delegation to the new subagent:
 
@@ -194,7 +206,7 @@ opencode run "Delegate this review to the architecture-review subagent. Current 
 
 Expected: YAML with `status: PASS` and no high or medium findings. Low findings are advisory. Do not commit while the status is `NEEDS_CHANGES`.
 
-- [ ] **Step 4: Review the final diff and repository state**
+- [ ] **Step 5: Review the final diff and repository state**
 
 Run:
 
@@ -206,18 +218,18 @@ git diff -- ".opencode/agents/architecture-review.md"
 
 Expected: no whitespace errors or unrelated changes; the implementation diff contains only `.opencode/agents/architecture-review.md`.
 
-- [ ] **Step 5: Commit the Phase 13 implementation**
+- [ ] **Step 6: Commit the Phase 13 implementation**
 
 Run:
 
 ```bash
 git add ".opencode/agents/architecture-review.md"
-git commit -m "feat: add architecture review subagent"
+git commit -m "chore: pin architecture reviewer model"
 ```
 
-Expected: the pre-commit `npm run check` passes and Git creates one coherent Phase 13 implementation commit containing only the agent definition.
+Expected: the pre-commit `npm run check` passes and Git creates one coherent model-configuration commit containing only the agent definition.
 
-- [ ] **Step 6: Confirm the commit**
+- [ ] **Step 7: Confirm the commit**
 
 Run:
 
@@ -226,4 +238,4 @@ git log -1 --stat
 git status --short
 ```
 
-Expected: the latest commit is `feat: add architecture review subagent`, it contains one new agent file, and the worktree is clean.
+Expected: the latest commit is `chore: pin architecture reviewer model`, it contains one modified agent file, and the worktree is clean.
