@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 import { render, waitFor } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { createMemoryRouter, RouterProvider } from "react-router";
@@ -33,6 +35,15 @@ async function renderRedirect(languages: readonly string[]) {
 }
 
 describe("root locale redirect", () => {
+  it("uses the default-locale provider and React-facing translation API", () => {
+    const source = readFileSync("app/routes/_index.tsx", "utf8");
+
+    expect(source).not.toContain('from "../i18n/translations"');
+    expect(source).toContain("I18nProvider");
+    expect(source).toContain("useI18n");
+    expect(source).toContain('translate("common.selectingLanguage")');
+  });
+
   it("renders Portuguese infrastructure copy before selecting a locale", () => {
     const router = createMemoryRouter(
       [

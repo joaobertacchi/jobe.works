@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+
 import { render, screen } from "@testing-library/react";
 import {
   createMemoryRouter,
@@ -98,6 +100,15 @@ function renderLocalizedRoute(pathname: string, validateLocale = false) {
 }
 
 describe("localized route layout", () => {
+  it("uses the React-facing i18n API instead of translation dictionaries", () => {
+    const source = readFileSync("app/routes/$locale.tsx", "utf8");
+
+    expect(source).not.toContain('from "../i18n/translations"');
+    expect(source).toContain("useI18n");
+    expect(source).toContain('"notFound.title"');
+    expect(source).toContain('"common.errors.title"');
+  });
+
   it.each([
     [
       "en",
@@ -142,22 +153,42 @@ describe("localized route layout", () => {
     },
   );
 
-  it("uses Portuguese not-found copy for an unsupported locale", () => {
-    render(
-      <ErrorBoundary
-        error={new Response(null, { status: 404 })}
-        params={{ locale: "fr" } as never}
-      />,
-    );
+  it.each([{}, { locale: "fr" }])(
+    "uses a language-neutral 404 for unsupported or missing locale params",
+    (params) => {
+      render(
+        <ErrorBoundary
+          error={new Response(null, { status: 404 })}
+          params={params as never}
+        />,
+      );
 
-    expect(
-      screen.getByRole("heading", { name: "Página não encontrada" }),
-    ).toBeVisible();
-    expect(
-      screen.getByText(
-        "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
-      ),
-    ).toBeVisible();
+      expect(screen.getByRole("heading", { name: "404" })).toBeVisible();
+      expect(screen.queryByText("Page not found")).toBeNull();
+      expect(screen.queryByText("Página não encontrada")).toBeNull();
+      expect(
+        screen.queryByText(
+          "This page may have moved or never existed. Use the navigation to find your way back.",
+        ),
+      ).toBeNull();
+      expect(
+        screen.queryByText(
+          "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
+        ),
+      ).toBeNull();
+    },
+  );
+
+  it("renders a neutral unsupported locale layout without a provider", () => {
+    const router = createMemoryRouter(
+      [{ path: ":locale/*", Component: LocaleLayout }],
+      { initialEntries: ["/fr/about"] },
+    );
+    render(<RouterProvider router={router} />);
+
+    expect(screen.getByRole("heading", { name: "404" })).toBeVisible();
+    expect(screen.queryByText("Page not found")).toBeNull();
+    expect(screen.queryByText("Página não encontrada")).toBeNull();
   });
 
   it.each([
@@ -386,10 +417,10 @@ describe("localized route layout", () => {
   it("rejects an unsupported locale", async () => {
     const router = renderLocalizedRoute("/fr/about", true);
 
-    expect(
-      await screen.findByRole("heading", { name: "Página não encontrada" }),
-    ).toBeVisible();
+    expect(await screen.findByRole("heading", { name: "404" })).toBeVisible();
     expect(screen.queryByRole("heading", { name: "About" })).toBeNull();
+    expect(screen.queryByText("Page not found")).toBeNull();
+    expect(screen.queryByText("Página não encontrada")).toBeNull();
     expect(
       Object.values(router.state.errors ?? {}).some(
         (error) =>

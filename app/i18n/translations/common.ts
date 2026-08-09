@@ -5,7 +5,7 @@ export type CommonTranslation = {
   navigationLabel: string;
   languageSwitcherLabel: string;
   selectingLanguage: string;
-  error: {
+  errors: {
     title: string;
     unexpectedTitle: string;
     unexpectedDescription: string;
@@ -29,7 +29,7 @@ export const commonTranslations = {
     navigationLabel: "Primary navigation",
     languageSwitcherLabel: "Choose language",
     selectingLanguage: "Selecting language",
-    error: {
+    errors: {
       title: "Error",
       unexpectedTitle: "Something went wrong",
       unexpectedDescription: "An unexpected error occurred.",
@@ -42,7 +42,7 @@ export const commonTranslations = {
     navigationLabel: "Navegação principal",
     languageSwitcherLabel: "Escolher idioma",
     selectingLanguage: "Selecionando idioma",
-    error: {
+    errors: {
       title: "Erro",
       unexpectedTitle: "Algo deu errado",
       unexpectedDescription: "Ocorreu um erro inesperado.",

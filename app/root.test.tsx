@@ -35,6 +35,15 @@ describe("root document", () => {
     expect(body.props.children[0]).toBe(child);
   });
 
+  it("defines a language-neutral document shell for unsupported paths", () => {
+    expect(() =>
+      Document({ children: null, locale: null } as never),
+    ).not.toThrow();
+    const document = Document({ children: null, locale: null } as never);
+
+    expect(document.props.lang).toBe("und");
+  });
+
   it("initializes the theme before discovering route styles", () => {
     const document = Document({ children: null, locale: "en" });
     const headChildren = document.props.children[0].props.children;
@@ -61,6 +70,15 @@ describe("root document", () => {
     expect(rootModule).not.toHaveProperty("links");
     expect(source).not.toContain("fonts.googleapis.com");
     expect(source).not.toContain("fonts.gstatic.com");
+  });
+
+  it("uses the React-facing i18n API instead of translation dictionaries", () => {
+    const source = readFileSync("app/root.tsx", "utf8");
+
+    expect(source).not.toContain('from "./i18n/translations"');
+    expect(source).toContain("useI18n");
+    expect(source).toContain('translate("notFound.title")');
+    expect(source).toContain('translate("common.errors.title")');
   });
 
   it("renders child routes through an outlet", () => {
@@ -133,16 +151,27 @@ describe("root error boundary", () => {
     expect(screen.queryByText("Arbitrary status text")).toBeNull();
   });
 
-  it("uses Portuguese copy for unsupported locales", () => {
+  it("renders a language-neutral 404 for an unsupported locale", () => {
     render(
       ErrorBoundary({
-        error: routeError(500),
+        error: routeError(404),
         params: { locale: "fr" },
       } as never),
     );
 
-    expect(screen.getByRole("heading", { name: "Erro" })).toBeVisible();
-    expect(screen.getByText("Ocorreu um erro inesperado.")).toBeVisible();
+    expect(screen.getByRole("heading", { name: "404" })).toBeVisible();
+    expect(screen.queryByText("Page not found")).toBeNull();
+    expect(screen.queryByText("Página não encontrada")).toBeNull();
+    expect(
+      screen.queryByText(
+        "This page may have moved or never existed. Use the navigation to find your way back.",
+      ),
+    ).toBeNull();
+    expect(
+      screen.queryByText(
+        "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
+      ),
+    ).toBeNull();
   });
 
   it("shows development error details", () => {

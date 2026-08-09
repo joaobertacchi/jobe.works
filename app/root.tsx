@@ -15,7 +15,7 @@ import {
   locales,
   type SupportedLocale,
 } from "./i18n/config";
-import { translations } from "./i18n/translations";
+import { I18nProvider, useI18n } from "./i18n/i18n";
 import { Heading } from "./components/ui/heading";
 import { Text } from "./components/ui/text";
 import { themeInitializationScript } from "./theme";
@@ -27,10 +27,13 @@ export function Document({
   locale,
 }: {
   children: React.ReactNode;
-  locale: SupportedLocale;
+  locale: SupportedLocale | null;
 }) {
   return (
-    <html lang={locales[locale].htmlLang} suppressHydrationWarning>
+    <html
+      lang={locale ? locales[locale].htmlLang : "und"}
+      suppressHydrationWarning
+    >
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -49,7 +52,9 @@ export function Document({
 
 export function Layout({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation();
-  const locale = getLocaleFromPathname(pathname) ?? defaultLocale;
+  const locale =
+    getLocaleFromPathname(pathname) ??
+    (pathname.split("/")[1] ? null : defaultLocale);
   return <Document locale={locale}>{children}</Document>;
 }
 
@@ -57,25 +62,29 @@ export default function App() {
   return <Outlet />;
 }
 
-export function ErrorBoundary({ error, params }: Route.ErrorBoundaryProps) {
-  const locale =
-    params.locale && isSupportedLocale(params.locale)
-      ? params.locale
-      : defaultLocale;
-  const translation = translations[locale];
-  let message = translation.common.error.unexpectedTitle;
-  let details = translation.common.error.unexpectedDescription;
+function NeutralNotFound() {
+  return (
+    <main className="pt-16 p-4 container mx-auto">
+      <Heading as="h1">404</Heading>
+    </main>
+  );
+}
+
+function LocalizedError({ error }: { error: unknown }) {
+  const { translate } = useI18n();
+  let message = translate("common.errors.unexpectedTitle");
+  let details = translate("common.errors.unexpectedDescription");
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
     message =
       error.status === 404
-        ? translation.notFound.title
-        : translation.common.error.title;
+        ? translate("notFound.title")
+        : translate("common.errors.title");
     details =
       error.status === 404
-        ? translation.notFound.description
-        : translation.common.error.unexpectedDescription;
+        ? translate("notFound.description")
+        : translate("common.errors.unexpectedDescription");
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
@@ -91,5 +100,20 @@ export function ErrorBoundary({ error, params }: Route.ErrorBoundaryProps) {
         </pre>
       )}
     </main>
+  );
+}
+
+export function ErrorBoundary({ error, params }: Route.ErrorBoundaryProps) {
+  if (params.locale && !isSupportedLocale(params.locale)) {
+    return <NeutralNotFound />;
+  }
+  const locale =
+    params.locale && isSupportedLocale(params.locale)
+      ? params.locale
+      : defaultLocale;
+  return (
+    <I18nProvider locale={locale}>
+      <LocalizedError error={error} />
+    </I18nProvider>
   );
 }

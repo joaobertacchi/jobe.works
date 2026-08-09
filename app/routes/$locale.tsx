@@ -9,9 +9,8 @@ import {
 import { SiteHeader } from "../components/site/site-header";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
-import { defaultLocale, isSupportedLocale } from "../i18n/config";
-import { I18nProvider } from "../i18n/i18n";
-import { translations } from "../i18n/translations";
+import { isSupportedLocale } from "../i18n/config";
+import { I18nProvider, useI18n } from "../i18n/i18n";
 import {
   type CanonicalUrlManifest,
   getLocalizedUrlsForPathname,
@@ -78,53 +77,53 @@ export async function clientLoader({
 }
 clientLoader.hydrate = true as const;
 
-function ErrorPage({
-  title,
-  description,
-}: {
-  title: string;
-  description: string;
-}) {
+function NeutralNotFound() {
   return (
     <main>
       <Heading as="h1" level="display">
-        {title}
+        404
       </Heading>
-      <Text>{description}</Text>
     </main>
   );
 }
 
-function UnsupportedLocalePage() {
-  const { title, description } = translations[defaultLocale].notFound;
-  return <ErrorPage title={title} description={description} />;
+function LocalizedError({ error }: { error: unknown }) {
+  const { translate } = useI18n();
+  const isNotFound =
+    (error instanceof Response || isRouteErrorResponse(error)) &&
+    error.status === 404;
+
+  return (
+    <main>
+      <Heading as="h1" level="display">
+        {translate(isNotFound ? "notFound.title" : "common.errors.title")}
+      </Heading>
+      <Text>
+        {translate(
+          isNotFound
+            ? "notFound.description"
+            : "common.errors.unexpectedDescription",
+        )}
+      </Text>
+    </main>
+  );
 }
 
 export function ErrorBoundary({ error, params }: Route.ErrorBoundaryProps) {
-  const locale =
-    params.locale && isSupportedLocale(params.locale)
-      ? params.locale
-      : defaultLocale;
-  const translation = translations[locale];
-
-  if (
-    (error instanceof Response || isRouteErrorResponse(error)) &&
-    error.status === 404
-  ) {
-    return <ErrorPage {...translation.notFound} />;
+  if (!params.locale || !isSupportedLocale(params.locale)) {
+    return <NeutralNotFound />;
   }
   return (
-    <ErrorPage
-      title={translation.common.error.title}
-      description={translation.common.error.unexpectedDescription}
-    />
+    <I18nProvider locale={params.locale}>
+      <LocalizedError error={error} />
+    </I18nProvider>
   );
 }
 
 export default function LocaleLayout() {
   const { locale } = useParams();
   if (!locale || !isSupportedLocale(locale)) {
-    return <UnsupportedLocalePage />;
+    return <NeutralNotFound />;
   }
 
   return (

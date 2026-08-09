@@ -273,15 +273,26 @@ test("uses the route error boundary for unsupported client navigation", async ({
   });
 
   await expect(page).toHaveURL("/fr/about");
+  await expect(page.locator("html")).toHaveAttribute("lang", "und");
+  await expect(page.getByRole("heading", { name: "404" })).toBeVisible();
+  await expect(page.getByText("Page not found", { exact: true })).toHaveCount(
+    0,
+  );
   await expect(
-    page.getByRole("heading", { name: "Página não encontrada" }),
-  ).toBeVisible();
+    page.getByText("Página não encontrada", { exact: true }),
+  ).toHaveCount(0);
+  await expect(
+    page.getByText(
+      "This page may have moved or never existed. Use the navigation to find your way back.",
+      { exact: true },
+    ),
+  ).toHaveCount(0);
   await expect(
     page.getByText(
       "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
       { exact: true },
     ),
-  ).toBeVisible();
+  ).toHaveCount(0);
 });
 
 test.describe("English browser locale", () => {
