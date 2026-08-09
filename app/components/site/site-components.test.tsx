@@ -97,16 +97,18 @@ describe("PrimaryNavigation", () => {
   it("marks only the active destination and matches Home exactly", () => {
     renderWithRouter(<PrimaryNavigation />, "en", "/en/about");
 
-    expect(screen.getByRole("link", { name: "About" })).toHaveAttribute(
-      "aria-current",
-      "page",
-    );
-    expect(screen.getByRole("link", { name: "Home" })).not.toHaveAttribute(
-      "aria-current",
-    );
-    expect(screen.getByRole("link", { name: "Services" })).not.toHaveAttribute(
-      "aria-current",
-    );
+    const activeLink = screen.getByRole("link", { name: "About" });
+    const inactiveLinks = [
+      screen.getByRole("link", { name: "Home" }),
+      screen.getByRole("link", { name: "Services" }),
+    ];
+
+    expect(activeLink).toHaveAttribute("aria-current", "page");
+    expect(activeLink).toHaveClass("text-brand");
+    for (const link of inactiveLinks) {
+      expect(link).not.toHaveAttribute("aria-current");
+      expect(link).not.toHaveClass("text-brand");
+    }
   });
 });
 

@@ -29,7 +29,7 @@ export function PrimaryNavigation() {
         <NavLink
           className={({ isActive }) =>
             isActive
-              ? "font-semibold underline underline-offset-4"
+              ? "text-brand font-semibold underline underline-offset-4"
               : "hover:underline hover:underline-offset-4"
           }
           end={end}
