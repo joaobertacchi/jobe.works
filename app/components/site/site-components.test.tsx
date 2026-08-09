@@ -1,4 +1,11 @@
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
+import { StrictMode } from "react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { I18nProvider } from "../../i18n/i18n";
@@ -188,6 +195,70 @@ describe("ThemeSwitcher", () => {
 
     expect(media.listenerCount()).toBe(0);
     expect(media.removeEventListener).toHaveBeenCalledTimes(2);
+  });
+
+  it("cancels the pending mount update when unmounted in the same turn", async () => {
+    const media = installMatchMedia(false);
+    const consoleError = vi
+      .spyOn(console, "error")
+      .mockImplementation(() => undefined);
+    const { unmount } = renderThemeSwitcher();
+
+    unmount();
+    await act(() => Promise.resolve());
+
+    expect(media.listenerCount()).toBe(0);
+    expect(media.addEventListener).toHaveBeenCalledOnce();
+    expect(media.removeEventListener).toHaveBeenCalledOnce();
+    expect(consoleError).not.toHaveBeenCalled();
+  });
+
+  it("does not let stored theme sync overwrite a same-turn system selection", async () => {
+    window.localStorage.setItem(THEME_STORAGE_KEY, "dark");
+    const media = installMatchMedia(false);
+    renderThemeSwitcher();
+
+    fireEvent.click(screen.getByRole("button", { name: "System" }));
+    await act(() => Promise.resolve());
+
+    expect(screen.getByRole("button", { name: "System" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(media.listenerCount()).toBe(1);
+    expect(document.documentElement).not.toHaveClass("dark");
+    expect(document.documentElement.style.colorScheme).toBe("light");
+    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
+  });
+
+  it("does not leak listeners or stale mount updates in StrictMode", async () => {
+    window.localStorage.setItem(THEME_STORAGE_KEY, "dark");
+    const media = installMatchMedia(false);
+    const { unmount } = render(
+      <StrictMode>
+        <I18nProvider locale="en">
+          <ThemeSwitcher />
+        </I18nProvider>
+      </StrictMode>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "System" }));
+    await act(() => Promise.resolve());
+
+    expect(screen.getByRole("button", { name: "System" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(media.listenerCount()).toBe(1);
+    expect(document.documentElement.style.colorScheme).toBe("light");
+    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
+
+    unmount();
+
+    expect(media.listenerCount()).toBe(0);
+    expect(media.removeEventListener).toHaveBeenCalledTimes(
+      media.addEventListener.mock.calls.length,
+    );
   });
 
   it("uses system when storage contains an invalid value", () => {

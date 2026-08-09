@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { useI18n } from "../../i18n/i18n";
 import {
@@ -16,8 +16,10 @@ const themes = ["light", "dark", "system"] as const;
 export function ThemeSwitcher() {
   const { translate } = useI18n();
   const [theme, setTheme] = useState<Theme>("system");
+  const hasInteracted = useRef(false);
 
   useEffect(() => {
+    let active = true;
     const storedTheme = readTheme();
     const prefersDark =
       typeof window.matchMedia === "function" &&
@@ -27,7 +29,13 @@ export function ThemeSwitcher() {
       resolveTheme(storedTheme, prefersDark),
       document.documentElement,
     );
-    void Promise.resolve(storedTheme).then(setTheme);
+    void Promise.resolve().then(() => {
+      if (active && !hasInteracted.current) setTheme(storedTheme);
+    });
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   useEffect(() => {
@@ -46,6 +54,7 @@ export function ThemeSwitcher() {
   }, [theme]);
 
   function selectTheme(nextTheme: Theme) {
+    hasInteracted.current = true;
     const prefersDark =
       typeof window.matchMedia === "function" &&
       window.matchMedia(THEME_MEDIA_QUERY).matches;
