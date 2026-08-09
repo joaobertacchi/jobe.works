@@ -46,6 +46,16 @@ async function tabTo(page: Page, target: Locator) {
   );
 }
 
+async function computedOutline(control: Locator) {
+  return control.evaluate((element) => {
+    const styles = getComputedStyle(element);
+    return {
+      style: styles.outlineStyle,
+      width: Number.parseFloat(styles.outlineWidth),
+    };
+  });
+}
+
 test("fresh system theme follows an emulated light preference", async ({
   page,
 }) => {
@@ -110,6 +120,12 @@ test("system responds to live media changes while explicit mode ignores them", a
   await page.getByRole("button", { name: "Dark" }).click();
   await page.emulateMedia({ colorScheme: "light" });
   await expectTheme(page, "dark", "Dark");
+
+  await page.getByRole("button", { name: "Light" }).click();
+  expect(await storedTheme(page)).toBe("light");
+  await page.emulateMedia({ colorScheme: "dark" });
+  expect(await storedTheme(page)).toBe("light");
+  await expectTheme(page, "light", "Light");
 });
 
 test("explicit preference survives internal navigation and a full reload", async ({
@@ -187,6 +203,9 @@ test("keyboard traversal reaches navigation and visibly focused theme controls",
   const homeLink = primaryNavigation.getByRole("link", { name: "Home" });
   await tabTo(page, homeLink);
   await expect(homeLink).toBeFocused();
+  const navigationFocusOutline = await computedOutline(homeLink);
+  expect(navigationFocusOutline.style).not.toBe("none");
+  expect(navigationFocusOutline.width).toBeGreaterThan(0);
 
   const lightButton = page
     .getByRole("group", { name: "Theme" })
@@ -194,15 +213,9 @@ test("keyboard traversal reaches navigation and visibly focused theme controls",
   await tabTo(page, lightButton);
   await expect(lightButton).toBeFocused();
 
-  const focusOutline = await lightButton.evaluate((element) => {
-    const styles = getComputedStyle(element);
-    return {
-      style: styles.outlineStyle,
-      width: Number.parseFloat(styles.outlineWidth),
-    };
-  });
-  expect(focusOutline.style).not.toBe("none");
-  expect(focusOutline.width).toBeGreaterThan(0);
+  const themeFocusOutline = await computedOutline(lightButton);
+  expect(themeFocusOutline.style).not.toBe("none");
+  expect(themeFocusOutline.width).toBeGreaterThan(0);
 });
 
 test("theme bootstrap appears before the first stylesheet in raw HTML", async ({
