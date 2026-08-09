@@ -8,10 +8,12 @@ export type NotFoundTranslation = {
 export const notFoundTranslations = {
   en: {
     title: "Page not found",
-    description: "The requested page does not exist.",
+    description:
+      "This page may have moved or never existed. Use the navigation to find your way back.",
   },
   "pt-BR": {
     title: "Página não encontrada",
-    description: "A página solicitada não existe.",
+    description:
+      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
   },
 } satisfies Record<SupportedLocale, NotFoundTranslation>;

@@ -2,6 +2,7 @@ import type { SupportedLocale } from "./config";
 import type { useI18n } from "./i18n";
 import type { Translate, Translation, TranslationScope } from "./types";
 import type { HomeTranslation } from "./translations/home";
+import type { ServicesTranslation } from "./translations/services";
 
 declare const translate: Translate;
 declare const contextTranslate: ReturnType<typeof useI18n>["translate"];
@@ -54,10 +55,18 @@ translate("home.exampleCount");
 contextTranslate("home.exampleCount");
 
 const servicesTitle: TranslationScope = "services.title";
+const servicesFoundationTitle: TranslationScope =
+  "services.items.foundation.title";
 
 // @ts-expect-error Home translations must include every field.
 const incompleteHome: HomeTranslation = {
   title: "Home",
+  description: "Description",
+};
+
+// @ts-expect-error Services translations must include every named item.
+const incompleteServices: ServicesTranslation = {
+  title: "Services",
   description: "Description",
 };
 
@@ -67,5 +76,7 @@ const incompleteRegistry: Record<SupportedLocale, Translation> = {
 };
 
 void servicesTitle;
+void servicesFoundationTitle;
 void incompleteHome;
+void incompleteServices;
 void incompleteRegistry;

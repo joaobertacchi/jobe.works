@@ -98,6 +98,113 @@ function renderLocalizedRoute(pathname: string, validateLocale = false) {
 }
 
 describe("localized route layout", () => {
+  it.each([
+    [
+      "/en/",
+      "Built for agents, ready for people",
+      "Static website template",
+      "A thoughtful static foundation for AI-assisted teams to shape, localize, and ship with confidence.",
+    ],
+    [
+      "/pt-BR/",
+      "Feito para agentes, pronto para pessoas",
+      "Modelo de site estático",
+      "Uma base estática cuidadosa para equipes assistidas por IA criarem, localizarem e publicarem com confiança.",
+    ],
+  ])(
+    "renders the localized Home hero for %s",
+    async (pathname, eyebrow, title, description) => {
+      renderLocalizedRoute(pathname);
+
+      const heading = await screen.findByRole("heading", {
+        level: 1,
+        name: title,
+      });
+      const hero = heading.closest("section");
+
+      expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
+      expect(hero).toHaveTextContent(eyebrow);
+      expect(hero).toHaveTextContent(description);
+    },
+  );
+
+  it.each([
+    [
+      "/en/about",
+      "About",
+      "A focused starting point that keeps structure, content, and quality checks clear so people and AI agents can build together.",
+    ],
+    [
+      "/pt-BR/about",
+      "Sobre",
+      "Um ponto de partida objetivo que mantém estrutura, conteúdo e verificações de qualidade claros para pessoas e agentes de IA criarem juntos.",
+    ],
+  ])(
+    "renders the localized About page for %s",
+    async (pathname, title, description) => {
+      renderLocalizedRoute(pathname);
+
+      expect(
+        await screen.findByRole("heading", { level: 1, name: title }),
+      ).toBeVisible();
+      expect(screen.getByText(description)).toBeVisible();
+    },
+  );
+
+  it.each([
+    [
+      "/en/services",
+      "Services",
+      "Everything needed to turn a clear idea into a fast, durable website.",
+      ["Foundation", "Localization", "Delivery"],
+    ],
+    [
+      "/pt-BR/services",
+      "Serviços",
+      "Tudo o que é necessário para transformar uma ideia clara em um site rápido e duradouro.",
+      ["Base", "Localização", "Entrega"],
+    ],
+  ])(
+    "renders three localized Services cards for %s",
+    async (pathname, title, description, serviceTitles) => {
+      renderLocalizedRoute(pathname);
+
+      expect(
+        await screen.findByRole("heading", { level: 1, name: title }),
+      ).toBeVisible();
+      expect(screen.getByText(description)).toBeVisible();
+      expect(document.querySelectorAll("article")).toHaveLength(3);
+      for (const serviceTitle of serviceTitles) {
+        expect(
+          screen.getByRole("heading", { level: 2, name: serviceTitle }),
+        ).toBeVisible();
+      }
+    },
+  );
+
+  it.each([
+    [
+      "/en/404",
+      "Page not found",
+      "This page may have moved or never existed. Use the navigation to find your way back.",
+    ],
+    [
+      "/pt-BR/404",
+      "Página não encontrada",
+      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
+    ],
+  ])(
+    "renders the polished localized 404 page for %s",
+    async (pathname, title, description) => {
+      renderLocalizedRoute(pathname);
+
+      expect(
+        await screen.findByRole("heading", { level: 1, name: title }),
+      ).toBeVisible();
+      expect(screen.getByText(description)).toBeVisible();
+    },
+  );
+
   it("binds English content and navigation", async () => {
     renderLocalizedRoute("/en/about");
 
@@ -185,12 +292,6 @@ describe("localized route layout", () => {
     ).toHaveAttribute("href", "/pt-BR/404");
   });
 
-  it("renders a client-side plural translation", async () => {
-    renderLocalizedRoute("/pt-BR/");
-
-    expect(await screen.findByText("2 exemplos")).toBeVisible();
-  });
-
   it("renders localized not-found content", async () => {
     renderLocalizedRoute("/pt-BR/404");
 
@@ -219,14 +320,14 @@ describe("localized route layout", () => {
       "/en/not-published",
       "About",
       "Page not found",
-      "The requested page does not exist.",
+      "This page may have moved or never existed. Use the navigation to find your way back.",
     ],
     [
       "/pt-BR/about",
       "/pt-BR/not-published",
       "Sobre",
       "Página não encontrada",
-      "A página solicitada não existe.",
+      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
     ],
   ])(
     "renders localized catch-all content after navigating from %s to %s",

@@ -8,10 +8,12 @@ export type AboutTranslation = {
 export const aboutTranslations = {
   en: {
     title: "About",
-    description: "Localized about placeholder.",
+    description:
+      "A focused starting point that keeps structure, content, and quality checks clear so people and AI agents can build together.",
   },
   "pt-BR": {
     title: "Sobre",
-    description: "Página sobre localizada de demonstração.",
+    description:
+      "Um ponto de partida objetivo que mantém estrutura, conteúdo e verificações de qualidade claros para pessoas e agentes de IA criarem juntos.",
   },
 } satisfies Record<SupportedLocale, AboutTranslation>;

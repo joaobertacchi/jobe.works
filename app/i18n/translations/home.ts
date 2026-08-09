@@ -2,6 +2,7 @@ import type { SupportedLocale } from "../config";
 import type { Plural } from "../types";
 
 export type HomeTranslation = {
+  eyebrow: string;
   title: string;
   description: string;
   greeting: string;
@@ -10,8 +11,10 @@ export type HomeTranslation = {
 
 export const homeTranslations = {
   en: {
+    eyebrow: "Built for agents, ready for people",
     title: "Static website template",
-    description: "Localized home placeholder.",
+    description:
+      "A thoughtful static foundation for AI-assisted teams to shape, localize, and ship with confidence.",
     greeting: "Hello, %{name}",
     exampleCount: {
       zero: "No examples",
@@ -20,8 +23,10 @@ export const homeTranslations = {
     },
   },
   "pt-BR": {
+    eyebrow: "Feito para agentes, pronto para pessoas",
     title: "Modelo de site estático",
-    description: "Página inicial localizada de demonstração.",
+    description:
+      "Uma base estática cuidadosa para equipes assistidas por IA criarem, localizarem e publicarem com confiança.",
     greeting: "Olá, %{name}",
     exampleCount: {
       zero: "Nenhum exemplo",

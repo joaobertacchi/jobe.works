@@ -21,7 +21,7 @@ for (const [url, heading] of publishedPages) {
   });
 }
 
-test("keeps typed plural translation after hydration", async ({ page }) => {
+test("keeps localized Home content after hydration", async ({ page }) => {
   await page.goto("/en/");
   const sentinel = await page.evaluate(() => {
     const value = crypto.randomUUID();
@@ -41,7 +41,12 @@ test("keeps typed plural translation after hydration", async ({ page }) => {
   expect(
     await page.evaluate(() => Reflect.get(window, "routingSentinel")),
   ).toBe(sentinel);
-  await expect(page.getByText("2 examples", { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Static website template" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Built for agents, ready for people", { exact: true }),
+  ).toBeVisible();
 });
 
 const englishPagesWithPortugueseSiblings = [
@@ -116,14 +121,14 @@ const supportedLocaleCatchAllPages = [
     "/en/about",
     "/en/not-published",
     "Page not found",
-    "The requested page does not exist.",
+    "This page may have moved or never existed. Use the navigation to find your way back.",
     "Choose language",
   ],
   [
     "/pt-BR/about",
     "/pt-BR/not-published",
     "Página não encontrada",
-    "A página solicitada não existe.",
+    "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
     "Escolher idioma",
   ],
 ] as const;
