@@ -4,6 +4,10 @@ import { useNavigate } from "react-router";
 import { defaultLocale, selectPreferredLocale } from "../i18n/config";
 import { I18nProvider, useI18n } from "../i18n/i18n";
 
+export function meta() {
+  return [{ name: "robots", content: "noindex,follow" }];
+}
+
 function RootRedirectContent() {
   const navigate = useNavigate();
   const { translate } = useI18n();

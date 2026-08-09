@@ -1,11 +1,35 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { MemoryRouter } from "react-router";
 
 import { Button } from "./button";
 import { Card } from "./card";
 import { Container } from "./container";
 import { Heading } from "./heading";
 import { Text } from "./text";
+import { TextLink } from "./text-link";
+
+describe("TextLink", () => {
+  it("renders semantic primary and secondary links", () => {
+    render(
+      <MemoryRouter>
+        <TextLink to="/primary">Primary</TextLink>
+        <TextLink to="/secondary" variant="secondary">
+          Secondary
+        </TextLink>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByRole("link", { name: "Primary" })).toHaveClass(
+      "bg-brand",
+      "focus-visible:outline-brand",
+    );
+    expect(screen.getByRole("link", { name: "Secondary" })).toHaveClass(
+      "underline",
+      "text-foreground",
+    );
+  });
+});
 
 describe("Button", () => {
   it("renders primary and large defaults on a native button", () => {

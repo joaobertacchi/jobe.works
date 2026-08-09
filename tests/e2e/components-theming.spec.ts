@@ -175,7 +175,13 @@ test("invalid stored theme follows system preference without browser errors", as
 test("representative pages use semantic headings and one selected theme", async ({
   page,
 }) => {
-  for (const url of ["/en/", "/en/about", "/en/services", "/en/404"]) {
+  for (const url of [
+    "/en/",
+    "/en/about",
+    "/en/services",
+    "/en/privacy",
+    "/en/404",
+  ]) {
     await page.goto(url);
     await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
     await expect(
@@ -213,6 +219,24 @@ test("keyboard traversal reaches navigation and visibly focused theme controls",
   const themeFocusOutline = await computedOutline(lightButton);
   expect(themeFocusOutline.style).not.toBe("none");
   expect(themeFocusOutline.width).toBeGreaterThan(0);
+});
+
+test("new page and footer links expose visible keyboard focus", async ({
+  page,
+}) => {
+  for (const [url, name] of [
+    ["/en/", "Explore the examples"],
+    ["/en/404", "Return home"],
+    ["/en/about", "Privacy"],
+  ] as const) {
+    await page.goto(url);
+    const link = page.getByRole("link", { name }).last();
+    await tabTo(page, link);
+    await expect(link).toBeFocused();
+    const outline = await computedOutline(link);
+    expect(outline.style).not.toBe("none");
+    expect(outline.width).toBeGreaterThan(0);
+  }
 });
 
 test("theme bootstrap appears before the first stylesheet in raw HTML", async ({
@@ -349,7 +373,7 @@ test("services remain usable and stack on a mobile viewport", async ({
   await page.goto("/en/services");
 
   await expect(
-    page.getByText("Agent-ready sites", { exact: true }),
+    page.getByRole("banner").getByText("Agent-ready sites", { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "Primary navigation" }),
@@ -400,4 +424,27 @@ test("service cards use multiple columns on a desktop viewport", async ({
     );
 
   expect(new Set(leftCoordinates).size).toBeGreaterThanOrEqual(2);
+});
+
+test("all example pages fit mobile viewports and expose the shared footer", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+
+  for (const url of [
+    "/en/",
+    "/en/about",
+    "/en/services",
+    "/en/privacy",
+    "/en/404",
+  ]) {
+    await page.goto(url);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+    await expect(page.getByRole("contentinfo")).toBeVisible();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= window.innerWidth,
+      ),
+    ).toBe(true);
+  }
 });

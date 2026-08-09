@@ -7,10 +7,12 @@ import {
 } from "react-router";
 
 import { SiteHeader } from "../components/site/site-header";
+import { SiteFooter } from "../components/site/site-footer";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
 import { isSupportedLocale } from "../i18n/config";
 import { I18nProvider, useI18n } from "../i18n/i18n";
+import { createSiteConfig } from "../seo/site-config.server";
 import {
   type CanonicalUrlManifest,
   getLocalizedUrlsForPathname,
@@ -27,24 +29,33 @@ function LocalizedLayout() {
         ?.languageSwitcher === false,
   );
   return (
-    <>
+    <div className="flex min-h-screen flex-col">
       <SiteHeader urls={hideLanguageSwitcher ? null : urls} />
-      <Outlet />
-    </>
+      <div className="flex-1">
+        <Outlet />
+      </div>
+      <SiteFooter />
+    </div>
   );
 }
 
 export function getLoaderDataForPathname(
   manifest: CanonicalUrlManifest,
   pathname: string,
+  site: ReturnType<typeof createSiteConfig>,
 ) {
   return {
     urls: getLocalizedUrlsForPathname(manifest, pathname),
+    site,
   };
 }
 
 export function loader({ url }: Route.LoaderArgs) {
-  return getLoaderDataForPathname(readCanonicalManifest(), url.pathname);
+  return getLoaderDataForPathname(
+    readCanonicalManifest(),
+    url.pathname,
+    createSiteConfig(),
+  );
 }
 
 export async function clientLoader({

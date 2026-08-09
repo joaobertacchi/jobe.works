@@ -6,10 +6,12 @@ const publishedPages = [
   ["/en/", "Static website template"],
   ["/en/about", "About"],
   ["/en/services", "Services"],
+  ["/en/privacy", "Privacy notice"],
   ["/en/404", "Page not found"],
   ["/pt-BR/", "Modelo de site estático"],
   ["/pt-BR/about", "Sobre"],
   ["/pt-BR/services", "Serviços"],
+  ["/pt-BR/privacy", "Aviso de privacidade"],
   ["/pt-BR/404", "Página não encontrada"],
 ] as const;
 
@@ -69,6 +71,7 @@ const englishPagesWithPortugueseSiblings = [
   ["Home", "/en/", "/pt-BR/", "Modelo de site estático"],
   ["About", "/en/about", "/pt-BR/about", "Sobre"],
   ["Services", "/en/services", "/pt-BR/services", "Serviços"],
+  ["Privacy", "/en/privacy", "/pt-BR/privacy", "Aviso de privacidade"],
   ["404", "/en/404", "/pt-BR/404", "Página não encontrada"],
 ] as const;
 
@@ -320,4 +323,86 @@ test.describe("unsupported browser locale", () => {
     await page.goto("/");
     await expect(page).toHaveURL("/pt-BR/");
   });
+});
+
+test("renders complete localized SEO metadata", async ({ page }) => {
+  await page.goto("/en/about");
+
+  await expect(page).toHaveTitle("About the Static Website Template");
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+    "content",
+    /agent-ready template/,
+  );
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://example.com/en/about",
+  );
+  await expect(page.locator('link[hreflang="en"]')).toHaveAttribute(
+    "href",
+    "https://example.com/en/about",
+  );
+  await expect(page.locator('link[hreflang="pt-BR"]')).toHaveAttribute(
+    "href",
+    "https://example.com/pt-BR/about",
+  );
+  await expect(page.locator('link[hreflang="x-default"]')).toHaveAttribute(
+    "href",
+    "https://example.com/pt-BR/about",
+  );
+  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+    "content",
+    "https://example.com/social-card.svg",
+  );
+  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
+    "content",
+    "summary_large_image",
+  );
+});
+
+test("renders explicit Home JSON-LD and 404 noindex metadata", async ({
+  page,
+}) => {
+  await page.goto("/en/");
+  const jsonLd = JSON.parse(
+    (await page.locator('script[type="application/ld+json"]').textContent()) ??
+      "null",
+  );
+  expect(jsonLd).toMatchObject({
+    "@context": "https://schema.org",
+    "@type": "Organization",
+  });
+
+  await page.goto("/en/404");
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    "noindex,follow",
+  );
+});
+
+test("serves sitemap and robots generated from indexable routes", async ({
+  request,
+}) => {
+  const sitemap = await (await request.get("/sitemap.xml")).text();
+  expect(sitemap).toContain("https://example.com/en/about");
+  expect(sitemap).toContain("https://example.com/pt-BR/services");
+  expect(sitemap).toContain("https://example.com/en/privacy");
+  expect(sitemap).not.toContain("https://example.com/en/404");
+  expect(sitemap).not.toContain("https://example.com/pt-BR/404");
+
+  const robots = await (await request.get("/robots.txt")).text();
+  expect(robots).toContain("Allow: /");
+  expect(robots).toContain("Sitemap: https://example.com/sitemap.xml");
+});
+
+test("keeps localized Privacy navigation in the footer", async ({ page }) => {
+  await page.goto("/pt-BR/about");
+  const footer = page.getByRole("contentinfo");
+  await expect(
+    footer.getByRole("link", { name: "Privacidade" }),
+  ).toHaveAttribute("href", "/pt-BR/privacy");
+  await footer.getByRole("link", { name: "Privacidade" }).click();
+  await expect(page).toHaveURL("/pt-BR/privacy");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Aviso de privacidade" }),
+  ).toBeVisible();
 });

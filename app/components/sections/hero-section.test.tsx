@@ -2,6 +2,31 @@ import { render, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { HeroSection } from "./hero-section";
+import { ContentSection } from "./content-section";
+
+describe("ContentSection", () => {
+  it("composes optional eyebrow, heading, description, and children", () => {
+    const { container } = render(
+      <ContentSection
+        eyebrow="Principle"
+        title="Clear boundaries"
+        description="Keep responsibilities explicit."
+      >
+        <p>Supporting example</p>
+      </ContentSection>,
+    );
+
+    expect(container.querySelectorAll("section")).toHaveLength(1);
+    expect(
+      within(container).getByRole("heading", {
+        level: 2,
+        name: "Clear boundaries",
+      }),
+    ).toBeVisible();
+    expect(within(container).getByText("Principle")).toBeVisible();
+    expect(within(container).getByText("Supporting example")).toBeVisible();
+  });
+});
 
 describe("HeroSection", () => {
   it("renders hero copy with shared bounds and responsive spacing", () => {

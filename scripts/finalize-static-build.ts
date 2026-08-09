@@ -1,15 +1,28 @@
-import { existsSync, readFileSync, readdirSync, rmSync } from "node:fs";
+import {
+  existsSync,
+  readFileSync,
+  readdirSync,
+  rmSync,
+  writeFileSync,
+} from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
 
-import {
-  isSupportedLocale,
-  locales,
-  supportedLocales,
-} from "../app/i18n/config";
+import { isSupportedLocale, supportedLocales } from "../app/i18n/config";
 import {
   getCanonicalUrls,
   type CanonicalUrlManifest,
 } from "../app/routing/canonical-url-manifest";
+import { createSiteConfig } from "../app/seo/site-config.server";
+import type { PublicSiteConfig } from "../app/seo/types";
+import {
+  createRobots,
+  createSitemap,
+  parseAndValidateSeoPage,
+  type RenderedSeoPage,
+  validateRenderedSeoPages,
+  validateRobots,
+  validateSitemap,
+} from "./seo-static";
 
 function artifactPath(url: string): string {
   if (url === "/") return "index.html";
@@ -35,15 +48,43 @@ function readRequiredHtml(clientDirectory: string, path: string): string {
   return content;
 }
 
+function resolveInternalLink(
+  href: string,
+  pathname: string,
+  site: PublicSiteConfig,
+  artifact: string,
+): URL | undefined {
+  if (!href || href.startsWith("#")) return undefined;
+  const isAbsoluteHttp = /^https?:\/\//i.test(href);
+  const hasOtherScheme = /^[a-z][a-z\d+.-]*:/i.test(href) && !isAbsoluteHttp;
+  if (hasOtherScheme) return undefined;
+  if (!isAbsoluteHttp && !href.startsWith("/")) {
+    throw new Error(`Unknown internal link ${href} in ${artifact}`);
+  }
+  const destination = new URL(href, new URL(pathname, `${site.origin}/`));
+  return destination.origin === site.origin ? destination : undefined;
+}
+
 function validateLinks(
   html: string,
   artifact: string,
+  pathname: string,
   publishedUrls: ReadonlySet<string>,
+  site: PublicSiteConfig,
 ): void {
-  const anchorPattern = /<a\b[^>]*\bhref\s*=\s*(["'])(\/[^"'#?]*)[^"']*\1/gi;
+  const anchorPattern =
+    /<a\b[^>]*\bhref\s*=\s*(?:(["'])([^"']*)\1|([^\s>]+))/gi;
   for (const match of html.matchAll(anchorPattern)) {
-    const href = match[2];
-    if (href !== "/" && !publishedUrls.has(href)) {
+    const href = match[2] ?? match[3];
+    const destination = resolveInternalLink(href, pathname, site, artifact);
+    if (!destination) continue;
+    if (destination.pathname === "/" && pathname !== "/") {
+      throw new Error(`Unknown internal link ${href} in ${artifact}`);
+    }
+    if (
+      destination.pathname !== "/" &&
+      !publishedUrls.has(destination.pathname)
+    ) {
       throw new Error(`Unknown internal link ${href} in ${artifact}`);
     }
   }
@@ -66,26 +107,34 @@ function validateLocalizedHtml(
   clientDirectory: string,
   manifest: CanonicalUrlManifest,
   publishedUrls: ReadonlySet<string>,
-): void {
+  site: PublicSiteConfig,
+): RenderedSeoPage[] {
+  const pages: RenderedSeoPage[] = [];
   for (const entry of manifest) {
     for (const locale of supportedLocales) {
       const artifact = artifactPath(entry.urls[locale]);
       const html = readRequiredHtml(clientDirectory, artifact);
-      const expectedLang = locales[locale].htmlLang;
-      if (!html.includes(`<html lang="${expectedLang}"`)) {
-        throw new Error(
-          `Expected ${artifact} to use html lang ${expectedLang}`,
-        );
-      }
-      validateLinks(html, artifact, publishedUrls);
+      validateLinks(html, artifact, entry.urls[locale], publishedUrls, site);
+      pages.push(
+        parseAndValidateSeoPage({
+          html,
+          artifact,
+          pathname: entry.urls[locale],
+          locale,
+          siblingUrls: entry.urls,
+          site,
+        }),
+      );
     }
   }
+  return pages;
 }
 
 export function finalizeStaticBuild(
   clientDirectory: string,
   manifest: CanonicalUrlManifest,
 ): void {
+  const site = createSiteConfig();
   const fallbackArtifact = "__spa-fallback.html";
   validateLocaleDirectories(clientDirectory);
   const rootHtml = readRequiredHtml(clientDirectory, "index.html");
@@ -115,8 +164,20 @@ export function finalizeStaticBuild(
   }
 
   const publishedUrls = new Set(canonicalUrls);
-  validateLinks(rootHtml, "index.html", publishedUrls);
-  validateLocalizedHtml(clientDirectory, manifest, publishedUrls);
+  validateLinks(rootHtml, "index.html", "/", publishedUrls, site);
+  const renderedPages = validateLocalizedHtml(
+    clientDirectory,
+    manifest,
+    publishedUrls,
+    site,
+  );
+  validateRenderedSeoPages(renderedPages);
+  const sitemap = createSitemap(renderedPages);
+  validateSitemap(sitemap, renderedPages);
+  writeFileSync(join(clientDirectory, "sitemap.xml"), sitemap);
+  const robots = createRobots(site);
+  validateRobots(robots, site);
+  writeFileSync(join(clientDirectory, "robots.txt"), robots);
 
   rmSync(join(dirname(clientDirectory), "server"), {
     force: true,

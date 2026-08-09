@@ -6,9 +6,15 @@ type HeroSectionProps = {
   eyebrow: string;
   title: string;
   description: string;
+  actions?: ReactNode;
 };
 
-export function HeroSection({ eyebrow, title, description }: HeroSectionProps) {
+export function HeroSection({
+  eyebrow,
+  title,
+  description,
+  actions,
+}: HeroSectionProps) {
   return (
     <section className="py-16 sm:py-24 lg:py-32">
       <Container>
@@ -18,8 +24,12 @@ export function HeroSection({ eyebrow, title, description }: HeroSectionProps) {
             {title}
           </Heading>
           <Text tone="muted">{description}</Text>
+          {actions ? (
+            <div className="flex flex-wrap gap-3">{actions}</div>
+          ) : null}
         </div>
       </Container>
     </section>
   );
 }
+import type { ReactNode } from "react";

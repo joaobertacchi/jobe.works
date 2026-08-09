@@ -2,10 +2,12 @@ export const locales = {
   en: {
     label: "English",
     htmlLang: "en",
+    ogLocale: "en_US",
   },
   "pt-BR": {
     label: "Português",
     htmlLang: "pt-BR",
+    ogLocale: "pt_BR",
   },
 } as const;
 

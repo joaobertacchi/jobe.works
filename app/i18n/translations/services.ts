@@ -1,6 +1,10 @@
 import type { SupportedLocale } from "../config";
 
 export type ServicesTranslation = {
+  seo: {
+    title: string;
+    description: string;
+  };
   title: string;
   description: string;
   items: {
@@ -17,10 +21,19 @@ export type ServicesTranslation = {
       description: string;
     };
   };
+  closing: {
+    title: string;
+    description: string;
+  };
 };
 
 export const servicesTranslations = {
   en: {
+    seo: {
+      title: "Static Website Foundation Services",
+      description:
+        "Explore the reusable foundation, typed localization, and deterministic delivery patterns demonstrated by this static website template.",
+    },
     title: "Services",
     description:
       "Everything needed to turn a clear idea into a fast, durable website.",
@@ -41,8 +54,18 @@ export const servicesTranslations = {
           "Built-in quality checks and prerendering make confident releases routine.",
       },
     },
+    closing: {
+      title: "A foundation, not a platform",
+      description:
+        "These examples stay intentionally small so each fork can establish its own content and visual system.",
+    },
   },
   "pt-BR": {
+    seo: {
+      title: "Serviços de Base para Sites Estáticos",
+      description:
+        "Explore a base reutilizável, a localização tipada e os padrões de entrega determinística demonstrados por este modelo de site estático.",
+    },
     title: "Serviços",
     description:
       "Tudo o que é necessário para transformar uma ideia clara em um site rápido e duradouro.",
@@ -62,6 +85,11 @@ export const servicesTranslations = {
         description:
           "Verificações de qualidade e pré-renderização tornam as entregas confiáveis e previsíveis.",
       },
+    },
+    closing: {
+      title: "Uma base, não uma plataforma",
+      description:
+        "Estes exemplos permanecem intencionalmente pequenos para que cada fork estabeleça seu próprio conteúdo e sistema visual.",
     },
   },
 } satisfies Record<SupportedLocale, ServicesTranslation>;

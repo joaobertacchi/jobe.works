@@ -2,6 +2,7 @@ import type { AboutTranslation } from "./translations/about";
 import type { CommonTranslation } from "./translations/common";
 import type { HomeTranslation } from "./translations/home";
 import type { NotFoundTranslation } from "./translations/not-found";
+import type { PrivacyTranslation } from "./translations/privacy";
 import type { ServicesTranslation } from "./translations/services";
 
 export type Translation = {
@@ -10,6 +11,7 @@ export type Translation = {
   about: AboutTranslation;
   services: ServicesTranslation;
   notFound: NotFoundTranslation;
+  privacy: PrivacyTranslation;
 };
 
 export type Plural = {

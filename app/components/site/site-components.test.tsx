@@ -16,6 +16,7 @@ import { THEME_STORAGE_KEY } from "../../theme";
 import { LanguageSwitcher } from "./language-switcher";
 import { PrimaryNavigation } from "./primary-navigation";
 import { SiteHeader } from "./site-header";
+import { SiteFooter } from "./site-footer";
 import { ThemeSwitcher } from "./theme-switcher";
 
 const urls: Record<SupportedLocale, string> = {
@@ -177,6 +178,37 @@ describe("SiteHeader", () => {
     ).toBeNull();
     expect(screen.getByRole("group", { name: "Tema" })).toBeVisible();
   });
+});
+
+describe("SiteFooter", () => {
+  it.each([
+    ["en", "Footer navigation", "Home", "Privacy", "/en/", "/en/privacy"],
+    [
+      "pt-BR",
+      "Navegação do rodapé",
+      "Início",
+      "Privacidade",
+      "/pt-BR/",
+      "/pt-BR/privacy",
+    ],
+  ] as const)(
+    "renders localized canonical links in %s",
+    (locale, label, home, privacy, homeHref, privacyHref) => {
+      renderWithRouter(<SiteFooter />, locale, `/${locale}/about`);
+
+      expect(screen.getByRole("contentinfo")).toBeVisible();
+      const navigation = screen.getByRole("navigation", { name: label });
+      expect(navigation).toBeVisible();
+      expect(screen.getByRole("link", { name: home })).toHaveAttribute(
+        "href",
+        homeHref,
+      );
+      expect(screen.getByRole("link", { name: privacy })).toHaveAttribute(
+        "href",
+        privacyHref,
+      );
+    },
+  );
 });
 
 describe("ThemeSwitcher", () => {

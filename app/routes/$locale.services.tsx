@@ -2,7 +2,19 @@ import { ServiceCard } from "../components/domain/service-card";
 import { Container } from "../components/ui/container";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
+import { isSupportedLocale } from "../i18n/config";
 import { useI18n } from "../i18n/i18n";
+import { servicesTranslations } from "../i18n/translations/services";
+import { createPageMeta, getSeoLoaderData } from "../seo/metadata";
+import type { Route } from "./+types/$locale.services";
+
+export function meta({ matches, params }: Route.MetaArgs) {
+  if (!params.locale || !isSupportedLocale(params.locale)) return [];
+  return createPageMeta(params.locale, getSeoLoaderData(matches), {
+    ...servicesTranslations[params.locale].seo,
+    indexable: true,
+  });
+}
 
 export default function Services() {
   const { translate } = useI18n();
@@ -29,6 +41,16 @@ export default function Services() {
             description={translate("services.items.delivery.description")}
           />
         </div>
+        <section className="mt-16 border-t border-border pt-10">
+          <div className="max-w-3xl">
+            <Heading as="h2" level="section">
+              {translate("services.closing.title")}
+            </Heading>
+            <Text className="mt-4" tone="muted">
+              {translate("services.closing.description")}
+            </Text>
+          </div>
+        </section>
       </Container>
     </main>
   );

@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import {
   createMemoryRouter,
   isRouteErrorResponse,
@@ -15,6 +15,7 @@ import NotFound from "./$locale.404";
 import About from "./$locale.about";
 import Home from "./$locale._index";
 import Services from "./$locale.services";
+import Privacy from "./$locale.privacy";
 import LocalizedCatchAll from "./$locale.$";
 import LocaleLayout, {
   clientLoader,
@@ -47,7 +48,20 @@ const canonicalManifest = [
     pattern: "/:locale/404",
     urls: { en: "/en/404", "pt-BR": "/pt-BR/404" },
   },
+  {
+    id: "privacy",
+    kind: "page",
+    pattern: "/:locale/privacy",
+    urls: { en: "/en/privacy", "pt-BR": "/pt-BR/privacy" },
+  },
 ] satisfies CanonicalUrlManifest;
+
+const site = {
+  origin: "https://example.com",
+  siteName: "Agent-ready sites",
+  defaultSocialImage: "/social-card.svg",
+  xDefault: true,
+};
 
 function TestErrorBoundary() {
   return (
@@ -56,7 +70,7 @@ function TestErrorBoundary() {
 }
 
 function getLoaderData(pathname: string) {
-  return getLoaderDataForPathname(canonicalManifest, pathname);
+  return getLoaderDataForPathname(canonicalManifest, pathname, site);
 }
 
 function renderLocalizedRoute(pathname: string, validateLocale = false) {
@@ -84,6 +98,7 @@ function renderLocalizedRoute(pathname: string, validateLocale = false) {
           { index: true, Component: Home },
           { path: "about", Component: About },
           { path: "services", Component: Services },
+          { path: "privacy", Component: Privacy },
           { path: "404", Component: NotFound },
           {
             path: "*",
@@ -132,6 +147,41 @@ describe("localized route layout", () => {
 
       expect(screen.getByRole("heading", { name: title })).toBeVisible();
       expect(screen.getByText(description)).toBeVisible();
+    },
+  );
+
+  it("composes Home principles and a localized call to action", async () => {
+    renderLocalizedRoute("/en/");
+
+    expect(
+      await screen.findByRole("heading", { name: "Static delivery" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "Typed localization" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "Deterministic quality" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("link", { name: "Explore the examples" }),
+    ).toHaveAttribute("href", "/en/services");
+  });
+
+  it.each([
+    ["/en/privacy", "Privacy notice", "Data handled by the template"],
+    ["/pt-BR/privacy", "Aviso de privacidade", "Dados tratados pelo modelo"],
+  ])(
+    "renders localized Privacy content for %s",
+    async (pathname, title, section) => {
+      renderLocalizedRoute(pathname);
+
+      expect(
+        await screen.findByRole("heading", { level: 1, name: title }),
+      ).toBeVisible();
+      expect(
+        screen.getByRole("heading", { level: 2, name: section }),
+      ).toBeVisible();
+      expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(4);
     },
   );
 
@@ -221,6 +271,18 @@ describe("localized route layout", () => {
     },
   );
 
+  it("composes About from shared semantic content sections", async () => {
+    renderLocalizedRoute("/en/about");
+
+    expect(await screen.findByRole("heading", { name: "About" })).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Clear boundaries" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Working examples" }),
+    ).toBeVisible();
+  });
+
   it.each([
     [
       "/en/about",
@@ -243,6 +305,18 @@ describe("localized route layout", () => {
       expect(screen.getByText(description)).toBeVisible();
     },
   );
+
+  it("closes Services without adding a speculative fourth card", async () => {
+    renderLocalizedRoute("/en/services");
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 2,
+        name: "A foundation, not a platform",
+      }),
+    ).toBeVisible();
+    expect(document.querySelectorAll("article")).toHaveLength(3);
+  });
 
   it.each([
     [
@@ -319,26 +393,32 @@ describe("localized route layout", () => {
     },
   );
 
+  it("links localized 404 visitors back to canonical Home", async () => {
+    renderLocalizedRoute("/pt-BR/404");
+
+    expect(
+      await screen.findByRole("link", { name: "Voltar ao início" }),
+    ).toHaveAttribute("href", "/pt-BR/");
+  });
+
   it("binds English content and navigation", async () => {
     renderLocalizedRoute("/en/about");
 
     expect(await screen.findByRole("heading", { name: "About" })).toBeVisible();
     expect(screen.getByRole("banner")).toHaveTextContent("Agent-ready sites");
+    const navigation = screen.getByRole("navigation", {
+      name: "Primary navigation",
+    });
+    expect(navigation).toBeVisible();
     expect(
-      screen.getByRole("navigation", { name: "Primary navigation" }),
-    ).toBeVisible();
-    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute(
-      "href",
-      "/en/",
-    );
-    expect(screen.getByRole("link", { name: "About" })).toHaveAttribute(
-      "href",
-      "/en/about",
-    );
-    expect(screen.getByRole("link", { name: "Services" })).toHaveAttribute(
-      "href",
-      "/en/services",
-    );
+      within(navigation).getByRole("link", { name: "Home" }),
+    ).toHaveAttribute("href", "/en/");
+    expect(
+      within(navigation).getByRole("link", { name: "About" }),
+    ).toHaveAttribute("href", "/en/about");
+    expect(
+      within(navigation).getByRole("link", { name: "Services" }),
+    ).toHaveAttribute("href", "/en/services");
     expect(screen.getByRole("group", { name: "Theme" })).toBeVisible();
   });
 
@@ -362,18 +442,18 @@ describe("localized route layout", () => {
     expect(
       await screen.findByRole("heading", { name: "Serviços" }),
     ).toBeVisible();
-    expect(screen.getByRole("link", { name: "Início" })).toHaveAttribute(
-      "href",
-      "/pt-BR/",
-    );
-    expect(screen.getByRole("link", { name: "Sobre" })).toHaveAttribute(
-      "href",
-      "/pt-BR/about",
-    );
-    expect(screen.getByRole("link", { name: "Serviços" })).toHaveAttribute(
-      "href",
-      "/pt-BR/services",
-    );
+    const navigation = screen.getByRole("navigation", {
+      name: "Navegação principal",
+    });
+    expect(
+      within(navigation).getByRole("link", { name: "Início" }),
+    ).toHaveAttribute("href", "/pt-BR/");
+    expect(
+      within(navigation).getByRole("link", { name: "Sobre" }),
+    ).toHaveAttribute("href", "/pt-BR/about");
+    expect(
+      within(navigation).getByRole("link", { name: "Serviços" }),
+    ).toHaveAttribute("href", "/pt-BR/services");
   });
 
   it("links Portuguese Services only to its English sibling", async () => {
@@ -567,14 +647,14 @@ describe("localized route clientLoader", () => {
 
 describe("localized route build loader data", () => {
   it("maps a normalized pathname to exact manifest URLs", () => {
-    const data = getLoaderDataForPathname(canonicalManifest, "/en/about");
+    const data = getLoaderDataForPathname(canonicalManifest, "/en/about", site);
 
-    expect(data).toEqual({ urls: canonicalManifest[1].urls });
+    expect(data).toEqual({ urls: canonicalManifest[1].urls, site });
     expect(data).not.toHaveProperty("manifest");
   });
 
   it("preserves the canonical Home trailing slash", () => {
-    const data = getLoaderDataForPathname(canonicalManifest, "/en/");
+    const data = getLoaderDataForPathname(canonicalManifest, "/en/", site);
 
     expect(data.urls).toBe(canonicalManifest[0].urls);
   });
@@ -593,8 +673,8 @@ describe("localized route build loader data", () => {
         urls: dataUrls,
       },
     ] satisfies CanonicalUrlManifest;
-    const data = getLoaderDataForPathname(manifest, "/en/release.data");
+    const data = getLoaderDataForPathname(manifest, "/en/release.data", site);
 
-    expect(data).toEqual({ urls: dataUrls });
+    expect(data).toEqual({ urls: dataUrls, site });
   });
 });

@@ -1,4 +1,10 @@
-import { existsSync, mkdtempSync, mkdirSync, writeFileSync } from "node:fs";
+import {
+  existsSync,
+  mkdtempSync,
+  mkdirSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
@@ -22,8 +28,16 @@ const manifest = [
   },
 ] satisfies CanonicalUrlManifest;
 
-function html(lang: string, href = "/en/about") {
-  return `<!doctype html><html lang="${lang}"><body><a href="${href}">Link</a></body></html>`;
+function html(lang: string, href = "/en/about", pathname?: string) {
+  if (!pathname) {
+    return `<!doctype html><html lang="${lang}"><body><a href="${href}">Link</a></body></html>`;
+  }
+  const logicalPath = pathname.replace(/^\/(en|pt-BR)/, "") || "/";
+  const suffix = logicalPath === "/" ? "/" : logicalPath;
+  const canonical = `https://example.com${pathname}`;
+  const ogLocale = lang === "en" ? "en_US" : "pt_BR";
+  const alternateOgLocale = lang === "en" ? "pt_BR" : "en_US";
+  return `<!doctype html><html lang="${lang}"><head><title>Page</title><meta name="description" content="Description"><meta name="robots" content="index,follow"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="en" href="https://example.com/en${suffix}"><link rel="alternate" hreflang="pt-BR" href="https://example.com/pt-BR${suffix}"><link rel="alternate" hreflang="x-default" href="https://example.com/pt-BR${suffix}"><meta property="og:type" content="website"><meta property="og:site_name" content="Agent-ready sites"><meta property="og:url" content="${canonical}"><meta property="og:title" content="Page"><meta property="og:description" content="Description"><meta property="og:image" content="https://example.com/social-card.svg"><meta property="og:locale" content="${ogLocale}"><meta property="og:locale:alternate" content="${alternateOgLocale}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Page"><meta name="twitter:description" content="Description"><meta name="twitter:image" content="https://example.com/social-card.svg"></head><body><a href="${href}">Link</a></body></html>`;
 }
 
 function writeHtml(client: string, url: string, content: string) {
@@ -39,10 +53,10 @@ function createCompleteBuild() {
   mkdirSync(client);
   writeFileSync(join(client, "index.html"), html("pt-BR", "/"));
   writeFileSync(join(client, "__spa-fallback.html"), html("pt-BR", "/"));
-  writeHtml(client, "/en/", html("en"));
-  writeHtml(client, "/en/about", html("en"));
-  writeHtml(client, "/pt-BR/", html("pt-BR", "/pt-BR/about"));
-  writeHtml(client, "/pt-BR/about", html("pt-BR", "/pt-BR/"));
+  writeHtml(client, "/en/", html("en", "/en/about", "/en/"));
+  writeHtml(client, "/en/about", html("en", "/en/about", "/en/about"));
+  writeHtml(client, "/pt-BR/", html("pt-BR", "/pt-BR/about", "/pt-BR/"));
+  writeHtml(client, "/pt-BR/about", html("pt-BR", "/pt-BR/", "/pt-BR/about"));
   mkdirSync(join(root, "server"));
   return { client, root };
 }
@@ -55,6 +69,12 @@ describe("finalizeStaticBuild", () => {
 
     expect(existsSync(join(root, "server"))).toBe(false);
     expect(existsSync(join(client, "__spa-fallback.html"))).toBe(false);
+    expect(readFileSync(join(client, "sitemap.xml"), "utf8")).toContain(
+      "https://example.com/en/about",
+    );
+    expect(readFileSync(join(client, "robots.txt"), "utf8")).toContain(
+      "Sitemap: https://example.com/sitemap.xml",
+    );
   });
 
   it("rejects a missing manifest artifact", () => {
@@ -78,7 +98,7 @@ describe("finalizeStaticBuild", () => {
 
   it("rejects the wrong document language", () => {
     const { client } = createCompleteBuild();
-    writeHtml(client, "/pt-BR/about", html("en"));
+    writeHtml(client, "/pt-BR/about", html("en", "/pt-BR/", "/pt-BR/about"));
 
     expect(() => finalizeStaticBuild(client, manifest)).toThrow(
       "Expected pt-BR/about/index.html to use html lang pt-BR",
@@ -87,7 +107,7 @@ describe("finalizeStaticBuild", () => {
 
   it("rejects an internal link outside the manifest", () => {
     const { client } = createCompleteBuild();
-    writeHtml(client, "/en/about", html("en", "/en/missing"));
+    writeHtml(client, "/en/about", html("en", "/en/missing", "/en/about"));
 
     expect(() => finalizeStaticBuild(client, manifest)).toThrow(
       "Unknown internal link /en/missing in en/about/index.html",
@@ -99,13 +119,135 @@ describe("finalizeStaticBuild", () => {
     writeHtml(
       client,
       "/en/about",
-      "<html lang=\"en\"><body><a href = '/en/missing'>Link</a></body></html>",
+      html("en", "/en/missing", "/en/about").replace(
+        '<a href="/en/missing">',
+        "<a href = '/en/missing'>",
+      ),
     );
 
     expect(() => finalizeStaticBuild(client, manifest)).toThrow(
       "Unknown internal link /en/missing in en/about/index.html",
     );
   });
+
+  it.each(["services", "https://example.com/en/missing"])(
+    "rejects invalid internal link %s",
+    (href) => {
+      const { client } = createCompleteBuild();
+      writeHtml(client, "/en/about", html("en", href, "/en/about"));
+
+      expect(() => finalizeStaticBuild(client, manifest)).toThrow(
+        `Unknown internal link ${href} in en/about/index.html`,
+      );
+    },
+  );
+
+  it("rejects nonlocalized root links from localized pages", () => {
+    const { client } = createCompleteBuild();
+    writeHtml(client, "/en/about", html("en", "/", "/en/about"));
+
+    expect(() => finalizeStaticBuild(client, manifest)).toThrow(
+      "Unknown internal link / in en/about/index.html",
+    );
+  });
+
+  it("validates unquoted internal href values", () => {
+    const { client } = createCompleteBuild();
+    writeHtml(
+      client,
+      "/en/about",
+      html("en", "/en/missing", "/en/about").replace(
+        'href="/en/missing"',
+        "href=/en/missing",
+      ),
+    );
+
+    expect(() => finalizeStaticBuild(client, manifest)).toThrow(
+      "Unknown internal link /en/missing in en/about/index.html",
+    );
+  });
+
+  it("allows external and non-navigation link schemes", () => {
+    const { client } = createCompleteBuild();
+    writeHtml(
+      client,
+      "/en/about",
+      html("en", "mailto:hello@example.com", "/en/about"),
+    );
+
+    expect(() => finalizeStaticBuild(client, manifest)).not.toThrow();
+  });
+
+  it.each([
+    [
+      (content: string) => content.replace("<title>Page</title>", ""),
+      "Missing title in en/about/index.html",
+    ],
+    [
+      (content: string) =>
+        content.replace('<meta name="description" content="Description">', ""),
+      "Missing description in en/about/index.html",
+    ],
+    [
+      (content: string) =>
+        content.replace(
+          "</head>",
+          '<link rel="canonical" href="https://example.com/en/about"></head>',
+        ),
+      "Expected exactly one canonical in en/about/index.html",
+    ],
+    [
+      (content: string) =>
+        content.replace(
+          'rel="canonical" href="https://example.com/en/about"',
+          'rel="canonical" href="https://"',
+        ),
+      "Invalid canonical in en/about/index.html",
+    ],
+    [
+      (content: string) =>
+        content.replace(
+          "https://example.com/pt-BR/about",
+          "https://example.com/pt-BR/services",
+        ),
+      "Invalid hreflang pt-BR in en/about/index.html",
+    ],
+    [
+      (content: string) =>
+        content.replace(/<link rel="alternate" hreflang="x-default"[^>]+>/, ""),
+      "Missing hreflang x-default in en/about/index.html",
+    ],
+    [
+      (content: string) =>
+        content.replace(
+          "</head>",
+          '<link rel="alternate" hreflang="en" href="https://example.com/en/about"></head>',
+        ),
+      "Invalid hreflang in en/about/index.html",
+    ],
+    [
+      (content: string) =>
+        content.replace(
+          '<meta name="robots" content="index,follow">',
+          '<meta name="robots" content="index,noindex">',
+        ),
+      "Invalid robots metadata in en/about/index.html",
+    ],
+    [
+      (content: string) =>
+        content.replace('<meta property="og:title" content="Page">', ""),
+      "Missing og:title in en/about/index.html",
+    ],
+  ])(
+    "rejects invalid rendered SEO at the build boundary",
+    (mutate, message) => {
+      const { client } = createCompleteBuild();
+      const artifact = join(client, "en", "about", "index.html");
+      writeFileSync(artifact, mutate(readFileSync(artifact, "utf8")));
+
+      expect(() => finalizeStaticBuild(client, manifest)).toThrow(message);
+    },
+  );
 
   it("rejects unsupported locale directories without HTML", () => {
     const { client } = createCompleteBuild();
