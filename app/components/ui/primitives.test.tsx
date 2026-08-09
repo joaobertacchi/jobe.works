@@ -2,6 +2,10 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 import { Button } from "./button";
+import { Card } from "./card";
+import { Container } from "./container";
+import { Heading } from "./heading";
+import { Text } from "./text";
 
 describe("Button", () => {
   it("renders primary and large defaults on a native button", () => {
@@ -43,5 +47,113 @@ describe("Button", () => {
     fireEvent.click(button);
 
     expect(handleClick).toHaveBeenCalledOnce();
+  });
+});
+
+describe("Heading", () => {
+  it("keeps semantic and visual levels independent", () => {
+    render(
+      <Heading as="h2" level="display">
+        Welcome
+      </Heading>,
+    );
+
+    const heading = screen.getByRole("heading", { level: 2, name: "Welcome" });
+
+    expect(heading).toHaveClass("text-4xl", "sm:text-6xl");
+  });
+
+  it("defaults to an h2 with section styling", () => {
+    render(<Heading>About us</Heading>);
+
+    const heading = screen.getByRole("heading", { level: 2, name: "About us" });
+
+    expect(heading).toHaveClass("text-3xl", "sm:text-4xl", "text-foreground");
+  });
+
+  it("appends caller classes and forwards native heading props", () => {
+    render(
+      <Heading className="tracking-wide" id="services-heading">
+        Services
+      </Heading>,
+    );
+
+    const heading = screen.getByRole("heading", { name: "Services" });
+
+    expect(heading.className).toMatch(/text-foreground tracking-wide$/);
+    expect(heading).toHaveAttribute("id", "services-heading");
+  });
+});
+
+describe("Text", () => {
+  it("defaults to a paragraph with the default foreground", () => {
+    render(<Text>Supporting copy</Text>);
+
+    const text = screen.getByText("Supporting copy");
+
+    expect(text.tagName).toBe("P");
+    expect(text).toHaveClass("text-foreground");
+  });
+
+  it("renders muted text as a span", () => {
+    render(
+      <Text as="span" tone="muted">
+        Optional
+      </Text>,
+    );
+
+    const text = screen.getByText("Optional");
+
+    expect(text.tagName).toBe("SPAN");
+    expect(text).toHaveClass("text-muted-foreground");
+  });
+
+  it("appends caller classes and forwards native props", () => {
+    render(
+      <Text className="max-w-prose" title="Introduction">
+        Introductory copy
+      </Text>,
+    );
+
+    const text = screen.getByText("Introductory copy");
+
+    expect(text.className).toMatch(/text-foreground max-w-prose$/);
+    expect(text).toHaveAttribute("title", "Introduction");
+  });
+});
+
+describe("Card", () => {
+  it("renders children in a styled div and forwards caller props", () => {
+    render(
+      <Card className="mt-4" data-testid="card">
+        Card content
+      </Card>,
+    );
+
+    const card = screen.getByTestId("card");
+
+    expect(card.tagName).toBe("DIV");
+    expect(card.className).toBe(
+      "rounded-2xl border border-border bg-surface p-6 shadow-sm mt-4",
+    );
+    expect(card).toHaveTextContent("Card content");
+  });
+});
+
+describe("Container", () => {
+  it("renders children in a responsive div and forwards caller props", () => {
+    render(
+      <Container className="relative" data-testid="container">
+        Page content
+      </Container>,
+    );
+
+    const container = screen.getByTestId("container");
+
+    expect(container.tagName).toBe("DIV");
+    expect(container.className).toBe(
+      "mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 relative",
+    );
+    expect(container).toHaveTextContent("Page content");
   });
 });
