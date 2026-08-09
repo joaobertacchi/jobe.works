@@ -17,11 +17,7 @@ export default defineConfig({
     ],
     setupFiles: ["./tests/setup.ts"],
     coverage: {
-      exclude: [
-        "**/*.test.{ts,tsx,mjs}",
-        "app/locales/types.ts",
-        "scripts/*-cli.mjs",
-      ],
+      exclude: ["**/*.test.{ts,tsx,mjs}", "scripts/*-cli.mjs"],
       include: ["app/**/*.{ts,tsx}", "scripts/**/*.{mjs,ts}"],
       provider: "v8",
       reporter: ["text", "html"],
