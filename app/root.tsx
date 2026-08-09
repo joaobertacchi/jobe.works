@@ -14,6 +14,7 @@ import {
   locales,
   type SupportedLocale,
 } from "./i18n/config";
+import { themeInitializationScript } from "./theme";
 import type { Route } from "./+types/root";
 import "./app.css";
 
@@ -26,7 +27,7 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap",
   },
 ];
 
@@ -38,10 +39,11 @@ export function Document({
   locale: SupportedLocale;
 }) {
   return (
-    <html lang={locales[locale].htmlLang}>
+    <html lang={locales[locale].htmlLang} suppressHydrationWarning>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script>{themeInitializationScript}</script>
         <Meta />
         <Links />
       </head>
