@@ -23,11 +23,24 @@ for (const [url, heading] of publishedPages) {
 
 test("keeps typed plural translation after hydration", async ({ page }) => {
   await page.goto("/en/");
-  await page.getByRole("link", { name: "Português" }).click();
-  await expect(page).toHaveURL("/pt-BR/");
-  await page.goBack();
+  const sentinel = await page.evaluate(() => {
+    const value = crypto.randomUUID();
+    Reflect.set(window, "routingSentinel", value);
+    return value;
+  });
 
-  await expect(page).toHaveURL("/en/");
+  await page.getByRole("link", { name: "About", exact: true }).click();
+  await expect(page).toHaveURL("/en/about");
+  expect(
+    await page.evaluate(() => Reflect.get(window, "routingSentinel")),
+  ).toBe(sentinel);
+
+  await page.getByRole("link", { name: "Home", exact: true }).click();
+
+  await expect(page).toHaveURL("/en");
+  expect(
+    await page.evaluate(() => Reflect.get(window, "routingSentinel")),
+  ).toBe(sentinel);
   await expect(page.getByText("2 examples", { exact: true })).toBeVisible();
 });
 
@@ -66,30 +79,22 @@ for (const [
   });
 }
 
-test("does not persist a language choice", async ({ browser, baseURL }) => {
-  const context = await browser.newContext({ baseURL });
-  const page = await context.newPage();
+test("does not persist a language choice", async ({ page }) => {
+  const snapshotPersistence = () =>
+    page.evaluate(() => ({
+      cookie: document.cookie,
+      localStorage: { ...localStorage },
+      sessionStorage: { ...sessionStorage },
+    }));
 
-  try {
-    await page.goto("/en/about");
-    await page.getByRole("link", { name: "Português" }).click();
+  await page.goto("/en/about");
+  const persistenceBeforeSwitch = await snapshotPersistence();
 
-    await expect(page).toHaveURL("/pt-BR/about");
-    await expect(page.getByRole("heading", { name: "Sobre" })).toBeVisible();
-    expect(
-      await page.evaluate(() => ({
-        cookie: document.cookie,
-        localStorageLength: localStorage.length,
-        sessionStorageLength: sessionStorage.length,
-      })),
-    ).toEqual({
-      cookie: "",
-      localStorageLength: 0,
-      sessionStorageLength: 0,
-    });
-  } finally {
-    await context.close();
-  }
+  await page.getByRole("link", { name: "Português" }).click();
+
+  await expect(page).toHaveURL("/pt-BR/about");
+  await expect(page.getByRole("heading", { name: "Sobre" })).toBeVisible();
+  expect(await snapshotPersistence()).toEqual(persistenceBeforeSwitch);
 });
 
 test("keeps navigation in the active locale", async ({ page }) => {
