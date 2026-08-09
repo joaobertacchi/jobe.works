@@ -181,10 +181,10 @@ Expected: Node.js `v22.22.2` is active from `.nvmrc`.
 Run:
 
 ```bash
-opencode debug config
+opencode debug config | node -e 'let data = ""; process.stdin.setEncoding("utf8"); process.stdin.on("data", (chunk) => (data += chunk)); process.stdin.on("end", () => { const agent = JSON.parse(data).agent?.["architecture-review"]; if (agent?.model !== "openai/gpt-5.6-sol" || agent?.variant !== "medium") { console.error("architecture-review model configuration mismatch"); process.exit(1); } console.log(JSON.stringify({ model: agent.model, variant: agent.variant })); });'
 ```
 
-Expected: the resolved `architecture-review` agent entry contains `"model": "openai/gpt-5.6-sol"` and `"variant": "medium"`.
+Expected: `{"model":"openai/gpt-5.6-sol","variant":"medium"}`. Do not print the unfiltered resolved configuration because it may contain secrets from global configuration.
 
 - [ ] **Step 3: Run canonical deterministic validation**
 
