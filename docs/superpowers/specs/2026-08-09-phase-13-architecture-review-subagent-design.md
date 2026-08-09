@@ -8,9 +8,11 @@ This phase adds one OpenCode project-agent definition. It does not add a general
 
 ## Chosen Approach
 
-Create `.opencode/agents/architecture-review.md` as a provider-neutral OpenCode subagent. Keep the complete review contract in this one file so an agent can discover and run it without learning a project-specific wrapper.
+Create `.opencode/agents/architecture-review.md` as an OpenCode subagent. Keep the complete review contract in this one file so an agent can discover and run it without learning a project-specific wrapper.
 
-The reviewer is read-only. It may inspect the request, changed files, relevant project documentation, existing examples, Git state, and supplied validation results, but it must not edit the repository or act as an implementation agent. The definition does not pin a model.
+The reviewer is read-only. It may inspect the request, changed files, relevant project documentation, existing examples, Git state, and supplied validation results, but it must not edit the repository or act as an implementation agent.
+
+The definition pins `openai/gpt-5.6-sol` with the `medium` variant. OpenCode represents this selection with separate `model` and `variant` frontmatter fields.
 
 Git history is the recovery mechanism for accidental changes to the agent definition. The project will not add a hash guard, filesystem immutability, an `AGENTS.md` protection rule, or a contract test.
 
@@ -114,7 +116,7 @@ The status is `NEEDS_CHANGES` when any high or medium finding exists. The status
 
 ## Validation
 
-The implementation adds no executable application behavior and no browser-visible behavior. No prompt-contract test is added by design. Repository validation consists of `npm run check`; Playwright is not required for this phase.
+The implementation adds no executable application behavior and no browser-visible behavior. No prompt-contract test is added by design. Repository validation consists of `npm run check` plus a fresh OpenCode configuration load that confirms the pinned model and variant; Playwright is not required for this phase.
 
 Because OpenCode loads project agents at startup, users must restart OpenCode after the agent definition is added or changed.
 
@@ -123,7 +125,7 @@ Because OpenCode loads project agents at startup, users must restart OpenCode af
 Phase 13 is complete when:
 
 - `.opencode/agents/architecture-review.md` is discoverable as an OpenCode subagent;
-- the reviewer is provider-neutral and read-only;
+- the reviewer is read-only and configured with `model: openai/gpt-5.6-sol` and `variant: medium`;
 - the current phase, acceptance criteria, changed files, validation results, and future-phase exclusion are defined as review inputs;
 - the reviewer is initially change-scoped rather than repository-wide;
 - missing future-phase capabilities are explicitly excluded from findings;
