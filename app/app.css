@@ -1,16 +1,47 @@
 @import "tailwindcss";
 
-@theme {
-  --font-sans:
-    "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Source Serif 4", ui-serif, Georgia, serif;
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-foreground: var(--foreground);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
 }
 
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
+:root {
+  --background: oklch(0.974 0.014 84);
+  --surface: oklch(0.995 0.006 84);
+  --foreground: oklch(0.23 0.025 52);
+  --muted-foreground: oklch(0.48 0.025 60);
+  --border: oklch(0.85 0.025 75);
+  --brand: oklch(0.42 0.075 185);
+  --brand-foreground: oklch(0.98 0.01 90);
+}
 
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
+.dark {
+  --background: oklch(0.18 0.015 55);
+  --surface: oklch(0.23 0.016 55);
+  --foreground: oklch(0.92 0.018 82);
+  --muted-foreground: oklch(0.72 0.02 75);
+  --border: oklch(0.35 0.02 65);
+  --brand: oklch(0.72 0.08 180);
+  --brand-foreground: oklch(0.17 0.02 180);
+}
+
+html {
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  @apply min-h-screen bg-background font-sans text-foreground antialiased;
 }

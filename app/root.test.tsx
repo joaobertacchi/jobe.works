@@ -89,6 +89,18 @@ function metaIdentity(
 }
 
 describe("root error boundary", () => {
+  it("uses typography primitives for global error content", () => {
+    render(ErrorBoundary({ error: routeError(404) } as never));
+
+    expect(screen.getByRole("heading", { name: "404" })).toHaveClass(
+      "font-serif",
+      "text-foreground",
+    );
+    expect(
+      screen.getByText("The requested page could not be found."),
+    ).toHaveClass("text-base", "leading-relaxed", "text-foreground");
+  });
+
   it("renders a not-found response", () => {
     render(ErrorBoundary({ error: routeError(404) } as never));
 
