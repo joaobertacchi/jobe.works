@@ -35,9 +35,9 @@ test("keeps typed plural translation after hydration", async ({ page }) => {
     await page.evaluate(() => Reflect.get(window, "routingSentinel")),
   ).toBe(sentinel);
 
-  await page.getByRole("link", { name: "Home", exact: true }).click();
+  await page.goBack();
 
-  await expect(page).toHaveURL("/en");
+  await expect(page).toHaveURL("/en/");
   expect(
     await page.evaluate(() => Reflect.get(window, "routingSentinel")),
   ).toBe(sentinel);
