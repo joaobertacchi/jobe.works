@@ -1,0 +1,278 @@
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { afterEach, describe, expect, it, vi } from "vitest";
+
+import { I18nProvider } from "../../i18n/i18n";
+import { commonTranslations } from "../../i18n/translations/common";
+import { THEME_STORAGE_KEY } from "../../theme";
+import { ThemeSwitcher } from "./theme-switcher";
+
+afterEach(() => {
+  vi.restoreAllMocks();
+  vi.unstubAllGlobals();
+  window.localStorage.clear();
+  document.documentElement.className = "";
+  document.documentElement.style.colorScheme = "";
+});
+
+describe("common translations", () => {
+  it("defines shared site, navigation, and theme labels in both locales", () => {
+    expect(commonTranslations.en.siteName).toBe("Agent-ready sites");
+    expect(commonTranslations.en.navigationLabel).toBe("Primary navigation");
+    expect(commonTranslations.en.theme).toEqual({
+      label: "Theme",
+      light: "Light",
+      dark: "Dark",
+      system: "System",
+    });
+    expect(commonTranslations["pt-BR"].siteName).toBe(
+      "Sites prontos para agentes",
+    );
+    expect(commonTranslations["pt-BR"].navigationLabel).toBe(
+      "Navegação principal",
+    );
+    expect(commonTranslations["pt-BR"].theme).toEqual({
+      label: "Tema",
+      light: "Claro",
+      dark: "Escuro",
+      system: "Sistema",
+    });
+  });
+});
+
+describe("ThemeSwitcher", () => {
+  it.each([
+    ["en", "Theme", ["Light", "Dark", "System"]],
+    ["pt-BR", "Tema", ["Claro", "Escuro", "Sistema"]],
+  ] as const)(
+    "renders an accessible localized group in %s",
+    async (locale, groupName, buttonNames) => {
+      installMatchMedia(false);
+
+      renderThemeSwitcher(locale);
+
+      const group = screen.getByRole("group", { name: groupName });
+      const buttons = buttonNames.map((name) =>
+        screen.getByRole("button", { name }),
+      );
+
+      expect(group).toContainElement(buttons[0]);
+      expect(buttons).toHaveLength(3);
+      await waitFor(() => {
+        expect(
+          buttons.filter(
+            (button) => button.getAttribute("aria-pressed") === "true",
+          ),
+        ).toHaveLength(1);
+      });
+    },
+  );
+
+  it.each([
+    ["light", false, "light"],
+    ["dark", true, "dark"],
+  ] as const)(
+    "loads and applies a stored %s preference",
+    async (storedTheme, isDark, colorScheme) => {
+      window.localStorage.setItem(THEME_STORAGE_KEY, storedTheme);
+      installMatchMedia(!isDark);
+
+      renderThemeSwitcher();
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole("button", { name: title(storedTheme) }),
+        ).toHaveAttribute("aria-pressed", "true");
+      });
+      expect(document.documentElement.classList.contains("dark")).toBe(isDark);
+      expect(document.documentElement.style.colorScheme).toBe(colorScheme);
+    },
+  );
+
+  it("persists and immediately applies explicit dark and light selections", () => {
+    installMatchMedia(false);
+    renderThemeSwitcher();
+
+    fireEvent.click(screen.getByRole("button", { name: "Dark" }));
+
+    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBe("dark");
+    expect(document.documentElement).toHaveClass("dark");
+    expect(document.documentElement.style.colorScheme).toBe("dark");
+    expect(screen.getByRole("button", { name: "Dark" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Light" }));
+
+    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBe("light");
+    expect(document.documentElement).not.toHaveClass("dark");
+    expect(document.documentElement.style.colorScheme).toBe("light");
+    expect(screen.getByRole("button", { name: "Light" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+
+  it.each([
+    [false, "light"],
+    [true, "dark"],
+  ] as const)(
+    "removes the stored preference and follows system dark=%s",
+    (prefersDark, effectiveTheme) => {
+      window.localStorage.setItem(THEME_STORAGE_KEY, "light");
+      installMatchMedia(prefersDark);
+      renderThemeSwitcher();
+
+      fireEvent.click(screen.getByRole("button", { name: "System" }));
+
+      expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
+      expect(document.documentElement.classList.contains("dark")).toBe(
+        effectiveTheme === "dark",
+      );
+      expect(document.documentElement.style.colorScheme).toBe(effectiveTheme);
+      expect(screen.getByRole("button", { name: "System" })).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+    },
+  );
+
+  it("updates the effective system theme when the media preference changes", () => {
+    const media = installMatchMedia(false);
+    renderThemeSwitcher();
+
+    media.emit(true);
+
+    expect(document.documentElement).toHaveClass("dark");
+    expect(document.documentElement.style.colorScheme).toBe("dark");
+    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
+
+    media.emit(false);
+
+    expect(document.documentElement).not.toHaveClass("dark");
+    expect(document.documentElement.style.colorScheme).toBe("light");
+  });
+
+  it.each(["light", "dark"] as const)(
+    "does not override an explicit %s selection on media changes",
+    (theme) => {
+      const media = installMatchMedia(theme === "light");
+      renderThemeSwitcher();
+
+      fireEvent.click(screen.getByRole("button", { name: title(theme) }));
+      media.emit(theme === "light");
+
+      expect(document.documentElement.classList.contains("dark")).toBe(
+        theme === "dark",
+      );
+      expect(document.documentElement.style.colorScheme).toBe(theme);
+    },
+  );
+
+  it("removes the system listener on mode change and unmount", () => {
+    const media = installMatchMedia(false);
+    const { unmount } = renderThemeSwitcher();
+
+    expect(media.listenerCount()).toBe(1);
+
+    fireEvent.click(screen.getByRole("button", { name: "Dark" }));
+
+    expect(media.listenerCount()).toBe(0);
+    expect(media.removeEventListener).toHaveBeenCalledOnce();
+
+    fireEvent.click(screen.getByRole("button", { name: "System" }));
+
+    expect(media.listenerCount()).toBe(1);
+
+    unmount();
+
+    expect(media.listenerCount()).toBe(0);
+    expect(media.removeEventListener).toHaveBeenCalledTimes(2);
+  });
+
+  it("uses system when storage contains an invalid value", () => {
+    window.localStorage.setItem(THEME_STORAGE_KEY, "invalid");
+    installMatchMedia(true);
+
+    expect(() => renderThemeSwitcher()).not.toThrow();
+
+    expect(screen.getByRole("button", { name: "System" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(document.documentElement).toHaveClass("dark");
+  });
+
+  it("uses system when storage throws", () => {
+    installMatchMedia(true);
+    vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
+      throw new Error("Storage unavailable");
+    });
+
+    expect(() => renderThemeSwitcher()).not.toThrow();
+
+    expect(screen.getByRole("button", { name: "System" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(document.documentElement).toHaveClass("dark");
+  });
+
+  it("falls back to light when matchMedia is missing", () => {
+    vi.stubGlobal("matchMedia", undefined);
+
+    expect(() => renderThemeSwitcher()).not.toThrow();
+
+    expect(screen.getByRole("button", { name: "System" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(document.documentElement).not.toHaveClass("dark");
+    expect(document.documentElement.style.colorScheme).toBe("light");
+  });
+});
+
+function renderThemeSwitcher(locale: "en" | "pt-BR" = "en") {
+  return render(
+    <I18nProvider locale={locale}>
+      <ThemeSwitcher />
+    </I18nProvider>,
+  );
+}
+
+function title(theme: "light" | "dark") {
+  return `${theme[0].toUpperCase()}${theme.slice(1)}`;
+}
+
+function installMatchMedia(initialMatches: boolean) {
+  let matches = initialMatches;
+  const listeners = new Set<(event: MediaQueryListEvent) => void>();
+  const mediaQuery = {
+    get matches() {
+      return matches;
+    },
+    addEventListener: vi.fn(
+      (_type: "change", listener: (event: MediaQueryListEvent) => void) => {
+        listeners.add(listener);
+      },
+    ),
+    removeEventListener: vi.fn(
+      (_type: "change", listener: (event: MediaQueryListEvent) => void) => {
+        listeners.delete(listener);
+      },
+    ),
+    emit(nextMatches: boolean) {
+      matches = nextMatches;
+      const event = { matches } as MediaQueryListEvent;
+      listeners.forEach((listener) => listener(event));
+    },
+    listenerCount: () => listeners.size,
+  };
+
+  vi.stubGlobal(
+    "matchMedia",
+    vi.fn(() => mediaQuery),
+  );
+
+  return mediaQuery;
+}
