@@ -1,3 +1,5 @@
+import { readFileSync, readdirSync } from "node:fs";
+
 import { expect, test } from "./fixtures";
 
 const publishedPages = [
@@ -20,6 +22,20 @@ for (const [url, heading] of publishedPages) {
     await expect(page.getByRole("heading", { name: heading })).toBeVisible();
   });
 }
+
+test("canonical hydration reuses prerendered loader data", async ({ page }) => {
+  const dataRequests: string[] = [];
+  page.on("request", (request) => {
+    if (new URL(request.url()).pathname.endsWith(".data")) {
+      dataRequests.push(request.url());
+    }
+  });
+
+  await page.goto("/en/about");
+
+  await expect(page.getByRole("heading", { name: "About" })).toBeVisible();
+  expect(dataRequests).toEqual([]);
+});
 
 test("keeps localized Home content after hydration", async ({ page }) => {
   await page.goto("/en/");
@@ -116,14 +132,40 @@ test("returns real 404 responses for unpublished URLs", async ({ request }) => {
   expect((await request.get("/pt-BR/not-published")).status()).toBe(404);
 });
 
-test.describe("unpublished aliases", () => {
-  test.use({
-    allowedBrowserErrors: [
-      "Failed to load resource: the server responded with a status of 404 (Not Found)",
-    ],
-  });
+const unpublishedAliases = [
+  [
+    "/en/about/",
+    "Page not found",
+    "This page may have moved or never existed. Use the navigation to find your way back.",
+    "About",
+  ],
+  [
+    "/en/About",
+    "Page not found",
+    "This page may have moved or never existed. Use the navigation to find your way back.",
+    "About",
+  ],
+  [
+    "/pt-BR/about/",
+    "Página não encontrada",
+    "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
+    "Sobre",
+  ],
+  [
+    "/pt-BR/About",
+    "Página não encontrada",
+    "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
+    "Sobre",
+  ],
+] as const;
 
-  for (const alias of ["/en/about/", "/en/About"] as const) {
+test.describe("unpublished aliases", () => {
+  for (const [
+    alias,
+    heading,
+    description,
+    canonicalHeading,
+  ] of unpublishedAliases) {
     test(`rejects client navigation to ${alias}`, async ({ page }) => {
       await page.goto("/en/services");
       await page.evaluate(async (url) => {
@@ -136,13 +178,42 @@ test.describe("unpublished aliases", () => {
       }, alias);
 
       await expect(page).toHaveURL(alias);
-      await expect(page.getByRole("heading", { name: "404" })).toBeVisible();
+      await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+      await expect(page.getByText(description, { exact: true })).toBeVisible();
       await expect(
-        page.getByText("Page not found.", { exact: true }),
-      ).toBeVisible();
-      await expect(page.getByRole("heading", { name: "About" })).toHaveCount(0);
+        page.getByRole("heading", { name: canonicalHeading }),
+      ).toHaveCount(0);
+    });
+
+    test(`rejects direct browser navigation to ${alias}`, async ({ page }) => {
+      await page.goto(alias);
+
+      await expect(page).toHaveURL(alias);
+      await expect(page.getByRole("heading", { name: heading })).toBeVisible();
+      await expect(page.getByText(description, { exact: true })).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: canonicalHeading }),
+      ).toHaveCount(0);
     });
   }
+});
+
+test("does not publish alias URLs or generate alias artifacts", () => {
+  const manifest = readFileSync(
+    ".react-router/canonical-url-manifest.json",
+    "utf8",
+  );
+  const englishArtifacts = readdirSync("build/client/en");
+  const portugueseArtifacts = readdirSync("build/client/pt-BR");
+
+  expect(manifest).not.toContain('"/en/about/"');
+  expect(manifest).not.toContain('"/en/About"');
+  expect(manifest).not.toContain('"/pt-BR/about/"');
+  expect(manifest).not.toContain('"/pt-BR/About"');
+  expect(englishArtifacts).toContain("about");
+  expect(englishArtifacts).not.toContain("About");
+  expect(portugueseArtifacts).toContain("about");
+  expect(portugueseArtifacts).not.toContain("About");
 });
 
 const supportedLocaleCatchAllPages = [

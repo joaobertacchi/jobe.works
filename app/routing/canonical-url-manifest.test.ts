@@ -124,6 +124,9 @@ describe("canonical URL manifest", () => {
     expect(() => getLocalizedUrlsForPathname(manifest, "/en/about/")).toThrow(
       "Canonical URL not found: /en/about/",
     );
+    expect(() => getLocalizedUrlsForPathname(manifest, "/en/About")).toThrow(
+      "Canonical URL not found: /en/About",
+    );
   });
 
   it.each([

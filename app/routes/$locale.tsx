@@ -15,7 +15,9 @@ import {
   type CanonicalUrlManifest,
   getLocalizedUrlsForPathname,
 } from "../routing/canonical-url-manifest";
+import { isCanonicalLocalizedPathname } from "../routing/localized-pathname";
 import { readCanonicalManifest } from "../../scripts/canonical-manifest-file.server";
+import NotFound from "./$locale.404";
 import type { Route } from "./+types/$locale";
 
 function LocalizedLayout() {
@@ -54,6 +56,9 @@ export async function clientLoader({
   if (!params.locale || !isSupportedLocale(params.locale)) {
     throw new Response(null, { status: 404 });
   }
+  if (!isCanonicalLocalizedPathname(url.pathname)) {
+    throw new Response(null, { status: 404 });
+  }
   try {
     const data = await serverLoader();
     if (!Object.values(data.urls).includes(url.pathname)) {
@@ -71,6 +76,7 @@ export async function clientLoader({
     throw error;
   }
 }
+clientLoader.hydrate = true as const;
 
 function UnsupportedLocalePage() {
   return (
@@ -83,11 +89,18 @@ function UnsupportedLocalePage() {
   );
 }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+export function ErrorBoundary({ error, params }: Route.ErrorBoundaryProps) {
   if (
     (error instanceof Response || isRouteErrorResponse(error)) &&
     error.status === 404
   ) {
+    if (params.locale && isSupportedLocale(params.locale)) {
+      return (
+        <I18nProvider locale={params.locale}>
+          <NotFound />
+        </I18nProvider>
+      );
+    }
     return <UnsupportedLocalePage />;
   }
   return (

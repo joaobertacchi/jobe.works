@@ -1,12 +1,8 @@
 import { expect, test as base } from "@playwright/test";
 
-export const test = base.extend<{
-  allowedBrowserErrors: string[];
-  browserErrors: void;
-}>({
-  allowedBrowserErrors: [[], { option: true }],
+export const test = base.extend<{ browserErrors: void }>({
   browserErrors: [
-    async ({ allowedBrowserErrors, page }, use) => {
+    async ({ page }, use) => {
       const errors: string[] = [];
 
       page.on("console", (message) => {
@@ -16,10 +12,7 @@ export const test = base.extend<{
 
       await use();
 
-      expect(
-        errors.filter((error) => !allowedBrowserErrors.includes(error)),
-        "unexpected browser errors",
-      ).toEqual([]);
+      expect(errors, "unexpected browser errors").toEqual([]);
     },
     { auto: true },
   ],

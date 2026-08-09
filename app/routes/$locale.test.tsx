@@ -413,6 +413,7 @@ describe("localized route clientLoader", () => {
       clientLoader({
         params: { locale: "en", "*": "not-published" },
         serverLoader,
+        url: new URL("https://example.test/en/not-published"),
       } as never),
     ).resolves.toEqual({ urls: null });
     expect(serverLoader).toHaveBeenCalledOnce();
@@ -423,7 +424,11 @@ describe("localized route clientLoader", () => {
     const serverLoader = vi.fn().mockRejectedValue(response);
 
     await expect(
-      clientLoader({ params: { locale: "en" }, serverLoader } as never),
+      clientLoader({
+        params: { locale: "en" },
+        serverLoader,
+        url: new URL("https://example.test/en/about"),
+      } as never),
     ).rejects.toBe(response);
     expect(serverLoader).toHaveBeenCalledOnce();
   });
@@ -436,28 +441,33 @@ describe("localized route clientLoader", () => {
       clientLoader({
         params: { locale: "en", "*": "not-published" },
         serverLoader,
+        url: new URL("https://example.test/en/not-published"),
       } as never),
     ).rejects.toBe(error);
     expect(serverLoader).toHaveBeenCalledOnce();
   });
 
-  it.each(["/en/about/", "/en/About"])(
-    "rejects successful static data for noncanonical alias %s",
+  it.each(["/en/about/", "/en/About", "/pt-BR/about/", "/pt-BR/About"])(
+    "rejects noncanonical alias %s before loading static data",
     async (pathname) => {
-      const serverLoader = vi
-        .fn()
-        .mockResolvedValue(getLoaderData("/en/about"));
+      const serverLoader = vi.fn();
 
       await expect(
         clientLoader({
-          params: { locale: "en" },
+          params: {
+            locale: pathname.startsWith("/pt-BR/") ? "pt-BR" : "en",
+          },
           serverLoader,
           url: new URL(`https://example.test${pathname}`),
         } as never),
       ).rejects.toMatchObject({ status: 404 });
-      expect(serverLoader).toHaveBeenCalledOnce();
+      expect(serverLoader).not.toHaveBeenCalled();
     },
   );
+
+  it("runs during hydration to validate direct document URLs", () => {
+    expect(clientLoader.hydrate).toBe(true);
+  });
 });
 
 describe("localized route build loader data", () => {
