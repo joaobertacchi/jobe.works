@@ -128,45 +128,53 @@ describe("themeInitializationScript", () => {
   ] as const)(
     "initializes stored=%s and prefersDark=%s as %s",
     (stored, prefersDark, expected) => {
-      executeInitializationScript(storageWith(stored), prefersDark);
-
-      expect(document.documentElement.classList.contains("dark")).toBe(
-        expected === "dark",
+      const root = executeInitializationScript(
+        storageWith(stored),
+        prefersDark,
       );
-      expect(document.documentElement.style.colorScheme).toBe(expected);
+
+      expect(root.classList.contains("dark")).toBe(expected === "dark");
+      expect(root.style.colorScheme).toBe(expected);
     },
   );
 
-  it("follows the OS when storage throws", () => {
-    executeInitializationScript(
-      {
-        getItem() {
-          throw new Error("Storage unavailable");
+  it.each([
+    [false, "light"],
+    [true, "dark"],
+  ] as const)(
+    "follows the %s OS preference when storage throws",
+    (prefersDark, expected) => {
+      const root = executeInitializationScript(
+        {
+          getItem() {
+            throw new Error("Storage unavailable");
+          },
+          setItem() {},
+          removeItem() {},
         },
-        setItem() {},
-        removeItem() {},
-      },
-      true,
-    );
+        prefersDark,
+      );
 
-    expect(document.documentElement.classList.contains("dark")).toBe(true);
-    expect(document.documentElement.style.colorScheme).toBe("dark");
-  });
+      expect(root.classList.contains("dark")).toBe(expected === "dark");
+      expect(root.style.colorScheme).toBe(expected);
+    },
+  );
 
   it("defaults to light when matchMedia is unavailable", () => {
-    executeInitializationScript(storageWith(null));
+    const root = executeInitializationScript(storageWith(null));
 
-    expect(document.documentElement.classList.contains("dark")).toBe(false);
-    expect(document.documentElement.style.colorScheme).toBe("light");
+    expect(root.classList.contains("dark")).toBe(false);
+    expect(root.style.colorScheme).toBe("light");
   });
 
   it("removes an existing dark class when light is effective", () => {
-    document.documentElement.classList.add("dark");
+    const root = document.createElement("html");
+    root.classList.add("dark");
 
-    executeInitializationScript(storageWith("light"), true);
+    executeInitializationScript(storageWith("light"), true, root);
 
-    expect(document.documentElement.classList.contains("dark")).toBe(false);
-    expect(document.documentElement.style.colorScheme).toBe("light");
+    expect(root.classList.contains("dark")).toBe(false);
+    expect(root.style.colorScheme).toBe("light");
   });
 });
 
@@ -189,19 +197,20 @@ function recordingStorage() {
 function executeInitializationScript(
   storage: ThemeStorage,
   prefersDark?: boolean,
+  root = document.createElement("html"),
 ) {
-  const matchMedia =
+  vi.stubGlobal("localStorage", storage);
+  vi.stubGlobal(
+    "matchMedia",
     prefersDark === undefined
       ? undefined
       : vi.fn((query: string) => ({
           matches: query === THEME_MEDIA_QUERY && prefersDark,
-        }));
-  const execute = new Function(
-    "document",
-    "localStorage",
-    "matchMedia",
-    themeInitializationScript,
+        })),
   );
+  vi.stubGlobal("document", { documentElement: root });
 
-  execute(document, storage, matchMedia);
+  new Function(themeInitializationScript)();
+
+  return root;
 }
