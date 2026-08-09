@@ -6,12 +6,22 @@ import {
   waitFor,
 } from "@testing-library/react";
 import { StrictMode } from "react";
+import { MemoryRouter } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import type { SupportedLocale } from "../../i18n/config";
 import { I18nProvider } from "../../i18n/i18n";
 import { commonTranslations } from "../../i18n/translations/common";
 import { THEME_STORAGE_KEY } from "../../theme";
+import { LanguageSwitcher } from "./language-switcher";
+import { PrimaryNavigation } from "./primary-navigation";
+import { SiteHeader } from "./site-header";
 import { ThemeSwitcher } from "./theme-switcher";
+
+const urls: Record<SupportedLocale, string> = {
+  en: "/en/about",
+  "pt-BR": "/pt-BR/about",
+};
 
 afterEach(() => {
   vi.restoreAllMocks();
@@ -43,6 +53,117 @@ describe("common translations", () => {
       dark: "Escuro",
       system: "Sistema",
     });
+  });
+});
+
+describe("PrimaryNavigation", () => {
+  it.each([
+    [
+      "en",
+      "/en/about",
+      "Primary navigation",
+      [
+        ["Home", "/en/"],
+        ["About", "/en/about"],
+        ["Services", "/en/services"],
+      ],
+    ],
+    [
+      "pt-BR",
+      "/pt-BR/services",
+      "Navegação principal",
+      [
+        ["Início", "/pt-BR/"],
+        ["Sobre", "/pt-BR/about"],
+        ["Serviços", "/pt-BR/services"],
+      ],
+    ],
+  ] as const)(
+    "renders localized canonical links in %s",
+    (locale, pathname, label, links) => {
+      renderWithRouter(<PrimaryNavigation />, locale, pathname);
+
+      const navigation = screen.getByRole("navigation", { name: label });
+      expect(navigation).toBeVisible();
+      for (const [name, href] of links) {
+        expect(screen.getByRole("link", { name })).toHaveAttribute(
+          "href",
+          href,
+        );
+      }
+    },
+  );
+
+  it("marks only the active destination and matches Home exactly", () => {
+    renderWithRouter(<PrimaryNavigation />, "en", "/en/about");
+
+    expect(screen.getByRole("link", { name: "About" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(screen.getByRole("link", { name: "Home" })).not.toHaveAttribute(
+      "aria-current",
+    );
+    expect(screen.getByRole("link", { name: "Services" })).not.toHaveAttribute(
+      "aria-current",
+    );
+  });
+});
+
+describe("LanguageSwitcher", () => {
+  it.each([
+    ["en", "/en/not-published", "Choose language", "Português", "/pt-BR/about"],
+    [
+      "pt-BR",
+      "/pt-BR/anything/else",
+      "Escolher idioma",
+      "English",
+      "/en/about",
+    ],
+  ] as const)(
+    "uses the supplied sibling URL without rewriting the %s pathname",
+    (locale, pathname, label, linkName, href) => {
+      renderWithRouter(<LanguageSwitcher urls={urls} />, locale, pathname);
+
+      const navigation = screen.getByRole("navigation", { name: label });
+      expect(navigation.querySelectorAll("a")).toHaveLength(1);
+      expect(screen.getByRole("link", { name: linkName })).toHaveAttribute(
+        "href",
+        href,
+      );
+    },
+  );
+});
+
+describe("SiteHeader", () => {
+  it("composes the site identity, navigation, language, and theme controls", () => {
+    installMatchMedia(false);
+    renderWithRouter(<SiteHeader urls={urls} />, "en", "/en/about");
+
+    const header = screen.getByRole("banner");
+    expect(header).toHaveTextContent("Agent-ready sites");
+    expect(
+      screen.getByRole("navigation", { name: "Primary navigation" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("navigation", { name: "Choose language" }),
+    ).toBeVisible();
+    expect(screen.getByRole("group", { name: "Theme" })).toBeVisible();
+  });
+
+  it("omits only the language switcher when sibling URLs are unavailable", () => {
+    installMatchMedia(false);
+    renderWithRouter(<SiteHeader urls={null} />, "pt-BR", "/pt-BR/missing");
+
+    const header = screen.getByRole("banner");
+    expect(header).toHaveTextContent("Sites prontos para agentes");
+    expect(
+      screen.getByRole("navigation", { name: "Navegação principal" }),
+    ).toBeVisible();
+    expect(
+      screen.queryByRole("navigation", { name: "Escolher idioma" }),
+    ).toBeNull();
+    expect(screen.getByRole("group", { name: "Tema" })).toBeVisible();
   });
 });
 
@@ -308,6 +429,18 @@ function renderThemeSwitcher(locale: "en" | "pt-BR" = "en") {
     <I18nProvider locale={locale}>
       <ThemeSwitcher />
     </I18nProvider>,
+  );
+}
+
+function renderWithRouter(
+  component: React.ReactNode,
+  locale: SupportedLocale,
+  pathname: string,
+) {
+  return render(
+    <MemoryRouter initialEntries={[pathname]}>
+      <I18nProvider locale={locale}>{component}</I18nProvider>
+    </MemoryRouter>,
   );
 }
 

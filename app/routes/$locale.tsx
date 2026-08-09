@@ -1,14 +1,16 @@
 import {
   isRouteErrorResponse,
-  Link,
   Outlet,
   useLoaderData,
   useMatches,
   useParams,
 } from "react-router";
 
-import { isSupportedLocale, locales, supportedLocales } from "../i18n/config";
-import { I18nProvider, useI18n } from "../i18n/i18n";
+import { SiteHeader } from "../components/site/site-header";
+import { Heading } from "../components/ui/heading";
+import { Text } from "../components/ui/text";
+import { isSupportedLocale } from "../i18n/config";
+import { I18nProvider } from "../i18n/i18n";
 import {
   type CanonicalUrlManifest,
   getLocalizedUrlsForPathname,
@@ -23,27 +25,9 @@ function LocalizedLayout() {
       (handle as { languageSwitcher?: boolean } | undefined)
         ?.languageSwitcher === false,
   );
-  const { locale, translate } = useI18n();
   return (
     <>
-      <header>
-        <nav aria-label="Primary navigation">
-          <Link to=".">{translate("common.navigation.home")}</Link>
-          <Link to="about">{translate("common.navigation.about")}</Link>
-          <Link to="services">{translate("common.navigation.services")}</Link>
-        </nav>
-        {urls !== null && !hideLanguageSwitcher ? (
-          <nav aria-label={translate("common.languageSwitcherLabel")}>
-            {supportedLocales
-              .filter((targetLocale) => targetLocale !== locale)
-              .map((targetLocale) => (
-                <Link key={targetLocale} to={urls[targetLocale]}>
-                  {locales[targetLocale].label}
-                </Link>
-              ))}
-          </nav>
-        ) : null}
-      </header>
+      <SiteHeader urls={hideLanguageSwitcher ? null : urls} />
       <Outlet />
     </>
   );
@@ -85,8 +69,10 @@ export async function clientLoader({
 function UnsupportedLocalePage() {
   return (
     <main>
-      <h1>404</h1>
-      <p>Page not found.</p>
+      <Heading as="h1" level="display">
+        404
+      </Heading>
+      <Text>Page not found.</Text>
     </main>
   );
 }
@@ -100,8 +86,10 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
   return (
     <main>
-      <h1>Error</h1>
-      <p>An unexpected error occurred.</p>
+      <Heading as="h1" level="display">
+        Error
+      </Heading>
+      <Text>An unexpected error occurred.</Text>
     </main>
   );
 }

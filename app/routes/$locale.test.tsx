@@ -102,10 +102,23 @@ describe("localized route layout", () => {
     renderLocalizedRoute("/en/about");
 
     expect(await screen.findByRole("heading", { name: "About" })).toBeVisible();
+    expect(screen.getByRole("banner")).toHaveTextContent("Agent-ready sites");
+    expect(
+      screen.getByRole("navigation", { name: "Primary navigation" }),
+    ).toBeVisible();
+    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute(
+      "href",
+      "/en/",
+    );
+    expect(screen.getByRole("link", { name: "About" })).toHaveAttribute(
+      "href",
+      "/en/about",
+    );
     expect(screen.getByRole("link", { name: "Services" })).toHaveAttribute(
       "href",
       "/en/services",
     );
+    expect(screen.getByRole("group", { name: "Theme" })).toBeVisible();
   });
 
   it("links English About only to its Portuguese sibling", async () => {
@@ -128,9 +141,17 @@ describe("localized route layout", () => {
     expect(
       await screen.findByRole("heading", { name: "Serviços" }),
     ).toBeVisible();
+    expect(screen.getByRole("link", { name: "Início" })).toHaveAttribute(
+      "href",
+      "/pt-BR/",
+    );
     expect(screen.getByRole("link", { name: "Sobre" })).toHaveAttribute(
       "href",
       "/pt-BR/about",
+    );
+    expect(screen.getByRole("link", { name: "Serviços" })).toHaveAttribute(
+      "href",
+      "/pt-BR/services",
     );
   });
 
@@ -226,6 +247,13 @@ describe("localized route layout", () => {
       expect(
         screen.queryByRole("navigation", { name: /language|idioma/i }),
       ).toBeNull();
+      expect(screen.getByRole("banner")).toBeVisible();
+      expect(
+        screen.getByRole("navigation", {
+          name: /primary navigation|navegação principal/i,
+        }),
+      ).toBeVisible();
+      expect(screen.getByRole("group", { name: /theme|tema/i })).toBeVisible();
     },
   );
 });
