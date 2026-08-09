@@ -10,7 +10,36 @@ type I18nValue = {
   translate: Translate;
 };
 
+const reservedInterpolationKeys: ReadonlySet<string> = new Set([
+  "count",
+  "defaultValue",
+  "defaults",
+  "locale",
+  "missingBehavior",
+  "scope",
+]);
+
 const I18nContext = createContext<I18nValue | null>(null);
+
+function sanitizeTranslationOptions(
+  options?: TranslationOptions,
+): Record<string, string | number> | undefined {
+  const sanitizedOptions = Object.fromEntries(
+    Object.entries(options?.values ?? {}).filter(
+      ([key, value]) =>
+        !reservedInterpolationKeys.has(key) &&
+        (typeof value === "string" || typeof value === "number"),
+    ),
+  ) as Record<string, string | number>;
+
+  if (options?.count !== undefined) {
+    sanitizedOptions.count = options.count;
+  }
+
+  return Object.keys(sanitizedOptions).length === 0
+    ? undefined
+    : sanitizedOptions;
+}
 
 export function I18nProvider({
   children,
@@ -32,7 +61,7 @@ export function I18nProvider({
     ) =>
       i18n.t(
         scope,
-        options?.count === undefined ? undefined : { count: options.count },
+        sanitizeTranslationOptions(options),
       ) as string) as Translate;
 
     return { locale, translate };

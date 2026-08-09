@@ -57,6 +57,23 @@ describe("i18n context", () => {
     },
   );
 
+  it.each([
+    ["en", "Hello, Agent"],
+    ["pt-BR", "Olá, Agent"],
+  ] as const)("interpolates named values in %s", (locale, expected) => {
+    const { result } = renderHook(() => useI18n(), {
+      wrapper: ({ children }) => (
+        <I18nProvider locale={locale}>{children}</I18nProvider>
+      ),
+    });
+
+    expect(
+      result.current.translate("home.greeting", {
+        values: { name: "Agent" },
+      }),
+    ).toBe(expected);
+  });
+
   it("keeps simultaneously rendered providers bound to their locales", () => {
     render(
       <>
@@ -147,6 +164,36 @@ describe("i18n context", () => {
         scope: "home",
       }),
     ).toThrow("Missing translation: en.home.missing");
+  });
+
+  it("sanitizes reserved nested interpolation values", () => {
+    const greetingScope = "home.greeting" as TranslationScope;
+    const missingScope = "home.missing" as TranslationScope;
+    const { result } = renderHook(() => useI18n(), {
+      wrapper: ({ children }) => (
+        <I18nProvider locale="en">{children}</I18nProvider>
+      ),
+    });
+    const translate = result.current.translate as (
+      scope: TranslationScope,
+      options: Record<string, unknown>,
+    ) => string;
+    const options = {
+      values: {
+        name: "Agent",
+        count: 99,
+        locale: "pt-BR",
+        missingBehavior: "guess",
+        defaultValue: "Fallback",
+        defaults: [{ message: "Fallback" }],
+        scope: "home",
+      },
+    };
+
+    expect(translate(greetingScope, options)).toBe("Hello, Agent");
+    expect(() => translate(missingScope, options)).toThrow(
+      "Missing translation: en.home.missing",
+    );
   });
 
   it("requires consumers to be inside the provider", () => {

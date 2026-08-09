@@ -8,6 +8,17 @@ declare const contextTranslate: ReturnType<typeof useI18n>["translate"];
 
 translate("about.title");
 translate("home.exampleCount", { count: 3 });
+translate("home.greeting", { values: { name: "Agent" } });
+
+const unsafeInterpolationValues = {
+  name: "Agent",
+  locale: "pt-BR",
+  missingBehavior: "guess",
+  defaultValue: "Fallback",
+};
+
+// @ts-expect-error Interpolation values cannot override translation behavior.
+translate("home.greeting", { values: unsafeInterpolationValues });
 
 // @ts-expect-error Callers cannot override the provider locale.
 translate("about.title", { locale: "pt-BR" });

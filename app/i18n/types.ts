@@ -39,13 +39,23 @@ type PluralPaths<T> = {
 export type PlainTranslationScope = PlainPaths<Translation>;
 export type PluralTranslationScope = PluralPaths<Translation>;
 export type TranslationScope = PlainTranslationScope | PluralTranslationScope;
-export type TranslationOptions = {
-  count?: number;
+
+type ReservedTranslationOptions = {
   defaultValue?: never;
   defaults?: never;
   locale?: never;
   missingBehavior?: never;
   scope?: never;
+};
+
+export type InterpolationValues = Record<string, string | number | undefined> &
+  ReservedTranslationOptions & {
+    count?: never;
+  };
+
+export type TranslationOptions = ReservedTranslationOptions & {
+  count?: number;
+  values?: InterpolationValues;
 };
 
 export type Translate = {
