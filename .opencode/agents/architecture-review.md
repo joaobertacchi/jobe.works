@@ -1,6 +1,8 @@
 ---
 description: Reviews current-phase changes for compliance with accepted project architecture after deterministic validation.
 mode: subagent
+model: openai/gpt-5.6-sol
+variant: medium
 permission:
   edit: deny
   bash: deny
