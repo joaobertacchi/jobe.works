@@ -59,7 +59,6 @@ export function getLoaderDataForBuildRequest(
   }
 
   return {
-    manifest,
     urls: getLocalizedUrlsForPathname(manifest, canonicalPathname),
   };
 }

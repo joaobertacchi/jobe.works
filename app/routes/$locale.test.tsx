@@ -213,7 +213,8 @@ describe("localized route build loader data", () => {
       "https://example.test/en/about.data",
     );
 
-    expect(data.urls).toBe(canonicalManifest[1].urls);
+    expect(data).toEqual({ urls: canonicalManifest[1].urls });
+    expect(data).not.toHaveProperty("manifest");
   });
 
   it("maps a Home prerender data request to its trailing-slash URLs", () => {
@@ -231,8 +232,8 @@ describe("localized route build loader data", () => {
       "https://example.test/en/about/",
     );
 
-    expect(data.manifest).toBe(canonicalManifest);
-    expect(data.urls).toBe(canonicalManifest[1].urls);
+    expect(data).toEqual({ urls: canonicalManifest[1].urls });
+    expect(data).not.toHaveProperty("manifest");
   });
 
   it("preserves the canonical Home trailing slash", () => {
