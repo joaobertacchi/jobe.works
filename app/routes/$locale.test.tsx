@@ -109,7 +109,7 @@ describe("localized route layout", () => {
       "/pt-BR/",
       "Feito para agentes, pronto para pessoas",
       "Modelo de site estático",
-      "Uma base estática cuidadosa para equipes assistidas por IA criarem, localizarem e publicarem com confiança.",
+      "Uma base estática bem estruturada para equipes que desenvolvem com apoio de IA, com decisões explícitas e validação confiável.",
     ],
   ])(
     "renders the localized Home hero for %s",
@@ -157,16 +157,32 @@ describe("localized route layout", () => {
       "Services",
       "Everything needed to turn a clear idea into a fast, durable website.",
       ["Foundation", "Localization", "Delivery"],
+      [
+        "Composable React patterns and a static-first architecture keep each page easy to understand and evolve.",
+        "Typed dictionaries keep every supported language complete, consistent, and ready to publish.",
+        "Built-in quality checks and prerendering make confident releases routine.",
+      ],
     ],
     [
       "/pt-BR/services",
       "Serviços",
       "Tudo o que é necessário para transformar uma ideia clara em um site rápido e duradouro.",
       ["Base", "Localização", "Entrega"],
+      [
+        "Rotas pré-renderizadas, contratos tipados e validações objetivas mantêm cada página simples de evoluir.",
+        "Dicionários completos e URLs explícitas mantêm o conteúdo consistente em todos os idiomas.",
+        "Verificações de qualidade e pré-renderização tornam as entregas confiáveis e previsíveis.",
+      ],
     ],
   ])(
     "renders three localized Services cards for %s",
-    async (pathname, title, description, serviceTitles) => {
+    async (
+      pathname,
+      title,
+      description,
+      serviceTitles,
+      serviceDescriptions,
+    ) => {
       renderLocalizedRoute(pathname);
 
       expect(
@@ -174,10 +190,15 @@ describe("localized route layout", () => {
       ).toBeVisible();
       expect(screen.getByText(description)).toBeVisible();
       expect(document.querySelectorAll("article")).toHaveLength(3);
-      for (const serviceTitle of serviceTitles) {
-        expect(
-          screen.getByRole("heading", { level: 2, name: serviceTitle }),
-        ).toBeVisible();
+      for (const [index, serviceTitle] of serviceTitles.entries()) {
+        const serviceHeading = screen.getByRole("heading", {
+          level: 2,
+          name: serviceTitle,
+        });
+        expect(serviceHeading).toBeVisible();
+        expect(serviceHeading.closest("article")).toHaveTextContent(
+          serviceDescriptions[index],
+        );
       }
     },
   );

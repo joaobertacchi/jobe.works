@@ -50,17 +50,17 @@ export const servicesTranslations = {
       foundation: {
         title: "Base",
         description:
-          "Padrões React combináveis e uma arquitetura estática mantêm cada página fácil de entender e evoluir.",
+          "Rotas pré-renderizadas, contratos tipados e validações objetivas mantêm cada página simples de evoluir.",
       },
       localization: {
         title: "Localização",
         description:
-          "Dicionários tipados mantêm cada idioma completo, consistente e pronto para publicação.",
+          "Dicionários completos e URLs explícitas mantêm o conteúdo consistente em todos os idiomas.",
       },
       delivery: {
         title: "Entrega",
         description:
-          "Verificações de qualidade e pré-renderização tornam lançamentos seguros parte da rotina.",
+          "Verificações de qualidade e pré-renderização tornam as entregas confiáveis e previsíveis.",
       },
     },
   },

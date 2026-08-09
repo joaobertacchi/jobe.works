@@ -26,7 +26,7 @@ export const homeTranslations = {
     eyebrow: "Feito para agentes, pronto para pessoas",
     title: "Modelo de site estático",
     description:
-      "Uma base estática cuidadosa para equipes assistidas por IA criarem, localizarem e publicarem com confiança.",
+      "Uma base estática bem estruturada para equipes que desenvolvem com apoio de IA, com decisões explícitas e validação confiável.",
     greeting: "Olá, %{name}",
     exampleCount: {
       zero: "Nenhum exemplo",
