@@ -13,10 +13,12 @@ export function PrimaryNavigation() {
     {
       label: translate("common.navigation.about"),
       to: `/${locale}/about`,
+      end: true,
     },
     {
       label: translate("common.navigation.services"),
       to: `/${locale}/services`,
+      end: true,
     },
   ];
 

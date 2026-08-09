@@ -110,6 +110,16 @@ describe("PrimaryNavigation", () => {
       expect(link).not.toHaveClass("text-brand");
     }
   });
+
+  it("does not mark a destination active on a nested URL", () => {
+    renderWithRouter(<PrimaryNavigation />, "en", "/en/about/missing");
+
+    for (const name of ["Home", "About", "Services"]) {
+      expect(screen.getByRole("link", { name })).not.toHaveAttribute(
+        "aria-current",
+      );
+    }
+  });
 });
 
 describe("LanguageSwitcher", () => {
