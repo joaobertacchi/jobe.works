@@ -9,15 +9,15 @@ import {
 import { SiteHeader } from "../components/site/site-header";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
-import { isSupportedLocale } from "../i18n/config";
+import { defaultLocale, isSupportedLocale } from "../i18n/config";
 import { I18nProvider } from "../i18n/i18n";
+import { translations } from "../i18n/translations";
 import {
   type CanonicalUrlManifest,
   getLocalizedUrlsForPathname,
 } from "../routing/canonical-url-manifest";
 import { isCanonicalLocalizedPathname } from "../routing/localized-pathname";
 import { readCanonicalManifest } from "../../scripts/canonical-manifest-file.server";
-import NotFound from "./$locale.404";
 import type { Route } from "./+types/$locale";
 
 function LocalizedLayout() {
@@ -78,38 +78,46 @@ export async function clientLoader({
 }
 clientLoader.hydrate = true as const;
 
-function UnsupportedLocalePage() {
+function ErrorPage({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
   return (
     <main>
       <Heading as="h1" level="display">
-        404
+        {title}
       </Heading>
-      <Text>Page not found.</Text>
+      <Text>{description}</Text>
     </main>
   );
 }
 
+function UnsupportedLocalePage() {
+  const { title, description } = translations[defaultLocale].notFound;
+  return <ErrorPage title={title} description={description} />;
+}
+
 export function ErrorBoundary({ error, params }: Route.ErrorBoundaryProps) {
+  const locale =
+    params.locale && isSupportedLocale(params.locale)
+      ? params.locale
+      : defaultLocale;
+  const translation = translations[locale];
+
   if (
     (error instanceof Response || isRouteErrorResponse(error)) &&
     error.status === 404
   ) {
-    if (params.locale && isSupportedLocale(params.locale)) {
-      return (
-        <I18nProvider locale={params.locale}>
-          <NotFound />
-        </I18nProvider>
-      );
-    }
-    return <UnsupportedLocalePage />;
+    return <ErrorPage {...translation.notFound} />;
   }
   return (
-    <main>
-      <Heading as="h1" level="display">
-        Error
-      </Heading>
-      <Text>An unexpected error occurred.</Text>
-    </main>
+    <ErrorPage
+      title={translation.common.error.title}
+      description={translation.common.error.unexpectedDescription}
+    />
   );
 }
 

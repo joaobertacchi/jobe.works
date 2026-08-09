@@ -231,6 +231,8 @@ test("theme bootstrap appears before the first stylesheet in raw HTML", async ({
   expect(bootstrapScriptIndex).toBeGreaterThanOrEqual(0);
   expect(stylesheetIndex).toBeDefined();
   expect(bootstrapScriptIndex).toBeLessThan(stylesheetIndex!);
+  expect(html).not.toContain("fonts.googleapis.com");
+  expect(html).not.toContain("fonts.gstatic.com");
 });
 
 test("stored dark theme is applied no later than first contentful paint", async ({

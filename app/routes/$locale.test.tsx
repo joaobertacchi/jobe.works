@@ -100,6 +100,68 @@ function renderLocalizedRoute(pathname: string, validateLocale = false) {
 describe("localized route layout", () => {
   it.each([
     [
+      "en",
+      "Page not found",
+      "This page may have moved or never existed. Use the navigation to find your way back.",
+    ],
+    [
+      "pt-BR",
+      "Página não encontrada",
+      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
+    ],
+  ])(
+    "localizes its 404 error boundary for %s",
+    (locale, title, description) => {
+      render(
+        <ErrorBoundary
+          error={new Response(null, { status: 404 })}
+          params={{ locale } as never}
+        />,
+      );
+
+      expect(screen.getByRole("heading", { name: title })).toBeVisible();
+      expect(screen.getByText(description)).toBeVisible();
+    },
+  );
+
+  it.each([
+    ["en", "Error", "An unexpected error occurred."],
+    ["pt-BR", "Erro", "Ocorreu um erro inesperado."],
+  ])(
+    "localizes its generic error boundary for %s",
+    (locale, title, description) => {
+      render(
+        <ErrorBoundary
+          error={new Error("Failure")}
+          params={{ locale } as never}
+        />,
+      );
+
+      expect(screen.getByRole("heading", { name: title })).toBeVisible();
+      expect(screen.getByText(description)).toBeVisible();
+    },
+  );
+
+  it("uses Portuguese not-found copy for an unsupported locale", () => {
+    render(
+      <ErrorBoundary
+        error={new Response(null, { status: 404 })}
+        params={{ locale: "fr" } as never}
+      />,
+    );
+
+    expect(
+      screen.getByRole("heading", { name: "Página não encontrada" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText(
+        "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
+      ),
+    ).toBeVisible();
+  });
+
+  it.each([
+    [
       "/en/",
       "Built for agents, ready for people",
       "Static website template",
@@ -324,7 +386,9 @@ describe("localized route layout", () => {
   it("rejects an unsupported locale", async () => {
     const router = renderLocalizedRoute("/fr/about", true);
 
-    expect(await screen.findByText("404")).toBeVisible();
+    expect(
+      await screen.findByRole("heading", { name: "Página não encontrada" }),
+    ).toBeVisible();
     expect(screen.queryByRole("heading", { name: "About" })).toBeNull();
     expect(
       Object.values(router.state.errors ?? {}).some(

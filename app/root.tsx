@@ -11,27 +11,16 @@ import {
 import {
   defaultLocale,
   getLocaleFromPathname,
+  isSupportedLocale,
   locales,
   type SupportedLocale,
 } from "./i18n/config";
+import { translations } from "./i18n/translations";
 import { Heading } from "./components/ui/heading";
 import { Text } from "./components/ui/text";
 import { themeInitializationScript } from "./theme";
 import type { Route } from "./+types/root";
 import "./app.css";
-
-export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&display=swap",
-  },
-];
 
 export function Document({
   children,
@@ -68,17 +57,25 @@ export default function App() {
   return <Outlet />;
 }
 
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+export function ErrorBoundary({ error, params }: Route.ErrorBoundaryProps) {
+  const locale =
+    params.locale && isSupportedLocale(params.locale)
+      ? params.locale
+      : defaultLocale;
+  const translation = translations[locale];
+  let message = translation.common.error.unexpectedTitle;
+  let details = translation.common.error.unexpectedDescription;
   let stack: string | undefined;
 
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message =
+      error.status === 404
+        ? translation.notFound.title
+        : translation.common.error.title;
     details =
       error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
+        ? translation.notFound.description
+        : translation.common.error.unexpectedDescription;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;

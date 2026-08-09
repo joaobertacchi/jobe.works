@@ -4,9 +4,8 @@
 
 @theme inline {
   --font-sans:
-    "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji";
-  --font-serif: "Source Serif 4", ui-serif, Georgia, serif;
+    ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
+  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --color-background: var(--background);
   --color-surface: var(--surface);
   --color-foreground: var(--foreground);

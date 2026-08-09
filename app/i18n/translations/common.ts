@@ -4,6 +4,12 @@ export type CommonTranslation = {
   siteName: string;
   navigationLabel: string;
   languageSwitcherLabel: string;
+  selectingLanguage: string;
+  error: {
+    title: string;
+    unexpectedTitle: string;
+    unexpectedDescription: string;
+  };
   navigation: {
     home: string;
     about: string;
@@ -22,6 +28,12 @@ export const commonTranslations = {
     siteName: "Agent-ready sites",
     navigationLabel: "Primary navigation",
     languageSwitcherLabel: "Choose language",
+    selectingLanguage: "Selecting language",
+    error: {
+      title: "Error",
+      unexpectedTitle: "Something went wrong",
+      unexpectedDescription: "An unexpected error occurred.",
+    },
     navigation: { home: "Home", about: "About", services: "Services" },
     theme: { label: "Theme", light: "Light", dark: "Dark", system: "System" },
   },
@@ -29,6 +41,12 @@ export const commonTranslations = {
     siteName: "Sites prontos para agentes",
     navigationLabel: "Navegação principal",
     languageSwitcherLabel: "Escolher idioma",
+    selectingLanguage: "Selecionando idioma",
+    error: {
+      title: "Erro",
+      unexpectedTitle: "Algo deu errado",
+      unexpectedDescription: "Ocorreu um erro inesperado.",
+    },
     navigation: { home: "Início", about: "Sobre", services: "Serviços" },
     theme: { label: "Tema", light: "Claro", dark: "Escuro", system: "Sistema" },
   },

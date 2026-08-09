@@ -1,8 +1,11 @@
+import { readFileSync } from "node:fs";
+
 import { render, screen } from "@testing-library/react";
 import { Links, Meta, Outlet } from "react-router";
 import { describe, expect, it } from "vitest";
 
-import App, { Document, ErrorBoundary, links } from "./root";
+import * as rootModule from "./root";
+import App, { Document, ErrorBoundary } from "./root";
 import {
   THEME_MEDIA_QUERY,
   THEME_STORAGE_KEY,
@@ -52,29 +55,12 @@ describe("root document", () => {
     expect(headChildren[scriptIndex + 2].type).toBe(Links);
   });
 
-  it("loads the editorial fonts with the existing preconnects", () => {
-    const fontLinks = links();
+  it("leaves stylesheet discovery to Links without remote font links", () => {
+    const source = readFileSync("app/root.tsx", "utf8");
 
-    expect(fontLinks).toHaveLength(3);
-    expect(fontLinks[0]).toEqual({
-      rel: "preconnect",
-      href: "https://fonts.googleapis.com",
-    });
-    expect(fontLinks[1]).toEqual({
-      rel: "preconnect",
-      href: "https://fonts.gstatic.com",
-      crossOrigin: "anonymous",
-    });
-    expect(fontLinks[2]).toEqual(
-      expect.objectContaining({
-        href: expect.stringContaining("family=Inter"),
-      }),
-    );
-    expect(fontLinks[2]).toEqual(
-      expect.objectContaining({
-        href: expect.stringContaining("family=Source+Serif+4"),
-      }),
-    );
+    expect(rootModule).not.toHaveProperty("links");
+    expect(source).not.toContain("fonts.googleapis.com");
+    expect(source).not.toContain("fonts.gstatic.com");
   });
 
   it("renders child routes through an outlet", () => {
@@ -90,50 +76,96 @@ function metaIdentity(
 
 describe("root error boundary", () => {
   it("uses typography primitives for global error content", () => {
-    render(ErrorBoundary({ error: routeError(404) } as never));
+    render(
+      ErrorBoundary({
+        error: routeError(404),
+        params: { locale: "en" },
+      } as never),
+    );
 
-    expect(screen.getByRole("heading", { name: "404" })).toHaveClass(
+    expect(screen.getByRole("heading", { name: "Page not found" })).toHaveClass(
       "font-serif",
       "text-foreground",
     );
     expect(
-      screen.getByText("The requested page could not be found."),
+      screen.getByText(
+        "This page may have moved or never existed. Use the navigation to find your way back.",
+      ),
     ).toHaveClass("text-base", "leading-relaxed", "text-foreground");
   });
 
-  it("renders a not-found response", () => {
-    render(ErrorBoundary({ error: routeError(404) } as never));
+  it.each([
+    [
+      "en",
+      "Page not found",
+      "This page may have moved or never existed. Use the navigation to find your way back.",
+    ],
+    [
+      "pt-BR",
+      "Página não encontrada",
+      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
+    ],
+  ])(
+    "renders a localized not-found response for %s",
+    (locale, title, description) => {
+      render(
+        ErrorBoundary({ error: routeError(404), params: { locale } } as never),
+      );
 
-    expect(screen.getByRole("heading", { name: "404" })).toBeVisible();
-    expect(
-      screen.getByText("The requested page could not be found."),
-    ).toBeVisible();
+      expect(screen.getByRole("heading", { name: title })).toBeVisible();
+      expect(screen.getByText(description)).toBeVisible();
+    },
+  );
+
+  it.each([
+    ["en", "Error", "An unexpected error occurred."],
+    ["pt-BR", "Erro", "Ocorreu um erro inesperado."],
+  ])("localizes a generic route error for %s", (locale, title, description) => {
+    render(
+      ErrorBoundary({
+        error: routeError(500, "Arbitrary status text"),
+        params: { locale },
+      } as never),
+    );
+
+    expect(screen.getByRole("heading", { name: title })).toBeVisible();
+    expect(screen.getByText(description)).toBeVisible();
+    expect(screen.queryByText("Arbitrary status text")).toBeNull();
   });
 
-  it("renders a route error status", () => {
-    render(ErrorBoundary({ error: routeError(500, "Server Error") } as never));
+  it("uses Portuguese copy for unsupported locales", () => {
+    render(
+      ErrorBoundary({
+        error: routeError(500),
+        params: { locale: "fr" },
+      } as never),
+    );
 
-    expect(screen.getByRole("heading", { name: "Error" })).toBeVisible();
-    expect(screen.getByText("Server Error")).toBeVisible();
-  });
-
-  it("falls back when a route error has no status text", () => {
-    render(ErrorBoundary({ error: routeError(500) } as never));
-
-    expect(screen.getByText("An unexpected error occurred.")).toBeVisible();
+    expect(screen.getByRole("heading", { name: "Erro" })).toBeVisible();
+    expect(screen.getByText("Ocorreu um erro inesperado.")).toBeVisible();
   });
 
   it("shows development error details", () => {
-    render(ErrorBoundary({ error: new Error("Broken route") } as never));
+    render(
+      ErrorBoundary({
+        error: new Error("Broken route"),
+        params: { locale: "en" },
+      } as never),
+    );
 
+    expect(
+      screen.getByRole("heading", { name: "Something went wrong" }),
+    ).toBeVisible();
     expect(screen.getByText("Broken route")).toBeVisible();
     expect(screen.getByText(/Error: Broken route/)).toBeVisible();
   });
 
   it("renders a safe fallback for unknown errors", () => {
-    render(ErrorBoundary({ error: null } as never));
+    render(ErrorBoundary({ error: null, params: {} } as never));
 
-    expect(screen.getByRole("heading", { name: "Oops!" })).toBeVisible();
-    expect(screen.getByText("An unexpected error occurred.")).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "Algo deu errado" }),
+    ).toBeVisible();
+    expect(screen.getByText("Ocorreu um erro inesperado.")).toBeVisible();
   });
 });

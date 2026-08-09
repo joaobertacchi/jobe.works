@@ -265,13 +265,23 @@ test("uses the route error boundary for unsupported client navigation", async ({
   page,
 }) => {
   await page.goto("/en/about");
-  await page.evaluate(() => {
-    window.history.pushState(null, "", "/fr/about");
-    window.dispatchEvent(new PopStateEvent("popstate"));
+  await page.evaluate(async () => {
+    const router = Reflect.get(window, "__reactRouterDataRouter") as {
+      navigate(to: string): Promise<void>;
+    };
+    await router.navigate("/fr/about");
   });
 
   await expect(page).toHaveURL("/fr/about");
-  await expect(page.getByRole("heading", { name: "404" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Página não encontrada" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
+      { exact: true },
+    ),
+  ).toBeVisible();
 });
 
 test.describe("English browser locale", () => {

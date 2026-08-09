@@ -8,7 +8,16 @@ describe("application styles", () => {
     const fontSans = css.match(/--font-sans:\s*([^;]+);/)?.[1];
 
     expect(fontSans?.replace(/\s+/g, " ").trim()).toBe(
-      '"Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+      'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+    );
+  });
+
+  it("defines the exact serif system font stack", () => {
+    const css = readFileSync("app/app.css", "utf8");
+    const fontSerif = css.match(/--font-serif:\s*([^;]+);/)?.[1];
+
+    expect(fontSerif?.replace(/\s+/g, " ").trim()).toBe(
+      'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
     );
   });
 });

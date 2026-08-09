@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
-import { selectPreferredLocale } from "../i18n/config";
+import { defaultLocale, selectPreferredLocale } from "../i18n/config";
+import { translations } from "../i18n/translations";
 
 export default function RootRedirect() {
   const navigate = useNavigate();
@@ -13,7 +14,9 @@ export default function RootRedirect() {
 
   return (
     <main>
-      <p role="status">Selecting language</p>
+      <p role="status">
+        {translations[defaultLocale].common.selectingLanguage}
+      </p>
     </main>
   );
 }
