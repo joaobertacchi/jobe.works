@@ -1,5 +1,6 @@
 import type { Locator, Page } from "@playwright/test";
 
+import { themeInitializationScript } from "../../app/theme";
 import { expect, test } from "./fixtures";
 
 const themeStorageKey = "theme";
@@ -31,11 +32,7 @@ async function storedTheme(page: Page) {
 }
 
 async function tabTo(page: Page, target: Locator) {
-  const tabbableCount = await page
-    .locator("a[href], button:not([disabled])")
-    .count();
-
-  for (let index = 0; index < tabbableCount; index += 1) {
+  for (let index = 0; index < 50; index += 1) {
     await page.keyboard.press("Tab");
     if (await target.evaluate((element) => element === document.activeElement))
       return;
@@ -224,14 +221,13 @@ test("theme bootstrap appears before the first stylesheet in raw HTML", async ({
   const response = await request.get("/en/");
   expect(response.status()).toBe(200);
   const html = await response.text();
-  const bootstrapTextIndex = html.indexOf('localStorage.getItem("theme")');
-  const bootstrapScriptIndex = html.lastIndexOf("<script", bootstrapTextIndex);
+  const bootstrapTag = `<script>${themeInitializationScript}</script>`;
+  const bootstrapScriptIndex = html.indexOf(bootstrapTag);
   const stylesheetIndex = [...html.matchAll(/<link\b[^>]*>/gi)]
     .filter(([tag]) => /\brel=["'][^"']*\bstylesheet\b[^"']*["']/i.test(tag))
     .map(({ index }) => index)
     .at(0);
 
-  expect(bootstrapTextIndex).toBeGreaterThan(bootstrapScriptIndex);
   expect(bootstrapScriptIndex).toBeGreaterThanOrEqual(0);
   expect(stylesheetIndex).toBeDefined();
   expect(bootstrapScriptIndex).toBeLessThan(stylesheetIndex!);
@@ -242,23 +238,28 @@ test("stored dark theme is applied no later than first contentful paint", async 
 }) => {
   await page.emulateMedia({ colorScheme: "light" });
   await page.addInitScript(
-    ({ key }) => {
+    ({ bootstrapScript, key }) => {
       localStorage.setItem(key, "dark");
       const originalToggle = DOMTokenList.prototype.toggle;
       DOMTokenList.prototype.toggle = function (token, force) {
         const result = originalToggle.call(this, token, force);
+        const currentScript = document.currentScript;
         if (
           token === "dark" &&
           this === document.documentElement.classList &&
           document.documentElement.classList.contains("dark") &&
-          performance.getEntriesByName("theme-applied").length === 0
+          currentScript instanceof HTMLScriptElement &&
+          currentScript.parentElement === document.head &&
+          currentScript.textContent === bootstrapScript &&
+          !("__reactRouterContext" in window) &&
+          performance.getEntriesByName("theme-bootstrap-applied").length === 0
         ) {
-          performance.mark("theme-applied");
+          performance.mark("theme-bootstrap-applied");
         }
         return result;
       };
     },
-    { key: themeStorageKey },
+    { bootstrapScript: themeInitializationScript, key: themeStorageKey },
   );
 
   await page.goto("/en/");
@@ -283,13 +284,22 @@ test("stored dark theme is applied no later than first contentful paint", async 
       observer.observe({ type: "paint", buffered: true });
     });
   });
-  const themeApplied = await page.evaluate(
-    () => performance.getEntriesByName("theme-applied")[0]?.startTime,
+  const themeBootstrapApplied = await page.evaluate(
+    () => performance.getEntriesByName("theme-bootstrap-applied")[0]?.startTime,
   );
 
   expect(immediateTheme).toEqual({ dark: true, colorScheme: "dark" });
-  expect(themeApplied).toBeDefined();
-  expect(themeApplied!).toBeLessThanOrEqual(firstContentfulPaint);
+  expect(themeBootstrapApplied).toBeDefined();
+  expect(themeBootstrapApplied!).toBeLessThanOrEqual(firstContentfulPaint);
+
+  const marksAfterHydrationToggle = await page.evaluate(() => {
+    if (!("__reactRouterContext" in window)) {
+      throw new Error("React Router hydration context was not installed");
+    }
+    document.documentElement.classList.toggle("dark", true);
+    return performance.getEntriesByName("theme-bootstrap-applied").length;
+  });
+  expect(marksAfterHydrationToggle).toBe(1);
   await expectTheme(page, "dark", "Dark");
 });
 
