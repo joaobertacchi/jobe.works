@@ -21,6 +21,16 @@ for (const [url, heading] of publishedPages) {
   });
 }
 
+test("keeps typed plural translation after hydration", async ({ page }) => {
+  await page.goto("/en/");
+  await page.getByRole("link", { name: "Português" }).click();
+  await expect(page).toHaveURL("/pt-BR/");
+  await page.goBack();
+
+  await expect(page).toHaveURL("/en/");
+  await expect(page.getByText("2 examples", { exact: true })).toBeVisible();
+});
+
 const englishPagesWithPortugueseSiblings = [
   ["Home", "/en/", "/pt-BR/", "Modelo de site estático"],
   ["About", "/en/about", "/pt-BR/about", "Sobre"],
@@ -55,6 +65,32 @@ for (const [
     await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
   });
 }
+
+test("does not persist a language choice", async ({ browser, baseURL }) => {
+  const context = await browser.newContext({ baseURL });
+  const page = await context.newPage();
+
+  try {
+    await page.goto("/en/about");
+    await page.getByRole("link", { name: "Português" }).click();
+
+    await expect(page).toHaveURL("/pt-BR/about");
+    await expect(page.getByRole("heading", { name: "Sobre" })).toBeVisible();
+    expect(
+      await page.evaluate(() => ({
+        cookie: document.cookie,
+        localStorageLength: localStorage.length,
+        sessionStorageLength: sessionStorage.length,
+      })),
+    ).toEqual({
+      cookie: "",
+      localStorageLength: 0,
+      sessionStorageLength: 0,
+    });
+  } finally {
+    await context.close();
+  }
+});
 
 test("keeps navigation in the active locale", async ({ page }) => {
   await page.goto("/pt-BR/");
