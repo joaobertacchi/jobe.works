@@ -11,7 +11,7 @@ describe("Button", () => {
 
     expect(button).toBeVisible();
     expect(button).toHaveAttribute("type", "button");
-    expect(button).toHaveClass("bg-brand", "min-h-11");
+    expect(button).toHaveClass("bg-brand", "min-h-11", "py-3", "transition");
   });
 
   it("renders a disabled secondary small button with caller classes", () => {
@@ -24,7 +24,7 @@ describe("Button", () => {
     const button = screen.getByRole("button", { name: "Save" });
 
     expect(button).toBeDisabled();
-    expect(button).toHaveClass("border-border", "min-h-9", "w-full");
+    expect(button).toHaveClass("border-border", "min-h-9", "py-2", "w-full");
   });
 
   it("forwards native props and allows callers to override the type", () => {

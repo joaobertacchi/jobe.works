@@ -12,8 +12,8 @@ const variantClasses = {
 };
 
 const sizeClasses = {
-  sm: "min-h-9 px-3 text-sm",
-  lg: "min-h-11 px-5 text-base",
+  sm: "min-h-9 px-3 py-2 text-sm",
+  lg: "min-h-11 px-5 py-3 text-base",
 };
 
 export function Button({
@@ -25,7 +25,7 @@ export function Button({
   ...props
 }: ButtonProps) {
   const classes = [
-    "inline-flex items-center justify-center rounded-lg font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand",
+    "inline-flex items-center justify-center rounded-lg font-medium transition disabled:cursor-not-allowed disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand",
     variantClasses[variant],
     sizeClasses[size],
     className,
