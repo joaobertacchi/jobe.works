@@ -250,6 +250,12 @@ for (const [
     page,
   }) => {
     await page.goto(initialUrl);
+    await page.waitForFunction(() => {
+      const router = Reflect.get(window, "__reactRouterDataRouter") as {
+        state: { initialized: boolean };
+      };
+      return router.state.initialized;
+    });
     await page.evaluate(async (url) => {
       const router = Reflect.get(window, "__reactRouterDataRouter") as {
         navigate(to: string): Promise<void>;
