@@ -2,6 +2,7 @@ import type { SupportedLocale } from "../config";
 import type { Translation } from "../types";
 import { aboutTranslations } from "./about";
 import { commonTranslations } from "./common";
+import { consentTranslations } from "./consent";
 import { homeTranslations } from "./home";
 import { notFoundTranslations } from "./not-found";
 import { privacyTranslations } from "./privacy";
@@ -10,6 +11,7 @@ import { servicesTranslations } from "./services";
 export const translations = {
   en: {
     common: commonTranslations.en,
+    consent: consentTranslations.en,
     home: homeTranslations.en,
     about: aboutTranslations.en,
     services: servicesTranslations.en,
@@ -18,6 +20,7 @@ export const translations = {
   },
   "pt-BR": {
     common: commonTranslations["pt-BR"],
+    consent: consentTranslations["pt-BR"],
     home: homeTranslations["pt-BR"],
     about: aboutTranslations["pt-BR"],
     services: servicesTranslations["pt-BR"],
