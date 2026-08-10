@@ -20,6 +20,7 @@
 - Create `app/analytics/trackers/index.ts`: default tracker registry.
 - Create `app/analytics/attribution.ts`: allowlisted UTM campaign parser.
 - Create `app/analytics/analytics.tsx`: `AnalyticsProvider` + `useAnalytics()` with central page views.
+- Modify `app/root.tsx`: mount `AnalyticsProvider` at the root with the disabled consent snapshot.
 - Modify `app/routes/$locale._index.tsx`: emit `cta_pressed` from the hero CTA.
 - Modify `app/routes/$locale.test.tsx`: wrap the memory router in `AnalyticsProvider` and test the CTA event.
 
@@ -845,6 +846,39 @@ describe("AnalyticsProvider", () => {
     });
   });
 
+  it("dispatches a page view when a second category becomes eligible", async () => {
+    const analyticsTracker = vi.fn();
+    const marketingTracker = vi.fn();
+    const trackers: readonly TrackerRegistration[] = [
+      { tracker: analyticsTracker, consentCategory: "analytics" },
+      { tracker: marketingTracker, consentCategory: "marketing" },
+    ];
+
+    const { rerender } = render(
+      <Harness consent={{ analytics: true, marketing: false }} trackers={trackers} />,
+    );
+    await waitFor(() => {
+      expect(analyticsTracker).toHaveBeenCalledWith({
+        eventName: "page_view",
+        pathname: "/en/",
+        locale: "en",
+      });
+    });
+    expect(marketingTracker).not.toHaveBeenCalled();
+
+    rerender(
+      <Harness consent={{ analytics: true, marketing: true }} trackers={trackers} />,
+    );
+
+    await waitFor(() => {
+      expect(marketingTracker).toHaveBeenCalledWith({
+        eventName: "page_view",
+        pathname: "/en/",
+        locale: "en",
+      });
+    });
+  });
+
   it("exposes landing attribution parsed from the current URL", () => {
     window.history.replaceState(null, "", "/en/?utm_source=newsletter");
 
@@ -959,13 +993,20 @@ export function AnalyticsProvider({
     [trackers, consent],
   );
 
-  const eligible = consent.analytics || consent.marketing;
-  const wasEligible = useRef(eligible);
+  const analyticsEligible = consent.analytics;
+  const marketingEligible = consent.marketing;
+  const wasAnalyticsEligible = useRef(analyticsEligible);
+  const wasMarketingEligible = useRef(marketingEligible);
   const lastDispatchedPathname = useRef<string | null>(null);
 
   useEffect(() => {
-    const becameEligible = eligible && !wasEligible.current;
-    wasEligible.current = eligible;
+    const analyticsBecameEligible =
+      analyticsEligible && !wasAnalyticsEligible.current;
+    const marketingBecameEligible =
+      marketingEligible && !wasMarketingEligible.current;
+    wasAnalyticsEligible.current = analyticsEligible;
+    wasMarketingEligible.current = marketingEligible;
+    const becameEligible = analyticsBecameEligible || marketingBecameEligible;
     if (pathname === lastDispatchedPathname.current && !becameEligible) return;
     lastDispatchedPathname.current = pathname;
     capture({
@@ -973,7 +1014,7 @@ export function AnalyticsProvider({
       pathname,
       locale: getLocaleFromPathname(pathname) ?? defaultLocale,
     });
-  }, [capture, eligible, pathname]);
+  }, [analyticsEligible, marketingEligible, capture, pathname]);
 
   const value = useMemo<AnalyticsValue>(
     () => ({ attribution, capture }),
@@ -1009,7 +1050,55 @@ git add app/analytics/analytics.tsx app/analytics/analytics.test.tsx
 git commit -m "feat(analytics): add provider with central page views"
 ```
 
-### Task 7: Demonstrate the Capture Pattern from a Component
+### Task 7: Mount the Analytics Provider at the Root
+
+**Files:**
+- Modify: `app/root.tsx`
+
+The home route emits analytics events, so the provider must be mounted before that happens. Phase 6 wires `AnalyticsProvider` directly with the conservative disabled consent snapshot; Phase 7 replaces this wiring with the consent-context bridge.
+
+- [ ] **Step 1: Wire the provider into the root layout**
+
+In `app/root.tsx`:
+
+- Add the import:
+
+```tsx
+import { AnalyticsProvider } from "./analytics/analytics";
+```
+
+- Replace the `Layout` body:
+
+```tsx
+export function Layout({ children }: { children: React.ReactNode }) {
+  const { pathname } = useLocation();
+  const locale =
+    getLocaleFromPathname(pathname) ??
+    (pathname.split("/")[1] ? null : defaultLocale);
+  return (
+    <Document locale={locale}>
+      <AnalyticsProvider consent={{ analytics: false, marketing: false }}>
+        {children}
+      </AnalyticsProvider>
+    </Document>
+  );
+}
+```
+
+- [ ] **Step 2: Run the root and route tests and verify GREEN**
+
+Run: `source "$HOME/.nvm/nvm.sh" && nvm use && npm test -- app/root.test.tsx 'app/routes/$locale.test.tsx'`
+
+Expected: PASS; the app now renders with analytics available everywhere.
+
+- [ ] **Step 3: Commit the root wiring**
+
+```bash
+git add app/root.tsx
+git commit -m "feat(analytics): mount provider at the root"
+```
+
+### Task 8: Demonstrate the Capture Pattern from a Component
 
 **Files:**
 - Modify: `app/routes/$locale._index.tsx`
@@ -1179,7 +1268,7 @@ git add app/routes/\$locale._index.tsx app/routes/\$locale.test.tsx
 git commit -m "feat(analytics): emit cta_pressed from hero"
 ```
 
-### Task 8: Phase 6 Validation and Review
+### Task 9: Phase 6 Validation and Review
 
 - [ ] **Step 1: Run the full deterministic validation**
 

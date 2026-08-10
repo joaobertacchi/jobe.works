@@ -291,7 +291,7 @@ git commit -m "feat(consent): persist versioned consent state"
 Create `app/consent/consent-context.test.tsx`:
 
 ```tsx
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it } from "vitest";
 
 import { CONSENT_STORAGE_KEY, CONSENT_VERSION } from "./consent";
@@ -395,7 +395,7 @@ describe("ConsentProvider", () => {
     expect(screen.getByTestId("decision")).toHaveTextContent("true");
   });
 
-  it("loads a stored decision on mount", () => {
+  it("loads a stored decision shortly after mount", async () => {
     window.localStorage.setItem(
       CONSENT_STORAGE_KEY,
       JSON.stringify({
@@ -408,7 +408,9 @@ describe("ConsentProvider", () => {
 
     renderProbe();
 
-    expect(screen.getByTestId("analytics")).toHaveTextContent("true");
+    await waitFor(() => {
+      expect(screen.getByTestId("analytics")).toHaveTextContent("true");
+    });
     expect(screen.getByTestId("marketing")).toHaveTextContent("false");
     expect(screen.getByTestId("decision")).toHaveTextContent("true");
   });
@@ -470,6 +472,8 @@ Expected: FAIL because `app/consent/consent-context.tsx` does not exist.
 
 - [ ] **Step 3: Implement the consent context**
 
+The provider starts with the same conservative unresolved state used during prerendering (no `window` exists there), then applies stored consent in a client effect. This keeps the initial prerendered and hydrated trees identical, avoiding hydration mismatches on returning visits. The analytics transition dispatch guarantees trackers still observe the landing page view once stored consent is applied.
+
 Create `app/consent/consent-context.tsx`:
 
 ```tsx
@@ -477,6 +481,7 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
@@ -505,10 +510,13 @@ type ConsentValue = {
 const ConsentContext = createContext<ConsentValue | null>(null);
 
 export function ConsentProvider({ children }: { children: ReactNode }) {
-  const [stored, setStored] = useState<StoredConsent | null>(() =>
-    readConsent(),
-  );
+  const [stored, setStored] = useState<StoredConsent | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
+
+  useEffect(() => {
+    const loaded = readConsent();
+    if (loaded) setStored(loaded);
+  }, []);
 
   const persist = useCallback((snapshot: ConsentSnapshot) => {
     const next = createStoredConsent(snapshot);
@@ -916,13 +924,11 @@ describe("ConsentBanner", () => {
     expect(screen.getByRole("checkbox", { name: "Analytics" })).toHaveFocus();
   });
 
-  it("closes the dialog when clicking the backdrop", () => {
+  it("closes the dialog when clicking outside the content", () => {
     renderBanner("en");
 
     fireEvent.click(screen.getByRole("button", { name: "Customize" }));
-    fireEvent.mouseDown(
-      screen.getByRole("presentation", { hidden: true }),
-    );
+    fireEvent.click(screen.getByRole("dialog", { name: "Cookie settings" }));
 
     expect(
       screen.queryByRole("dialog", { name: "Cookie settings" }),
@@ -938,6 +944,8 @@ Run: `source "$HOME/.nvm/nvm.sh" && nvm use && npm test -- app/components/site/c
 Expected: FAIL because `app/components/site/consent-banner.tsx` does not exist.
 
 - [ ] **Step 3: Implement the banner and dialog**
+
+The customize screen uses the native `<dialog>` element with its native modal lifecycle (`showModal` in browsers). jsdom does not implement `showModal`, so the open effect falls back to setting the `open` attribute in that environment; the dialog's content and handlers are identical in both.
 
 Create `app/components/site/consent-banner.tsx`:
 
@@ -964,14 +972,20 @@ function ConsentDialog() {
   const { translate } = useI18n();
   const [analytics, setAnalytics] = useState(consent.analytics);
   const [marketing, setMarketing] = useState(consent.marketing);
+  const dialogRef = useRef<HTMLDialogElement>(null);
   const analyticsToggleRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (settingsOpen) {
-      setAnalytics(consent.analytics);
-      setMarketing(consent.marketing);
-      analyticsToggleRef.current?.focus();
+    if (!settingsOpen) return;
+    setAnalytics(consent.analytics);
+    setMarketing(consent.marketing);
+    const dialog = dialogRef.current;
+    if (dialog && typeof dialog.showModal === "function") {
+      dialog.showModal();
+    } else if (dialog) {
+      dialog.setAttribute("open", "");
     }
+    analyticsToggleRef.current?.focus();
   }, [settingsOpen, consent]);
 
   if (!settingsOpen) return null;
@@ -981,26 +995,24 @@ function ConsentDialog() {
     closeSettings();
   }
 
-  function handleBackdropMouseDown(event: MouseEvent<HTMLDivElement>) {
+  function handleDialogClick(event: MouseEvent<HTMLDialogElement>) {
     if (event.target === event.currentTarget) closeSettings();
   }
 
-  function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
+  function handleKeyDown(event: KeyboardEvent<HTMLDialogElement>) {
     if (event.key === "Escape") closeSettings();
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4"
-      onMouseDown={handleBackdropMouseDown}
+    <dialog
+      ref={dialogRef}
+      aria-labelledby="consent-dialog-title"
+      className="w-full max-w-lg rounded-lg border border-border bg-surface p-6 backdrop:bg-background/80"
+      onClick={handleDialogClick}
+      onClose={closeSettings}
+      onKeyDown={handleKeyDown}
     >
-      <div
-        className="flex w-full max-w-lg flex-col gap-5 rounded-lg border border-border bg-surface p-6"
-        onKeyDown={handleKeyDown}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="consent-dialog-title"
-      >
+      <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-2">
           <Heading as="h2" id="consent-dialog-title" level="section">
             {translate("consent.dialog.title")}
@@ -1061,7 +1073,7 @@ function ConsentDialog() {
           </Button>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }
 
@@ -1117,7 +1129,7 @@ export function ConsentBanner({
 
 Run: `source "$HOME/.nvm/nvm.sh" && nvm use && npm test -- app/components/site/consent-banner.test.tsx`
 
-Expected: PASS. If the backdrop test cannot locate `role="presentation"` (jsdom requires `aria-hidden` for hidden roles), replace that test's selector with a stable hook: add `aria-label={translate("consent.dialog.backdrop")}` to the overlay div and query `screen.getByLabelText("Backdrop")`, updating the dictionary with `backdrop: "Close dialog"` / `"Fechar diálogo"`. Do not weaken the test.
+Expected: PASS; jsdom exercises the `open`-attribute fallback while browsers use the native modal path. Verify the accessible name assertions (`getByRole("dialog", { name: "Cookie settings" })`) resolve through the implicit dialog role and `aria-labelledby`.
 
 - [ ] **Step 5: Commit the consent banner**
 
@@ -1146,7 +1158,7 @@ import { ConsentBanner } from "./components/site/consent-banner";
 import { ConsentProvider, useConsent } from "./consent/consent-context";
 ```
 
-- Add the analytics bridge component above `Layout`:
+- Add the analytics bridge component above `Layout` (replacing the direct `AnalyticsProvider` wiring added in Phase 6):
 
 ```tsx
 function ConsentAwareAnalytics({ children }: { children: React.ReactNode }) {
