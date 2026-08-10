@@ -8,6 +8,7 @@ import {
   useLocation,
 } from "react-router";
 
+import { AnalyticsProvider } from "./analytics/analytics";
 import {
   defaultLocale,
   getLocaleFromPathname,
@@ -55,7 +56,13 @@ export function Layout({ children }: { children: React.ReactNode }) {
   const locale =
     getLocaleFromPathname(pathname) ??
     (pathname.split("/")[1] ? null : defaultLocale);
-  return <Document locale={locale}>{children}</Document>;
+  return (
+    <Document locale={locale}>
+      <AnalyticsProvider consent={{ analytics: false, marketing: false }}>
+        {children}
+      </AnalyticsProvider>
+    </Document>
+  );
 }
 
 export default function App() {
