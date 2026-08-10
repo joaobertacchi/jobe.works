@@ -122,7 +122,7 @@ function ConsentDialog() {
 
 function ConsentBannerContent() {
   const {
-    hasConsentDecision,
+    bannerVisible,
     acceptAll,
     rejectNonEssential,
     openSettings,
@@ -132,7 +132,7 @@ function ConsentBannerContent() {
 
   return (
     <>
-      {hasConsentDecision ? null : (
+      {bannerVisible ? (
         <div
           role="region"
           aria-label={translate("consent.banner.label")}
@@ -157,7 +157,7 @@ function ConsentBannerContent() {
             </div>
           </Container>
         </div>
-      )}
+      ) : null}
       {settingsOpen ? <ConsentDialog /> : null}
     </>
   );

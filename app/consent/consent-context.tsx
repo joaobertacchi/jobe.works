@@ -19,7 +19,7 @@ import {
 
 type ConsentValue = {
   consent: ConsentSnapshot;
-  hasConsentDecision: boolean;
+  bannerVisible: boolean;
   acceptAll: () => void;
   rejectNonEssential: () => void;
   updatePreferences: (snapshot: ConsentSnapshot) => void;
@@ -32,12 +32,18 @@ const ConsentContext = createContext<ConsentValue | null>(null);
 
 export function ConsentProvider({ children }: { children: ReactNode }) {
   const [stored, setStored] = useState<StoredConsent | null>(null);
+  const [consentChecked, setConsentChecked] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
 
   useEffect(() => {
-    const loaded = readConsent();
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-shot sync with an external system (localStorage has no same-tab subscription); the initial unresolved render must match the prerendered tree
-    if (loaded) setStored(loaded);
+    // Deferred one-shot read: applying stored consent (or revealing the banner
+    // for new visitors) after hydration keeps the prerendered and hydrated
+    // trees identical, so no hydration mismatch or flash occurs.
+    queueMicrotask(() => {
+      const loaded = readConsent();
+      setStored(loaded);
+      setConsentChecked(true);
+    });
   }, []);
 
   const persist = useCallback((snapshot: ConsentSnapshot) => {
@@ -64,7 +70,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
   const value = useMemo<ConsentValue>(
     () => ({
       consent: stored ?? defaultConsent,
-      hasConsentDecision: stored !== null,
+      bannerVisible: consentChecked && stored === null,
       acceptAll,
       rejectNonEssential,
       updatePreferences,
@@ -74,6 +80,7 @@ export function ConsentProvider({ children }: { children: ReactNode }) {
     }),
     [
       stored,
+      consentChecked,
       settingsOpen,
       acceptAll,
       rejectNonEssential,

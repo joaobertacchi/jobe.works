@@ -7,7 +7,7 @@ import { ConsentProvider, useConsent } from "./consent-context";
 function Probe() {
   const {
     consent,
-    hasConsentDecision,
+    bannerVisible,
     acceptAll,
     rejectNonEssential,
     updatePreferences,
@@ -19,7 +19,7 @@ function Probe() {
     <div>
       <span data-testid="analytics">{String(consent.analytics)}</span>
       <span data-testid="marketing">{String(consent.marketing)}</span>
-      <span data-testid="decision">{String(hasConsentDecision)}</span>
+      <span data-testid="banner-visible">{String(bannerVisible)}</span>
       <span data-testid="settings-open">{String(settingsOpen)}</span>
       <button onClick={acceptAll}>Accept</button>
       <button onClick={rejectNonEssential}>Reject</button>
@@ -47,23 +47,34 @@ afterEach(() => {
 });
 
 describe("ConsentProvider", () => {
-  it("defaults to no decision with optional categories disabled", () => {
+  it("hides the banner before the consent check completes", () => {
     renderProbe();
 
+    expect(screen.getByTestId("banner-visible")).toHaveTextContent("false");
+  });
+
+  it("defaults to no decision with optional categories disabled", async () => {
+    renderProbe();
+
+    await waitFor(() =>
+      expect(screen.getByTestId("banner-visible")).toHaveTextContent("true"),
+    );
     expect(screen.getByTestId("analytics")).toHaveTextContent("false");
     expect(screen.getByTestId("marketing")).toHaveTextContent("false");
-    expect(screen.getByTestId("decision")).toHaveTextContent("false");
     expect(screen.getByTestId("settings-open")).toHaveTextContent("false");
   });
 
-  it("accept all enables both optional categories and persists", () => {
+  it("accept all enables both optional categories and persists", async () => {
     renderProbe();
 
+    await waitFor(() =>
+      expect(screen.getByTestId("banner-visible")).toHaveTextContent("true"),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Accept" }));
 
     expect(screen.getByTestId("analytics")).toHaveTextContent("true");
     expect(screen.getByTestId("marketing")).toHaveTextContent("true");
-    expect(screen.getByTestId("decision")).toHaveTextContent("true");
+    expect(screen.getByTestId("banner-visible")).toHaveTextContent("false");
     const persisted = JSON.parse(
       window.localStorage.getItem(CONSENT_STORAGE_KEY) ?? "null",
     );
@@ -74,14 +85,17 @@ describe("ConsentProvider", () => {
     });
   });
 
-  it("reject non-essential persists both optional categories disabled", () => {
+  it("reject non-essential persists both optional categories disabled", async () => {
     renderProbe();
 
+    await waitFor(() =>
+      expect(screen.getByTestId("banner-visible")).toHaveTextContent("true"),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Reject" }));
 
     expect(screen.getByTestId("analytics")).toHaveTextContent("false");
     expect(screen.getByTestId("marketing")).toHaveTextContent("false");
-    expect(screen.getByTestId("decision")).toHaveTextContent("true");
+    expect(screen.getByTestId("banner-visible")).toHaveTextContent("false");
     const persisted = JSON.parse(
       window.localStorage.getItem(CONSENT_STORAGE_KEY) ?? "null",
     );
@@ -92,14 +106,17 @@ describe("ConsentProvider", () => {
     });
   });
 
-  it("update preferences persists exactly the supplied categories", () => {
+  it("update preferences persists exactly the supplied categories", async () => {
     renderProbe();
 
+    await waitFor(() =>
+      expect(screen.getByTestId("banner-visible")).toHaveTextContent("true"),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Custom" }));
 
     expect(screen.getByTestId("analytics")).toHaveTextContent("true");
     expect(screen.getByTestId("marketing")).toHaveTextContent("false");
-    expect(screen.getByTestId("decision")).toHaveTextContent("true");
+    expect(screen.getByTestId("banner-visible")).toHaveTextContent("false");
   });
 
   it("loads a stored decision shortly after mount", async () => {
@@ -119,10 +136,10 @@ describe("ConsentProvider", () => {
       expect(screen.getByTestId("analytics")).toHaveTextContent("true");
     });
     expect(screen.getByTestId("marketing")).toHaveTextContent("false");
-    expect(screen.getByTestId("decision")).toHaveTextContent("true");
+    expect(screen.getByTestId("banner-visible")).toHaveTextContent("false");
   });
 
-  it("treats a stored consent from an older version as unresolved", () => {
+  it("treats a stored consent from an older version as unresolved", async () => {
     window.localStorage.setItem(
       CONSENT_STORAGE_KEY,
       JSON.stringify({
@@ -135,12 +152,14 @@ describe("ConsentProvider", () => {
 
     renderProbe();
 
+    await waitFor(() =>
+      expect(screen.getByTestId("banner-visible")).toHaveTextContent("true"),
+    );
     expect(screen.getByTestId("analytics")).toHaveTextContent("false");
     expect(screen.getByTestId("marketing")).toHaveTextContent("false");
-    expect(screen.getByTestId("decision")).toHaveTextContent("false");
   });
 
-  it("treats malformed stored records as unresolved", () => {
+  it("treats malformed stored records as unresolved", async () => {
     window.localStorage.setItem(
       CONSENT_STORAGE_KEY,
       JSON.stringify({ version: CONSENT_VERSION, analytics: "yes" }),
@@ -148,20 +167,27 @@ describe("ConsentProvider", () => {
 
     renderProbe();
 
-    expect(screen.getByTestId("decision")).toHaveTextContent("false");
+    await waitFor(() =>
+      expect(screen.getByTestId("banner-visible")).toHaveTextContent("true"),
+    );
   });
 
-  it("treats unparsable stored records as unresolved", () => {
+  it("treats unparsable stored records as unresolved", async () => {
     window.localStorage.setItem(CONSENT_STORAGE_KEY, "{not json");
 
     renderProbe();
 
-    expect(screen.getByTestId("decision")).toHaveTextContent("false");
+    await waitFor(() =>
+      expect(screen.getByTestId("banner-visible")).toHaveTextContent("true"),
+    );
   });
 
-  it("exposes settings dialog state", () => {
+  it("exposes settings dialog state", async () => {
     renderProbe();
 
+    await waitFor(() =>
+      expect(screen.getByTestId("banner-visible")).toHaveTextContent("true"),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Open" }));
     expect(screen.getByTestId("settings-open")).toHaveTextContent("true");
 

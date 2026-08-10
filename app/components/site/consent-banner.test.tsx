@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { SupportedLocale } from "../../i18n/config";
@@ -46,12 +46,22 @@ afterEach(() => {
 });
 
 describe("ConsentBanner", () => {
-  it("renders a localized banner with comparable actions before a decision", () => {
+  it("does not render the banner before the consent check completes", () => {
     renderBanner("en");
 
     expect(
-      screen.getByRole("region", { name: "Cookie preferences" }),
-    ).toBeVisible();
+      screen.queryByRole("region", { name: "Cookie preferences" }),
+    ).toBeNull();
+  });
+
+  it("renders a localized banner with comparable actions before a decision", async () => {
+    renderBanner("en");
+
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible(),
+    );
     expect(screen.getByRole("button", { name: "Accept all" })).toBeVisible();
     expect(
       screen.getByRole("button", { name: "Reject non-essential" }),
@@ -59,12 +69,14 @@ describe("ConsentBanner", () => {
     expect(screen.getByRole("button", { name: "Customize" })).toBeVisible();
   });
 
-  it("renders the Portuguese banner in the pt-BR locale", () => {
+  it("renders the Portuguese banner in the pt-BR locale", async () => {
     renderBanner("pt-BR");
 
-    expect(
-      screen.getByRole("region", { name: "Preferências de cookies" }),
-    ).toBeVisible();
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Preferências de cookies" }),
+      ).toBeVisible(),
+    );
     expect(screen.getByRole("button", { name: "Aceitar tudo" })).toBeVisible();
     expect(
       screen.getByRole("button", { name: "Recusar não essenciais" }),
@@ -72,21 +84,31 @@ describe("ConsentBanner", () => {
     expect(screen.getByRole("button", { name: "Personalizar" })).toBeVisible();
   });
 
-  it("renders nothing when the locale is unknown", () => {
+  it("renders nothing when the locale is unknown", async () => {
     render(
       <ConsentProvider>
         <ConsentBanner locale={null} />
       </ConsentProvider>,
     );
 
+    await waitFor(() =>
+      expect(
+        screen.queryByRole("region", { name: "Cookie preferences" }),
+      ).toBeNull(),
+    );
     expect(
       screen.queryByRole("region", { name: "Cookie preferences" }),
     ).toBeNull();
   });
 
-  it("accept all persists consent and hides the banner", () => {
+  it("accept all persists consent and hides the banner", async () => {
     renderBanner("en");
 
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Accept all" }));
 
     expect(storedConsent()).toMatchObject({
@@ -99,9 +121,14 @@ describe("ConsentBanner", () => {
     ).toBeNull();
   });
 
-  it("reject non-essential persists optional categories disabled", () => {
+  it("reject non-essential persists optional categories disabled", async () => {
     renderBanner("en");
 
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible(),
+    );
     fireEvent.click(
       screen.getByRole("button", { name: "Reject non-essential" }),
     );
@@ -115,9 +142,14 @@ describe("ConsentBanner", () => {
     ).toBeNull();
   });
 
-  it("customize opens the dialog with the current choices", () => {
+  it("customize opens the dialog with the current choices", async () => {
     renderBanner("en");
 
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Customize" }));
 
     const dialog = screen.getByRole("dialog", { name: "Cookie settings" });
@@ -132,9 +164,14 @@ describe("ConsentBanner", () => {
     ).not.toBeChecked();
   });
 
-  it("saving custom preferences persists them and closes the dialog", () => {
+  it("saving custom preferences persists them and closes the dialog", async () => {
     renderBanner("en");
 
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Customize" }));
     fireEvent.click(screen.getByRole("checkbox", { name: "Analytics" }));
     fireEvent.click(screen.getByRole("button", { name: "Save preferences" }));
@@ -151,9 +188,14 @@ describe("ConsentBanner", () => {
     ).toBeNull();
   });
 
-  it("cancel closes the dialog without persisting a choice", () => {
+  it("cancel closes the dialog without persisting a choice", async () => {
     renderBanner("en");
 
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Customize" }));
     fireEvent.click(screen.getByRole("checkbox", { name: "Marketing" }));
     fireEvent.click(screen.getByRole("button", { name: "Cancel" }));
@@ -167,9 +209,14 @@ describe("ConsentBanner", () => {
     ).toBeVisible();
   });
 
-  it("escape closes the dialog without persisting", () => {
+  it("escape closes the dialog without persisting", async () => {
     renderBanner("en");
 
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Customize" }));
     fireEvent.keyDown(screen.getByRole("dialog", { name: "Cookie settings" }), {
       key: "Escape",
@@ -181,9 +228,14 @@ describe("ConsentBanner", () => {
     ).toBeNull();
   });
 
-  it("reopens the dialog with stored choices after a decision", () => {
+  it("reopens the dialog with stored choices after a decision", async () => {
     renderBanner("en", true);
 
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Accept all" }));
     fireEvent.click(screen.getByRole("button", { name: "Open settings" }));
 
@@ -193,9 +245,14 @@ describe("ConsentBanner", () => {
     expect(screen.getByRole("checkbox", { name: "Marketing" })).toBeChecked();
   });
 
-  it("restores stored choices when the dialog is reopened after cancel", () => {
+  it("restores stored choices when the dialog is reopened after cancel", async () => {
     renderBanner("en", true);
 
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Accept all" }));
     fireEvent.click(screen.getByRole("button", { name: "Open settings" }));
     fireEvent.click(screen.getByRole("checkbox", { name: "Marketing" }));
@@ -205,17 +262,27 @@ describe("ConsentBanner", () => {
     expect(screen.getByRole("checkbox", { name: "Marketing" })).toBeChecked();
   });
 
-  it("focuses the first optional toggle when the dialog opens", () => {
+  it("focuses the first optional toggle when the dialog opens", async () => {
     renderBanner("en");
 
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Customize" }));
 
     expect(screen.getByRole("checkbox", { name: "Analytics" })).toHaveFocus();
   });
 
-  it("closes the dialog when clicking outside the content", () => {
+  it("closes the dialog when clicking outside the content", async () => {
     renderBanner("en");
 
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Customize" }));
     fireEvent.click(screen.getByRole("dialog", { name: "Cookie settings" }));
 
@@ -224,7 +291,7 @@ describe("ConsentBanner", () => {
     ).toBeNull();
   });
 
-  it("does not rerun the modal open sequence when consent changes while the dialog is open", () => {
+  it("does not rerun the modal open sequence when consent changes while the dialog is open", async () => {
     const showModal = vi
       .fn()
       .mockImplementationOnce(function (this: HTMLDialogElement) {
@@ -248,6 +315,11 @@ describe("ConsentBanner", () => {
       </ConsentProvider>,
     );
 
+    await waitFor(() =>
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible(),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Customize" }));
     expect(showModal).toHaveBeenCalledTimes(1);
 
