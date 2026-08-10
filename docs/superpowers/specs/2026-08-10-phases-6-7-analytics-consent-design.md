@@ -68,9 +68,12 @@ type StoredConsent = { version: number; analytics: boolean; marketing: boolean; 
 
 `CONSENT_VERSION = 1`. Defaults: `necessary` enabled, `analytics` and `marketing` disabled. Stored in `localStorage` under a single `consent` key with the same try/catch guarding used by `theme.ts`. Reads are strictly validated at runtime: the record must be an object whose `version` equals `CONSENT_VERSION` (number), whose `analytics` and `marketing` are booleans, and whose `updatedAt` is a non-empty string. Any missing, malformed, wrong-version, or unparsable record is treated as unresolved (banner shows again) — never as affirmative consent.
 
+**Consent loading is deferred and inverted.** The provider's initial state is the conservative unresolved snapshot in BOTH the prerendered tree and the hydrated tree — so the prerendered HTML and the first hydrated render are always identical (no hydration mismatch, no lint exception needed). A single mount effect performs the one-shot storage read inside a deferred microtask (`queueMicrotask`) and applies the result in one batched update after hydration: returning visitors get their stored consent applied (trackers become eligible via the analytics transition dispatch, banner never renders — no flash), new visitors get the banner. The deferral is deliberate and documented in code and in this spec; it must not be converted back to a synchronous effect-body update or a lazy `useState` initializer.
+
 ### D7 — Consent UI
 
 - Fixed banner with three comparable actions: **Accept all**, **Reject non-essential**, **Customize**.
+- **The banner is not part of the prerendered HTML.** It renders only after the client-side consent check completes without a stored decision (inverted polarity): new visitors see it shortly after hydration; returning visitors with stored consent never see it (no flash, no HTML tear-down).
 - Customize screen is a native `<dialog>` with independent analytics/marketing toggles and a save action. Necessary is always enabled.
 - The site footer exposes a persistent **Cookie settings** button that reopens the customize dialog, providing the withdrawal/change path.
 - No new dependencies; no vendor scripts load anywhere in the template (no providers configured).
@@ -103,7 +106,7 @@ The default tracker registry (console tracker) lives in one obvious location (`a
 
 ## Data Flow
 
-1. Page loads → `ConsentProvider` reads `localStorage["consent"]`; unresolved (missing, malformed, or wrong version) ⇒ banner visible, only `necessary` trackers eligible.
+1. Page loads → `ConsentProvider` starts with the conservative unresolved snapshot in both the prerendered and hydrated trees (no banner in HTML). After hydration, one deferred microtask reads `localStorage["consent"]`; unresolved (missing, malformed, or wrong version) ⇒ banner appears, only `necessary` trackers eligible.
 2. User choice → state updates, persisted with version, banner closes, eligibility recomputed at next dispatch. If the change makes analytics (or marketing) trackers newly eligible, one `page_view` for the current pathname is dispatched so trackers observe the landing page.
 3. Route change → `AnalyticsProvider` effect emits `page_view` via `dispatchEvent`, filtered by consent.
 4. Component CTA → `capture({ eventName: 'cta_pressed', ... })` → same dispatch path.
