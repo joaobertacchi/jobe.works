@@ -1,7 +1,7 @@
 import { useAnalytics } from "../analytics/analytics";
 import { HeroSection } from "../components/sections/hero-section";
 import { Card } from "../components/ui/card";
-import { Container } from "../components/ui/container";
+import { DividedSection } from "../components/ui/divided-section";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
 import { TextLink } from "../components/ui/text-link";
@@ -52,37 +52,35 @@ export default function Home() {
           </TextLink>
         }
       />
-      <section className="border-t border-border py-16 sm:py-24">
-        <Container>
-          <Heading>{translate("home.principles.title")}</Heading>
-          <div className="mt-8 grid gap-6 md:grid-cols-3">
-            <Card className="flex flex-col gap-3">
-              <Heading as="h3" level="card">
-                {translate("home.principles.static.title")}
-              </Heading>
-              <Text tone="muted">
-                {translate("home.principles.static.description")}
-              </Text>
-            </Card>
-            <Card className="flex flex-col gap-3">
-              <Heading as="h3" level="card">
-                {translate("home.principles.localization.title")}
-              </Heading>
-              <Text tone="muted">
-                {translate("home.principles.localization.description")}
-              </Text>
-            </Card>
-            <Card className="flex flex-col gap-3">
-              <Heading as="h3" level="card">
-                {translate("home.principles.quality.title")}
-              </Heading>
-              <Text tone="muted">
-                {translate("home.principles.quality.description")}
-              </Text>
-            </Card>
-          </div>
-        </Container>
-      </section>
+      <DividedSection className="py-16 sm:py-24">
+        <Heading>{translate("home.principles.title")}</Heading>
+        <div className="mt-8 grid gap-6 md:grid-cols-3">
+          <Card className="flex flex-col gap-3">
+            <Heading as="h3" level="card">
+              {translate("home.principles.static.title")}
+            </Heading>
+            <Text tone="muted">
+              {translate("home.principles.static.description")}
+            </Text>
+          </Card>
+          <Card className="flex flex-col gap-3">
+            <Heading as="h3" level="card">
+              {translate("home.principles.localization.title")}
+            </Heading>
+            <Text tone="muted">
+              {translate("home.principles.localization.description")}
+            </Text>
+          </Card>
+          <Card className="flex flex-col gap-3">
+            <Heading as="h3" level="card">
+              {translate("home.principles.quality.title")}
+            </Heading>
+            <Text tone="muted">
+              {translate("home.principles.quality.description")}
+            </Text>
+          </Card>
+        </div>
+      </DividedSection>
     </main>
   );
 }

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-import { Container } from "../ui/container";
+import { DividedSection } from "../ui/divided-section";
 import { Heading } from "../ui/heading";
 import { Text } from "../ui/text";
 
@@ -18,8 +18,8 @@ export function ContentSection({
   children,
 }: ContentSectionProps) {
   return (
-    <section className="border-t border-border py-12 sm:py-16">
-      <Container className="grid gap-8 lg:grid-cols-2 lg:gap-16">
+    <DividedSection className="py-12 sm:py-16">
+      <div className="grid gap-8 lg:grid-cols-2 lg:gap-16">
         <div className="flex flex-col gap-3">
           {eyebrow ? <Text as="span">{eyebrow}</Text> : null}
           <Heading>{title}</Heading>
@@ -28,7 +28,7 @@ export function ContentSection({
           <Text tone="muted">{description}</Text>
           {children}
         </div>
-      </Container>
-    </section>
+      </div>
+    </DividedSection>
   );
 }

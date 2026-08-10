@@ -5,6 +5,7 @@ import { MemoryRouter } from "react-router";
 import { Button } from "./button";
 import { Card } from "./card";
 import { Container } from "./container";
+import { DividedSection } from "./divided-section";
 import { Heading } from "./heading";
 import { Text } from "./text";
 import { TextLink } from "./text-link";
@@ -179,5 +180,23 @@ describe("Container", () => {
       "mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 relative",
     );
     expect(container).toHaveTextContent("Page content");
+  });
+});
+
+describe("DividedSection", () => {
+  it("renders a content-column divider inside a section with caller classes", () => {
+    const { container } = render(
+      <DividedSection className="mt-16">Section content</DividedSection>,
+    );
+
+    const section = container.querySelector("section");
+    const divider = section?.querySelector(".border-t");
+
+    expect(section).toBeInTheDocument();
+    expect(section).toHaveClass("mt-16");
+    expect(section?.querySelector(".max-w-6xl")).toBeInTheDocument();
+    expect(divider).toBeInTheDocument();
+    expect(divider).toHaveClass("border-border", "pt-10");
+    expect(section).toHaveTextContent("Section content");
   });
 });

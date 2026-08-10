@@ -1,5 +1,6 @@
 import { ServiceCard } from "../components/domain/service-card";
 import { Container } from "../components/ui/container";
+import { DividedSection } from "../components/ui/divided-section";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
 import { isSupportedLocale } from "../i18n/config";
@@ -41,17 +42,17 @@ export default function Services() {
             description={translate("services.items.delivery.description")}
           />
         </div>
-        <section className="mt-16 border-t border-border pt-10">
-          <div className="max-w-3xl">
-            <Heading as="h2" level="section">
-              {translate("services.closing.title")}
-            </Heading>
-            <Text className="mt-4" tone="muted">
-              {translate("services.closing.description")}
-            </Text>
-          </div>
-        </section>
       </Container>
+      <DividedSection className="mt-16">
+        <div className="max-w-3xl">
+          <Heading as="h2" level="section">
+            {translate("services.closing.title")}
+          </Heading>
+          <Text className="mt-4" tone="muted">
+            {translate("services.closing.description")}
+          </Text>
+        </div>
+      </DividedSection>
     </main>
   );
 }
