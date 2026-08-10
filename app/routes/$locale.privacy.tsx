@@ -3,9 +3,25 @@ import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
 import { isSupportedLocale } from "../i18n/config";
 import { useI18n } from "../i18n/i18n";
-import { privacyTranslations } from "../i18n/translations/privacy";
+import {
+  privacyTranslations,
+  type PrivacyTranslation,
+} from "../i18n/translations/privacy";
 import { createPageMeta, getSeoLoaderData } from "../seo/metadata";
 import type { Route } from "./+types/$locale.privacy";
+
+const privacySectionKeys: readonly (keyof PrivacyTranslation["sections"])[] = [
+  "data",
+  "purpose",
+  "storage",
+  "consent",
+  "cookies",
+  "analytics",
+  "marketing",
+  "attribution",
+  "contactForms",
+  "rights",
+];
 
 export function meta({ matches, params }: Route.MetaArgs) {
   if (!params.locale || !isSupportedLocale(params.locale)) return [];
@@ -27,30 +43,14 @@ export default function Privacy() {
             </Heading>
             <Text tone="muted">{translate("privacy.introduction")}</Text>
           </div>
-          <section className="flex flex-col gap-3">
-            <Heading as="h2" level="section">
-              {translate("privacy.sections.data.title")}
-            </Heading>
-            <Text>{translate("privacy.sections.data.body")}</Text>
-          </section>
-          <section className="flex flex-col gap-3">
-            <Heading as="h2" level="section">
-              {translate("privacy.sections.purpose.title")}
-            </Heading>
-            <Text>{translate("privacy.sections.purpose.body")}</Text>
-          </section>
-          <section className="flex flex-col gap-3">
-            <Heading as="h2" level="section">
-              {translate("privacy.sections.storage.title")}
-            </Heading>
-            <Text>{translate("privacy.sections.storage.body")}</Text>
-          </section>
-          <section className="flex flex-col gap-3">
-            <Heading as="h2" level="section">
-              {translate("privacy.sections.rights.title")}
-            </Heading>
-            <Text>{translate("privacy.sections.rights.body")}</Text>
-          </section>
+          {privacySectionKeys.map((key) => (
+            <section key={key} className="flex flex-col gap-3">
+              <Heading as="h2" level="section">
+                {translate(`privacy.sections.${key}.title`)}
+              </Heading>
+              <Text>{translate(`privacy.sections.${key}.body`)}</Text>
+            </section>
+          ))}
         </div>
       </Container>
     </main>

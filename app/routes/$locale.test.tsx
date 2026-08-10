@@ -226,7 +226,7 @@ describe("localized route layout", () => {
       expect(
         screen.getByRole("heading", { level: 2, name: section }),
       ).toBeVisible();
-      expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(4);
+      expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(10);
     },
   );
 
