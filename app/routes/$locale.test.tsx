@@ -13,6 +13,7 @@ import { describe, expect, it, vi } from "vitest";
 
 import { AnalyticsProvider } from "../analytics/analytics";
 import type { TrackerRegistration } from "../analytics/types";
+import { ConsentProvider } from "../consent/consent-context";
 import type { CanonicalUrlManifest } from "../routing/canonical-url-manifest";
 import NotFound from "./$locale.404";
 import About from "./$locale.about";
@@ -87,12 +88,14 @@ function renderLocalizedRoute(
       {
         path: "/",
         Component: () => (
-          <AnalyticsProvider
-            consent={{ analytics: true, marketing: true }}
-            trackers={trackers}
-          >
-            <Outlet />
-          </AnalyticsProvider>
+          <ConsentProvider>
+            <AnalyticsProvider
+              consent={{ analytics: true, marketing: true }}
+              trackers={trackers}
+            >
+              <Outlet />
+            </AnalyticsProvider>
+          </ConsentProvider>
         ),
         children: [
           {

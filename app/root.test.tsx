@@ -1,16 +1,27 @@
 import { readFileSync } from "node:fs";
 
-import { render, screen } from "@testing-library/react";
-import { Links, Meta, Outlet } from "react-router";
-import { describe, expect, it } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import { Links, MemoryRouter, Meta, Outlet } from "react-router";
+import { describe, expect, it, vi } from "vitest";
 
 import * as rootModule from "./root";
-import App, { Document, ErrorBoundary } from "./root";
+import App, { Document, ErrorBoundary, Layout } from "./root";
 import {
   THEME_MEDIA_QUERY,
   THEME_STORAGE_KEY,
   themeInitializationScript,
 } from "./theme";
+
+vi.mock("react-router", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("react-router")>();
+  return {
+    ...actual,
+    Links: () => null,
+    Meta: () => null,
+    Scripts: () => null,
+    ScrollRestoration: () => null,
+  };
+});
 
 function routeError(status: number, statusText = "") {
   return {
@@ -83,6 +94,25 @@ describe("root document", () => {
 
   it("renders child routes through an outlet", () => {
     expect(App().type).toBe(Outlet);
+  });
+
+  it("wraps page content with consent providers and renders the banner", async () => {
+    window.localStorage.clear();
+    render(
+      <MemoryRouter initialEntries={["/en/"]}>
+        <Layout>
+          <p>Page content</p>
+        </Layout>
+      </MemoryRouter>,
+    );
+
+    expect(screen.getByText("Page content")).toBeVisible();
+    await waitFor(() => {
+      expect(
+        screen.getByRole("region", { name: "Cookie preferences" }),
+      ).toBeVisible();
+    });
+    expect(screen.getByRole("button", { name: "Accept all" })).toBeVisible();
   });
 });
 

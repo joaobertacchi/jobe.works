@@ -13,6 +13,8 @@ import type { SupportedLocale } from "../../i18n/config";
 import { I18nProvider } from "../../i18n/i18n";
 import { commonTranslations } from "../../i18n/translations/common";
 import { THEME_STORAGE_KEY } from "../../theme";
+import { ConsentProvider } from "../../consent/consent-context";
+import { ConsentBanner } from "./consent-banner";
 import { LanguageSwitcher } from "./language-switcher";
 import { PrimaryNavigation } from "./primary-navigation";
 import { SiteHeader } from "./site-header";
@@ -209,6 +211,25 @@ describe("SiteFooter", () => {
       );
     },
   );
+
+  it("exposes a cookie settings button that opens the customize dialog", () => {
+    render(
+      <MemoryRouter initialEntries={["/en/about"]}>
+        <ConsentProvider>
+          <I18nProvider locale="en">
+            <SiteFooter />
+            <ConsentBanner locale="en" />
+          </I18nProvider>
+        </ConsentProvider>
+      </MemoryRouter>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Cookie settings" }));
+
+    expect(
+      screen.getByRole("dialog", { name: "Cookie settings" }),
+    ).toBeVisible();
+  });
 });
 
 describe("ThemeSwitcher", () => {
@@ -483,7 +504,9 @@ function renderWithRouter(
 ) {
   return render(
     <MemoryRouter initialEntries={[pathname]}>
-      <I18nProvider locale={locale}>{component}</I18nProvider>
+      <ConsentProvider>
+        <I18nProvider locale={locale}>{component}</I18nProvider>
+      </ConsentProvider>
     </MemoryRouter>,
   );
 }

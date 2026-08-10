@@ -9,6 +9,8 @@ import {
 } from "react-router";
 
 import { AnalyticsProvider } from "./analytics/analytics";
+import { ConsentBanner } from "./components/site/consent-banner";
+import { ConsentProvider, useConsent } from "./consent/consent-context";
 import {
   defaultLocale,
   getLocaleFromPathname,
@@ -51,6 +53,11 @@ export function Document({
   );
 }
 
+function ConsentAwareAnalytics({ children }: { children: React.ReactNode }) {
+  const { consent } = useConsent();
+  return <AnalyticsProvider consent={consent}>{children}</AnalyticsProvider>;
+}
+
 export function Layout({ children }: { children: React.ReactNode }) {
   const { pathname } = useLocation();
   const locale =
@@ -58,9 +65,12 @@ export function Layout({ children }: { children: React.ReactNode }) {
     (pathname.split("/")[1] ? null : defaultLocale);
   return (
     <Document locale={locale}>
-      <AnalyticsProvider consent={{ analytics: false, marketing: false }}>
-        {children}
-      </AnalyticsProvider>
+      <ConsentProvider>
+        <ConsentAwareAnalytics>
+          {children}
+          <ConsentBanner locale={locale} />
+        </ConsentAwareAnalytics>
+      </ConsentProvider>
     </Document>
   );
 }

@@ -407,6 +407,7 @@ test("serves sitemap and robots generated from indexable routes", async ({
 
 test("keeps localized Privacy navigation in the footer", async ({ page }) => {
   await page.goto("/pt-BR/about");
+  await page.getByRole("button", { name: "Aceitar tudo" }).click();
   const footer = page.getByRole("contentinfo");
   await expect(
     footer.getByRole("link", { name: "Privacidade" }),
