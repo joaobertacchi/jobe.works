@@ -29,9 +29,10 @@ function ConsentDialog() {
     setAnalytics(consent.analytics);
     setMarketing(consent.marketing);
     const dialog = dialogRef.current;
-    if (dialog && typeof dialog.showModal === "function") {
+    if (!dialog || dialog.open) return;
+    if (typeof dialog.showModal === "function") {
       dialog.showModal();
-    } else if (dialog) {
+    } else {
       dialog.setAttribute("open", "");
     }
     analyticsToggleRef.current?.focus();

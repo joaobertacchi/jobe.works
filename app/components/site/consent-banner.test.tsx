@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { SupportedLocale } from "../../i18n/config";
 import { ConsentProvider, useConsent } from "../../consent/consent-context";
@@ -11,6 +11,15 @@ function SettingsOpener() {
   return (
     <button type="button" onClick={openSettings}>
       Open settings
+    </button>
+  );
+}
+
+function AcceptAllTrigger() {
+  const { acceptAll } = useConsent();
+  return (
+    <button type="button" onClick={acceptAll}>
+      Accept all while open
     </button>
   );
 }
@@ -33,6 +42,7 @@ function storedConsent() {
 
 afterEach(() => {
   window.localStorage.clear();
+  delete (HTMLDialogElement.prototype as { showModal?: unknown }).showModal;
 });
 
 describe("ConsentBanner", () => {
@@ -212,5 +222,42 @@ describe("ConsentBanner", () => {
     expect(
       screen.queryByRole("dialog", { name: "Cookie settings" }),
     ).toBeNull();
+  });
+
+  it("does not rerun the modal open sequence when consent changes while the dialog is open", () => {
+    const showModal = vi
+      .fn()
+      .mockImplementationOnce(function (this: HTMLDialogElement) {
+        this.setAttribute("open", "");
+      })
+      .mockImplementation(() => {
+        throw new DOMException(
+          "The dialog is already open.",
+          "InvalidStateError",
+        );
+      });
+    Object.defineProperty(HTMLDialogElement.prototype, "showModal", {
+      configurable: true,
+      value: showModal,
+    });
+
+    render(
+      <ConsentProvider>
+        <ConsentBanner locale="en" />
+        <AcceptAllTrigger />
+      </ConsentProvider>,
+    );
+
+    fireEvent.click(screen.getByRole("button", { name: "Customize" }));
+    expect(showModal).toHaveBeenCalledTimes(1);
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Accept all while open" }),
+    );
+
+    expect(showModal).toHaveBeenCalledTimes(1);
+    expect(
+      screen.getByRole("dialog", { name: "Cookie settings" }),
+    ).toBeVisible();
   });
 });
