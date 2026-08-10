@@ -15,8 +15,7 @@ import { Heading } from "../ui/heading";
 import { Text } from "../ui/text";
 
 function ConsentDialog() {
-  const { consent, settingsOpen, closeSettings, updatePreferences } =
-    useConsent();
+  const { consent, closeSettings, updatePreferences } = useConsent();
   const { translate } = useI18n();
   const [analytics, setAnalytics] = useState(consent.analytics);
   const [marketing, setMarketing] = useState(consent.marketing);
@@ -24,10 +23,6 @@ function ConsentDialog() {
   const analyticsToggleRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!settingsOpen) return;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- resync local form state with the stored consent whenever the dialog opens
-    setAnalytics(consent.analytics);
-    setMarketing(consent.marketing);
     const dialog = dialogRef.current;
     if (!dialog || dialog.open) return;
     if (typeof dialog.showModal === "function") {
@@ -36,9 +31,7 @@ function ConsentDialog() {
       dialog.setAttribute("open", "");
     }
     analyticsToggleRef.current?.focus();
-  }, [settingsOpen, consent]);
-
-  if (!settingsOpen) return null;
+  }, [consent]);
 
   function savePreferences() {
     updatePreferences({ analytics, marketing });
@@ -128,8 +121,13 @@ function ConsentDialog() {
 }
 
 function ConsentBannerContent() {
-  const { hasConsentDecision, acceptAll, rejectNonEssential, openSettings } =
-    useConsent();
+  const {
+    hasConsentDecision,
+    acceptAll,
+    rejectNonEssential,
+    openSettings,
+    settingsOpen,
+  } = useConsent();
   const { translate } = useI18n();
 
   return (
@@ -160,7 +158,7 @@ function ConsentBannerContent() {
           </Container>
         </div>
       )}
-      <ConsentDialog />
+      {settingsOpen ? <ConsentDialog /> : null}
     </>
   );
 }
