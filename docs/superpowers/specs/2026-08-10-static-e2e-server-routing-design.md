@@ -31,8 +31,6 @@ Update the route validation and e2e coverage as follows:
   assert the localized catch-all content. Revalidate the locale parent loader
   whenever the pathname changes so React Router cannot reuse canonical data for
   an alias with the same locale.
-- Keep direct browser coverage for trailing-slash aliases, whose existing
-  directory artifact loads and whose hydration rejects the noncanonical URL.
 - Do not use direct browser or request assertions for aliases in the app-routing
   tests. Whether a webserver maps an alias to an existing directory, returns a
   404, or applies deployment-specific rules is outside the app contract.

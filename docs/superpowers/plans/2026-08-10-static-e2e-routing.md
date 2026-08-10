@@ -14,7 +14,7 @@
 
 - Modify `app/routes/$locale.tsx`: revalidate the locale parent loader when the pathname changes.
 - Modify `app/routes/$locale.test.tsx`: cover pathname-driven parent-loader revalidation.
-- Modify `tests/e2e/routing.spec.ts`: distinguish client navigation assertions, hydration-based direct alias assertions, and static-server responses.
+- Modify `tests/e2e/routing.spec.ts`: distinguish client navigation assertions from stable static-server and artifact-inventory checks.
 - Do not modify `package.json`, `playwright.config.ts`, or production build configuration. The existing local `sirv` server already exercises the built static artifact without deployment.
 
 ## Task 1: Revalidate Noncanonical Pathnames
