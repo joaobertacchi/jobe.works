@@ -43,7 +43,9 @@ type LeadSubmittedEvent = { eventName: 'lead_submitted'; formId: string };
 type AnalyticsCustomEvent = PageViewEvent | CtaPressedEvent | LeadSubmittedEvent;
 ```
 
-`page_view` is dispatched centrally by `AnalyticsProvider` on initial load and on every route change (deduplicated per pathname). Routes never emit page views. `cta_pressed` is demonstrated from the home hero CTA. `lead_submitted` exists in the union now and gains an emitter in Phase 8.
+`page_view` is dispatched centrally by `AnalyticsProvider` on initial load and on every route change (deduplicated per pathname so dev double-fires and repeated navigations to the same route produce one event). Routes never emit page views. `cta_pressed` is demonstrated from the home hero CTA. `lead_submitted` exists in the union now and gains an emitter in Phase 8.
+
+Because a `page_view` dispatched before consent never reaches an ineligible tracker, the provider additionally dispatches one `page_view` for the current pathname whenever consent transitions from ineligible to eligible (e.g., accepting all on the landing page). This transition dispatch is not subject to pathname deduplication and matches the expectation that accepting all yields a page-view log.
 
 ### D3 — Console tracker classified as analytics
 
@@ -51,7 +53,7 @@ The development console tracker (`console.debug("[analytics]", event)`) declares
 
 ### D4 — Dispatch-time eligibility
 
-`dispatchEvent(trackers, event)` filters registrations by the current consent state at dispatch time. Changing consent therefore immediately changes tracker eligibility. Per-tracker try/catch isolates failures: one failing tracker never blocks other trackers or the caller, and `capture` never throws. Tracker errors are reported via `console.error` only in development.
+`dispatchEvent(trackers, event, consent)` filters registrations by the current consent state, passed explicitly as a snapshot argument so the manager has no hidden global state. Changing consent therefore immediately changes tracker eligibility. Per-tracker try/catch isolates failures: one failing tracker never blocks other trackers or the caller, and `capture` never throws. Tracker errors are reported via `console.error` only in development.
 
 ### D5 — Allowlisted landing attribution in memory
 
@@ -64,7 +66,7 @@ type ConsentCategory = 'necessary' | 'analytics' | 'marketing';
 type StoredConsent = { version: number; analytics: boolean; marketing: boolean; updatedAt: string };
 ```
 
-`CONSENT_VERSION = 1`. Defaults: `necessary` enabled, `analytics` and `marketing` disabled. Stored in `localStorage` under a single `consent` key with the same try/catch guarding used by `theme.ts`. A stored consent whose version differs from `CONSENT_VERSION` is treated as unresolved (banner shows again).
+`CONSENT_VERSION = 1`. Defaults: `necessary` enabled, `analytics` and `marketing` disabled. Stored in `localStorage` under a single `consent` key with the same try/catch guarding used by `theme.ts`. Reads are strictly validated at runtime: the record must be an object whose `version` equals `CONSENT_VERSION` (number), whose `analytics` and `marketing` are booleans, and whose `updatedAt` is a non-empty string. Any missing, malformed, wrong-version, or unparsable record is treated as unresolved (banner shows again) — never as affirmative consent.
 
 ### D7 — Consent UI
 
@@ -82,7 +84,7 @@ The default tracker registry (console tracker) lives in one obvious location (`a
 ### Phase 6 — `app/analytics/`
 
 - `types.ts` — event union, `Tracker`, `TrackerRegistration`, `ConsentCategory` import.
-- `manager.ts` — `dispatchEvent(trackers, event)` with isolation and dev-only error reporting.
+- `manager.ts` — `dispatchEvent(trackers, event, consent)` with isolation and dev-only error reporting.
 - `attribution.ts` — `parseCampaignAttribution(searchParams)`.
 - `trackers/console.ts` — console tracker.
 - `trackers/index.ts` — default registry.
@@ -101,8 +103,8 @@ The default tracker registry (console tracker) lives in one obvious location (`a
 
 ## Data Flow
 
-1. Page loads → `ConsentProvider` reads `localStorage["consent"]`; unresolved (missing or version mismatch) ⇒ banner visible, only `necessary` trackers eligible.
-2. User choice → state updates, persisted with version, banner closes, eligibility recomputed at next dispatch.
+1. Page loads → `ConsentProvider` reads `localStorage["consent"]`; unresolved (missing, malformed, or wrong version) ⇒ banner visible, only `necessary` trackers eligible.
+2. User choice → state updates, persisted with version, banner closes, eligibility recomputed at next dispatch. If the change makes analytics (or marketing) trackers newly eligible, one `page_view` for the current pathname is dispatched so trackers observe the landing page.
 3. Route change → `AnalyticsProvider` effect emits `page_view` via `dispatchEvent`, filtered by consent.
 4. Component CTA → `capture({ eventName: 'cta_pressed', ... })` → same dispatch path.
 5. Tracker failure → caught per tracker; other trackers still run; application unaffected.
@@ -115,8 +117,8 @@ The default tracker registry (console tracker) lives in one obvious location (`a
 
 ## Testing
 
-- **Unit:** manager isolation and eligibility by consent category; consent storage round-trips, version mismatch, invalid JSON; attribution allowlist (known UTM parsed, unknown params ignored, trimming); type-test file.
-- **Component:** banner renders in both locales, actions call context handlers, dialog toggles, footer cookie-settings button; provider emits page views on navigation and exposes attribution; failing tracker does not break capture.
+- **Unit:** manager isolation and eligibility by consent category (explicit consent snapshot); consent storage round-trips, version mismatch, malformed records and invalid JSON treated as unresolved; attribution allowlist (known UTM parsed, unknown params ignored, trimming); type-test file.
+- **Component:** banner renders in both locales, actions call context handlers, dialog toggles, footer cookie-settings button; provider emits page views on navigation and exposes attribution; consent transition dispatches a page view for the current pathname; failing tracker does not break capture.
 - **E2E (`tests/e2e/privacy-consent.spec.ts`):** banner appears without stored consent; accept all produces `[analytics]` page-view debug logs; reject non-essential produces none; customize analytics-only enables analytics but not marketing; cookie settings reopens after dismissal; consent persists across reload; stale consent version shows the banner again; no console errors.
 
 ## Out of Scope
