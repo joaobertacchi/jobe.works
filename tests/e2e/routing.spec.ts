@@ -1,6 +1,33 @@
 import { readFileSync, readdirSync } from "node:fs";
 
-import { expect, test } from "./fixtures";
+import {
+  CONSENT_STORAGE_KEY,
+  CONSENT_VERSION,
+} from "../../app/consent/consent";
+import { expect, test as base } from "./fixtures";
+
+const test = base.extend<{ consented: void }>({
+  consented: [
+    async ({ page }, use) => {
+      await page.addInitScript(
+        ({ key, version }) => {
+          localStorage.setItem(
+            key,
+            JSON.stringify({
+              version,
+              analytics: true,
+              marketing: true,
+              updatedAt: "2026-01-01T00:00:00.000Z",
+            }),
+          );
+        },
+        { key: CONSENT_STORAGE_KEY, version: CONSENT_VERSION },
+      );
+      await use();
+    },
+    { auto: true },
+  ],
+});
 
 const publishedPages = [
   ["/en/", "Static website template"],
@@ -407,7 +434,6 @@ test("serves sitemap and robots generated from indexable routes", async ({
 
 test("keeps localized Privacy navigation in the footer", async ({ page }) => {
   await page.goto("/pt-BR/about");
-  await page.getByRole("button", { name: "Aceitar tudo" }).click();
   const footer = page.getByRole("contentinfo");
   await expect(
     footer.getByRole("link", { name: "Privacidade" }),
