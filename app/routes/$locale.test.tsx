@@ -21,6 +21,7 @@ import LocaleLayout, {
   clientLoader,
   ErrorBoundary,
   getLoaderDataForPathname,
+  shouldRevalidate,
 } from "./$locale";
 
 const canonicalManifest = [
@@ -553,6 +554,34 @@ describe("localized route layout", () => {
       expect(screen.getByRole("group", { name: /theme|tema/i })).toBeVisible();
     },
   );
+});
+
+describe("localized route revalidation", () => {
+  it.each(["/en/about/", "/en/About", "/pt-BR/about/", "/pt-BR/About"])(
+    "revalidates the parent loader for noncanonical pathname %s",
+    (pathname) => {
+      expect(
+        shouldRevalidate({
+          currentUrl: new URL("https://example.test/en/services"),
+          nextUrl: new URL(`https://example.test${pathname}`),
+          nextParams: {
+            locale: pathname.startsWith("/pt-BR/") ? "pt-BR" : "en",
+          },
+        } as never),
+      ).toBe(true);
+    },
+  );
+
+  it("does not reload static data for a localized catch-all path", () => {
+    expect(
+      shouldRevalidate({
+        currentUrl: new URL("https://example.test/en/about"),
+        nextUrl: new URL("https://example.test/en/not-published"),
+        nextParams: { locale: "en", "*": "not-published" },
+        defaultShouldRevalidate: true,
+      } as never),
+    ).toBe(false);
+  });
 });
 
 describe("localized route clientLoader", () => {

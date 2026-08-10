@@ -23,29 +23,38 @@ Keep Playwright's existing local web server flow:
 npm run build -> npm run preview -> sirv build/client
 ```
 
-Do not add deployment dependencies, an SPA fallback, or a production route
-change.
+Do not add deployment dependencies, an SPA fallback, or a route-tree change.
 
-Update the e2e coverage as follows:
+Update the route validation and e2e coverage as follows:
 
 - Test client-side navigation to every alias with `router.navigate(alias)` and
-  assert the localized catch-all content.
+  assert the localized catch-all content. Revalidate the locale parent loader
+  whenever the pathname changes so React Router cannot reuse canonical data for
+  an alias with the same locale.
 - Keep direct browser coverage for trailing-slash aliases, whose existing
   directory artifact loads and whose hydration rejects the noncanonical URL.
-- Assert direct HTTP 404 responses through Playwright's `request` fixture for
-  case-mismatched aliases that have no static artifact.
+- Do not use direct browser or request assertions for aliases in the app-routing
+  tests. Whether a webserver maps an alias to an existing directory, returns a
+  404, or applies deployment-specific rules is outside the app contract.
+- Verify that aliases are absent from the canonical manifest and static
+  artifact inventory. Keep direct static-server 404 coverage for stable unknown
+  paths such as `/en/not-published`.
 
 ## Rationale
 
 This matches the accepted static-site contract: every published URL has a
 prerendered artifact, unknown paths receive normal static-server 404 responses,
-and no application route depends on an SPA fallback. It also removes the
-unnecessary revalidation race from the browser test instead of masking it with
-timing or browser-error allowances.
+and no application route depends on an SPA fallback. The app tests do not infer
+webserver behavior from filesystem behavior, so they remain portable across
+case-sensitive and case-insensitive volumes. The client test waits for the
+initial hydration and completed navigation instead of using an unawaited
+revalidation race.
 
 ## Validation
 
 - Targeted `tests/e2e/routing.spec.ts` passes on the local `sirv` server.
+- Route unit coverage verifies pathname-driven parent-loader revalidation.
+- Static artifact tests verify aliases are not published.
 - `npm run check` passes without weakened validation.
 - Full `npm run test:e2e` passes with no unexpected browser errors.
 - The build continues to remove `__spa-fallback.html` and does not publish alias

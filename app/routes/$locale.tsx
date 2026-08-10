@@ -5,6 +5,7 @@ import {
   useMatches,
   useParams,
 } from "react-router";
+import type { ShouldRevalidateFunctionArgs } from "react-router";
 
 import { SiteHeader } from "../components/site/site-header";
 import { SiteFooter } from "../components/site/site-footer";
@@ -55,6 +56,18 @@ export function loader({ url }: Route.LoaderArgs) {
     readCanonicalManifest(),
     url.pathname,
     createSiteConfig(),
+  );
+}
+
+export function shouldRevalidate({
+  currentUrl,
+  nextUrl,
+  nextParams,
+  defaultShouldRevalidate,
+}: ShouldRevalidateFunctionArgs) {
+  return (
+    !("*" in nextParams) &&
+    (currentUrl.pathname !== nextUrl.pathname || defaultShouldRevalidate)
   );
 }
 

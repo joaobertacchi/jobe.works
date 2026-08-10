@@ -136,60 +136,63 @@ test("returns real 404 responses for unpublished URLs", async ({ request }) => {
 });
 
 const unpublishedAliases = [
-  [
-    "/en/about/",
-    "Page not found",
-    "This page may have moved or never existed. Use the navigation to find your way back.",
-    "About",
-  ],
-  [
-    "/en/About",
-    "Page not found",
-    "This page may have moved or never existed. Use the navigation to find your way back.",
-    "About",
-  ],
-  [
-    "/pt-BR/about/",
-    "Página não encontrada",
-    "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
-    "Sobre",
-  ],
-  [
-    "/pt-BR/About",
-    "Página não encontrada",
-    "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
-    "Sobre",
-  ],
+  {
+    alias: "/en/about/",
+    heading: "Page not found",
+    description:
+      "This page may have moved or never existed. Use the navigation to find your way back.",
+    canonicalHeading: "About",
+  },
+  {
+    alias: "/en/About",
+    heading: "Page not found",
+    description:
+      "This page may have moved or never existed. Use the navigation to find your way back.",
+    canonicalHeading: "About",
+  },
+  {
+    alias: "/pt-BR/about/",
+    heading: "Página não encontrada",
+    description:
+      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
+    canonicalHeading: "Sobre",
+  },
+  {
+    alias: "/pt-BR/About",
+    heading: "Página não encontrada",
+    description:
+      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
+    canonicalHeading: "Sobre",
+  },
 ] as const;
 
 test.describe("unpublished aliases", () => {
-  for (const [
+  for (const {
     alias,
     heading,
     description,
     canonicalHeading,
-  ] of unpublishedAliases) {
+  } of unpublishedAliases) {
     test(`rejects client navigation to ${alias}`, async ({ page }) => {
       await page.goto("/en/services");
+      await page.waitForFunction(() => {
+        const router = Reflect.get(window, "__reactRouterDataRouter") as {
+          state: { navigation: { state: string } };
+        };
+        return router.state.navigation.state === "idle";
+      });
       await page.evaluate(async (url) => {
         const router = Reflect.get(window, "__reactRouterDataRouter") as {
           navigate(to: string): Promise<void>;
-          revalidate(): void;
         };
         await router.navigate(url);
-        router.revalidate();
       }, alias);
-
-      await expect(page).toHaveURL(alias);
-      await expect(page.getByRole("heading", { name: heading })).toBeVisible();
-      await expect(page.getByText(description, { exact: true })).toBeVisible();
-      await expect(
-        page.getByRole("heading", { name: canonicalHeading }),
-      ).toHaveCount(0);
-    });
-
-    test(`rejects direct browser navigation to ${alias}`, async ({ page }) => {
-      await page.goto(alias);
+      await page.waitForFunction(() => {
+        const router = Reflect.get(window, "__reactRouterDataRouter") as {
+          state: { navigation: { state: string } };
+        };
+        return router.state.navigation.state === "idle";
+      });
 
       await expect(page).toHaveURL(alias);
       await expect(page.getByRole("heading", { name: heading })).toBeVisible();
