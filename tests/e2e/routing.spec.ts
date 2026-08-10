@@ -250,9 +250,11 @@ for (const [
     page,
   }) => {
     await page.goto(initialUrl);
-    await page.evaluate((url) => {
-      window.history.pushState(null, "", url);
-      window.dispatchEvent(new PopStateEvent("popstate"));
+    await page.evaluate(async (url) => {
+      const router = Reflect.get(window, "__reactRouterDataRouter") as {
+        navigate(to: string): Promise<void>;
+      };
+      await router.navigate(url);
     }, unknownUrl);
 
     await expect(page).toHaveURL(unknownUrl);
