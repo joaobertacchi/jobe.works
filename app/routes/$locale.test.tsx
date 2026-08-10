@@ -14,6 +14,8 @@ import { describe, expect, it, vi } from "vitest";
 import { AnalyticsProvider } from "../analytics/analytics";
 import type { TrackerRegistration } from "../analytics/types";
 import { ConsentProvider } from "../consent/consent-context";
+import { defaultLocale } from "../i18n/config";
+import { privacyTranslations } from "../i18n/translations/privacy";
 import type { CanonicalUrlManifest } from "../routing/canonical-url-manifest";
 import NotFound from "./$locale.404";
 import About from "./$locale.about";
@@ -226,7 +228,9 @@ describe("localized route layout", () => {
       expect(
         screen.getByRole("heading", { level: 2, name: section }),
       ).toBeVisible();
-      expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(10);
+      expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(
+        Object.keys(privacyTranslations[defaultLocale].sections).length,
+      );
     },
   );
 
