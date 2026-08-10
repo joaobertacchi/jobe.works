@@ -1,15 +1,18 @@
 import { readFileSync } from "node:fs";
 
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import {
   createMemoryRouter,
   isRouteErrorResponse,
+  Outlet,
   RouterProvider,
   useParams,
   useRouteError,
 } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 
+import { AnalyticsProvider } from "../analytics/analytics";
+import type { TrackerRegistration } from "../analytics/types";
 import type { CanonicalUrlManifest } from "../routing/canonical-url-manifest";
 import NotFound from "./$locale.404";
 import About from "./$locale.about";
@@ -74,37 +77,56 @@ function getLoaderData(pathname: string) {
   return getLoaderDataForPathname(canonicalManifest, pathname, site);
 }
 
-function renderLocalizedRoute(pathname: string, validateLocale = false) {
+function renderLocalizedRoute(
+  pathname: string,
+  validateLocale = false,
+  trackers: readonly TrackerRegistration[] = [],
+) {
   const router = createMemoryRouter(
     [
       {
-        path: ":locale",
-        Component: LocaleLayout,
-        ErrorBoundary: TestErrorBoundary,
-        HydrateFallback: () => <p>Loading</p>,
-        loader: validateLocale
-          ? (args) =>
-              clientLoader({
-                ...args,
-                serverLoader: async () => {
-                  try {
-                    return getLoaderData(new URL(args.request.url).pathname);
-                  } catch {
-                    throw new Response(null, { status: 404 });
-                  }
-                },
-              } as never)
-          : ({ request }) => getLoaderData(new URL(request.url).pathname),
+        path: "/",
+        Component: () => (
+          <AnalyticsProvider
+            consent={{ analytics: true, marketing: true }}
+            trackers={trackers}
+          >
+            <Outlet />
+          </AnalyticsProvider>
+        ),
         children: [
-          { index: true, Component: Home },
-          { path: "about", Component: About },
-          { path: "services", Component: Services },
-          { path: "privacy", Component: Privacy },
-          { path: "404", Component: NotFound },
           {
-            path: "*",
-            Component: LocalizedCatchAll,
-            handle: { languageSwitcher: false },
+            path: ":locale",
+            Component: LocaleLayout,
+            ErrorBoundary: TestErrorBoundary,
+            HydrateFallback: () => <p>Loading</p>,
+            loader: validateLocale
+              ? (args) =>
+                  clientLoader({
+                    ...args,
+                    serverLoader: async () => {
+                      try {
+                        return getLoaderData(
+                          new URL(args.request.url).pathname,
+                        );
+                      } catch {
+                        throw new Response(null, { status: 404 });
+                      }
+                    },
+                  } as never)
+              : ({ request }) => getLoaderData(new URL(request.url).pathname),
+            children: [
+              { index: true, Component: Home },
+              { path: "about", Component: About },
+              { path: "services", Component: Services },
+              { path: "privacy", Component: Privacy },
+              { path: "404", Component: NotFound },
+              {
+                path: "*",
+                Component: LocalizedCatchAll,
+                handle: { languageSwitcher: false },
+              },
+            ],
           },
         ],
       },
@@ -166,6 +188,25 @@ describe("localized route layout", () => {
     expect(
       screen.getByRole("link", { name: "Explore the examples" }),
     ).toHaveAttribute("href", "/en/services");
+  });
+
+  it("emits cta_pressed when the hero call to action is clicked", async () => {
+    const tracker = vi.fn();
+    renderLocalizedRoute("/en/", false, [
+      { tracker, consentCategory: "analytics" },
+    ]);
+
+    fireEvent.click(
+      await screen.findByRole("link", { name: "Explore the examples" }),
+    );
+
+    await vi.waitFor(() => {
+      expect(tracker).toHaveBeenCalledWith({
+        eventName: "cta_pressed",
+        ctaId: "hero-cta",
+        context: "homepage",
+      });
+    });
   });
 
   it.each([

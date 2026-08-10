@@ -1,3 +1,4 @@
+import { useAnalytics } from "../analytics/analytics";
 import { HeroSection } from "../components/sections/hero-section";
 import { Card } from "../components/ui/card";
 import { Container } from "../components/ui/container";
@@ -29,6 +30,7 @@ export function meta({ matches, params }: Route.MetaArgs) {
 
 export default function Home() {
   const { locale, translate } = useI18n();
+  const { capture } = useAnalytics();
   return (
     <main>
       <HeroSection
@@ -36,7 +38,16 @@ export default function Home() {
         title={translate("home.title")}
         description={translate("home.description")}
         actions={
-          <TextLink to={`/${locale}/services`}>
+          <TextLink
+            to={`/${locale}/services`}
+            onClick={() =>
+              capture({
+                eventName: "cta_pressed",
+                ctaId: "hero-cta",
+                context: "homepage",
+              })
+            }
+          >
             {translate("home.cta")}
           </TextLink>
         }
