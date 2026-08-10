@@ -86,7 +86,7 @@ Expected: four passing tests.
 **Files:**
 - Modify: `tests/e2e/routing.spec.ts:138-202`
 
-- [ ] **Step 1: Update alias fixtures to describe direct-request behavior**
+- [ ] **Step 1: Update alias fixtures to describe client-navigation behavior**
 
 Replace the tuple-only `unpublishedAliases` data with objects that retain the existing client-navigation assertions:
 
