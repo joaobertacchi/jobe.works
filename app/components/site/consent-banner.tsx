@@ -13,6 +13,7 @@ import { Button } from "../ui/button";
 import { Container } from "../ui/container";
 import { Heading } from "../ui/heading";
 import { Text } from "../ui/text";
+import { TextLink } from "../ui/text-link";
 
 function ConsentDialog() {
   const { consent, closeSettings, updatePreferences } = useConsent();
@@ -128,7 +129,7 @@ function ConsentBannerContent() {
     openSettings,
     settingsOpen,
   } = useConsent();
-  const { translate } = useI18n();
+  const { translate, locale } = useI18n();
 
   return (
     <>
@@ -139,7 +140,12 @@ function ConsentBannerContent() {
           className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface"
         >
           <Container className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <Text>{translate("consent.banner.message")}</Text>
+            <div className="flex flex-col gap-1">
+              <Text>{translate("consent.banner.message")}</Text>
+              <TextLink to={`/${locale}/privacy`} variant="secondary">
+                {translate("common.navigation.privacy")}
+              </TextLink>
+            </div>
             <div className="flex flex-wrap gap-3">
               <Button size="sm" onClick={acceptAll}>
                 {translate("consent.banner.acceptAll")}

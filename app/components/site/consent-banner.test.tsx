@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { MemoryRouter } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { SupportedLocale } from "../../i18n/config";
@@ -29,10 +30,12 @@ function renderBanner(
   withSettingsOpener = false,
 ) {
   return render(
-    <ConsentProvider>
-      <ConsentBanner locale={locale} />
-      {withSettingsOpener ? <SettingsOpener /> : null}
-    </ConsentProvider>,
+    <MemoryRouter>
+      <ConsentProvider>
+        <ConsentBanner locale={locale} />
+        {withSettingsOpener ? <SettingsOpener /> : null}
+      </ConsentProvider>
+    </MemoryRouter>,
   );
 }
 
@@ -67,6 +70,10 @@ describe("ConsentBanner", () => {
       screen.getByRole("button", { name: "Reject non-essential" }),
     ).toBeVisible();
     expect(screen.getByRole("button", { name: "Customize" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "Privacy" })).toHaveAttribute(
+      "href",
+      "/en/privacy",
+    );
   });
 
   it("renders the Portuguese banner in the pt-BR locale", async () => {
@@ -82,6 +89,10 @@ describe("ConsentBanner", () => {
       screen.getByRole("button", { name: "Recusar não essenciais" }),
     ).toBeVisible();
     expect(screen.getByRole("button", { name: "Personalizar" })).toBeVisible();
+    expect(screen.getByRole("link", { name: "Privacidade" })).toHaveAttribute(
+      "href",
+      "/pt-BR/privacy",
+    );
   });
 
   it("renders nothing when the locale is unknown", async () => {
@@ -309,10 +320,12 @@ describe("ConsentBanner", () => {
     });
 
     render(
-      <ConsentProvider>
-        <ConsentBanner locale="en" />
-        <AcceptAllTrigger />
-      </ConsentProvider>,
+      <MemoryRouter>
+        <ConsentProvider>
+          <ConsentBanner locale="en" />
+          <AcceptAllTrigger />
+        </ConsentProvider>
+      </MemoryRouter>,
     );
 
     await waitFor(() =>
