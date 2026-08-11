@@ -2,37 +2,55 @@
 
 ## Project
 
-This repository is an AI-agent harness for localized static marketing and content websites. Product requirements are in `docs/PRD.md`; accepted architecture decisions under `docs/adrs/` are authoritative.
+This repository is an AI-agent harness for localized static marketing and content websites. Start with `docs/README.md`; `docs/PRD.md` defines the product and accepted ADRs under `docs/adrs/` are authoritative for architecture.
 
 ## Invariants
 
 - Use React Router Framework Mode with TypeScript.
 - Keep `ssr: false` and prerender every public route.
-- Production output must remain static and deployable without Node.js.
-- Do not add a backend, serverless function, route action, local API, or runtime server without explicit authorization and an ADR.
-- Keep user-facing page copy in typed localization dictionaries once the localization layer is introduced.
-- Keep SEO metadata explicit and localized once the SEO layer is introduced.
+- Keep production output static and deployable without Node.js.
+- Do not add a backend, serverless function, route action, local API, or runtime server without explicit user authorization and a documenting ADR.
+- Keep user-facing page copy in typed localization dictionaries and SEO metadata explicit and localized.
 - Reuse existing components and patterns before adding abstractions or dependencies.
-- Centralize integrations and analytics behind their established project boundaries once introduced.
-- Never expose secrets in frontend code.
+- Emit typed analytics events through `app/analytics/`; do not call providers from pages or arbitrary components.
+- Keep consent handling in `app/consent/` and vendor-specific code in `app/integrations/` or the established analytics tracker boundary.
+- Treat browser-visible configuration as public and never expose secrets in frontend code.
 
-## Workflow
+## Code Map
+
+| Concern | Location |
+|---|---|
+| Public pages and layouts | `app/routes/` |
+| Locale configuration and typed copy | `app/i18n/` |
+| Primitives, domain UI, sections, and site chrome | `app/components/ui/`, `app/components/domain/`, `app/components/sections/`, `app/components/site/` |
+| SEO metadata and site configuration | `app/seo/` |
+| Canonical routes and localized paths | `app/routing/` |
+| Analytics, consent, and attribution | `app/analytics/`, `app/consent/` |
+| Third-party providers | `app/integrations/` |
+| Static build validation | `scripts/`, `react-router.config.ts` |
+| Browser tests and shared error fixture | `tests/e2e/` |
+
+## Working Rules
+
+- Inspect and adapt the nearest working example before creating a new pattern.
+- To add a public page, add a locale-prefixed route module, register typed copy for every locale, define explicit localized SEO metadata, update links or navigation when required, and add meaningful tests. Use `app/routes/$locale.services.tsx` and `app/i18n/translations/services.ts` as the complete example.
+- Reuse `app/components/ui/` primitives. Add domain components for feature semantics, sections for reusable page regions, and site components for site-wide chrome. Keep unique page composition in its route until reuse is demonstrated.
+- Before adding a dependency, check the platform, React Router, and installed packages; record the build-vs-buy reason. A dependency that changes primary architecture requires an ADR.
+- Read only ADRs relevant to the changed area. If a requirement conflicts with an accepted ADR, obtain explicit user authorization and document the exception in a new ADR.
+
+## Completion
 
 1. Activate the Node.js version in `.nvmrc` before installing dependencies or running validation.
-2. Read the relevant accepted ADRs before changing architecture.
-3. Follow existing working examples.
-4. Add or update meaningful tests with behavior changes.
-5. Run `npm run check` and fix root causes before completion.
-6. Run `npm run test:e2e` for browser-relevant changes.
-7. Do not weaken validation, thresholds, or hooks to make changes pass.
-
-CI wiring and later architectural layers are intentionally introduced in subsequent phases.
+2. Add or update meaningful tests for behavior changes.
+3. Run `npm run check` and fix root causes.
+4. Run `npm run test:e2e` for browser-visible changes.
+5. After deterministic validation passes, run the configured architecture-review subagent against the current change and fix all high and medium findings. Phase 13 supplies the repository-owned reviewer definition.
+6. Do not weaken validation, thresholds, tests, or hooks to make changes pass.
 
 ## graphify
 
-This project has a graphify knowledge graph at graphify-out/.
+The project knowledge graph is in `graphify-out/`.
 
-Rules:
-- Before answering architecture or codebase questions, run `graphify update .` to keep the graph current (AST-only, no API cost), and read graphify-out/GRAPH_REPORT.md for god nodes and community structure
-- If graphify-out/wiki/index.md exists, navigate it instead of reading raw files
-- For cross-module "how does X relate to Y" questions, prefer `graphify query "<question>"`, `graphify path "<A>" "<B>"`, or `graphify explain "<concept>"` over grep — these traverse the graph's EXTRACTED + INFERRED edges instead of scanning files
+- Before answering architecture or codebase questions, run `graphify update .` and read `graphify-out/GRAPH_REPORT.md`.
+- If `graphify-out/wiki/index.md` exists, navigate it instead of reading raw files.
+- For cross-module relationships, prefer `graphify query`, `graphify path`, or `graphify explain` over text search.
