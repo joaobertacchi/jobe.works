@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** Create concise, precise repository guidance that lets AI agents locate relevant context, follow existing patterns, and validate Phase 12 work without claiming future-phase capabilities exist.
+**Goal:** Create concise, precise repository guidance that lets AI agents locate relevant context, follow existing patterns, and validate Phase 12 work without misrepresenting implementation status.
 
 **Architecture:** Keep the root `AGENTS.md` as the small operational contract, make `docs/README.md` a task-oriented navigation layer, and leave rationale in accepted ADRs and procedures in working code. Correct only demonstrated factual drift in `docs/decisions_list.md`; do not change application behavior or `docs/PRD.md`.
 
@@ -84,7 +84,7 @@ This repository is an AI-agent harness for localized static marketing and conten
 2. Add or update meaningful tests for behavior changes.
 3. Run `npm run check` and fix root causes.
 4. Run `npm run test:e2e` for browser-visible changes.
-5. After deterministic validation passes, run the configured architecture-review subagent against the current change and fix all high and medium findings. Phase 13 supplies the repository-owned reviewer definition.
+5. After deterministic validation passes, run the repository's `architecture-review` subagent against the current change and fix all high and medium findings.
 6. Do not weaken validation, thresholds, tests, or hooks to make changes pass.
 
 ## graphify
@@ -171,6 +171,8 @@ Planning artifacts record intent but do not prove that a phase is implemented. V
 | Understand published URLs and static validation | [`app/routes.ts`](../app/routes.ts) | [`app/routing/canonical-url-manifest.ts`](../app/routing/canonical-url-manifest.ts), [`react-router.config.ts`](../react-router.config.ts), [`scripts/finalize-static-build.ts`](../scripts/finalize-static-build.ts) |
 | Add a focused unit test | [`app/components/domain/service-card.test.tsx`](../app/components/domain/service-card.test.tsx) | colocate the test with the implementation |
 | Add a browser test | [`tests/e2e/routing.spec.ts`](../tests/e2e/routing.spec.ts) | [`tests/e2e/fixtures.ts`](../tests/e2e/fixtures.ts), [`playwright.config.ts`](../playwright.config.ts) |
+| Review architecture after validation | [`.opencode/agents/architecture-review.md`](../.opencode/agents/architecture-review.md) | [ADR 022](adrs/022-agent-documentation-and-architecture-review.md) |
+| Understand continuous integration | [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) | [`package.json`](../package.json), [`playwright.config.ts`](../playwright.config.ts) |
 
 Copy and adapt the nearest example. Do not create a parallel abstraction when an existing boundary already fits.
 
@@ -186,15 +188,15 @@ Copy and adapt the nearest example. Do not create a parallel abstraction when an
 | Configuration, SEO, and assets | [ADR 018](adrs/018-configuration-and-constants.md), [ADR 019](adrs/019-seo-architecture.md), [ADR 020](adrs/020-images-assets-fonts-and-cache-invalidation.md) |
 | Validation and dependencies | [ADR 021](adrs/021-quality-toolchain-and-validation.md), [ADR 023](adrs/023-dependency-policy.md) |
 
-## Current Phase Boundaries
+## Validation Workflow
 
-`PHASES.md` defines sequence and scope. At Phase 12:
+The repository-owned validation workflow is implemented:
 
-- the Phase 11 CI workflow is designed but `.github/workflows/ci.yml` is not yet present;
-- the Phase 13 architecture-review subagent is designed, but `.opencode/agents/architecture-review.md` is not yet present;
-- a configured external architecture reviewer may still be used for the required post-validation review.
+- `npm run check` is the canonical deterministic local gate;
+- `npm run test:e2e` covers browser-visible behavior and runs in [CI](../.github/workflows/ci.yml);
+- the [`architecture-review`](../.opencode/agents/architecture-review.md) subagent runs after deterministic validation and treats high and medium findings as blocking.
 
-Update this section when those repository-owned files are introduced. Do not report missing future-phase capabilities as defects in the current phase.
+`PHASES.md` defines implementation sequence and scope. Do not report capabilities assigned to a later, genuinely unimplemented phase as defects in the current phase.
 ```
 
 - [ ] **Step 2: Verify that the index routes context instead of duplicating it**
@@ -204,10 +206,10 @@ Check that:
 - each table entry links to a document, directory, or representative source file;
 - no section gives a long step-by-step page, component, integration, or SEO recipe;
 - all 24 accepted ADRs appear exactly once in the concern table;
-- the phase-boundary section states both absent repository-owned files precisely;
-- no text claims CI or the Phase 13 subagent is currently implemented.
+- the validation section links both implemented repository-owned files precisely;
+- no text describes the existing CI or Phase 13 subagent as unavailable.
 
-Expected: `docs/README.md` remains primarily navigation plus short source-priority and phase-boundary guidance.
+Expected: `docs/README.md` remains primarily navigation plus short source-priority and validation-workflow guidance.
 
 ### Task 3: Correct the Decision Overview
 
@@ -306,7 +308,9 @@ for path in \
   app/components/domain/service-card.test.tsx \
   tests/e2e/routing.spec.ts \
   tests/e2e/fixtures.ts \
-  playwright.config.ts; do
+  playwright.config.ts \
+  .github/workflows/ci.yml \
+  .opencode/agents/architecture-review.md; do
   test -e "$path" || { printf 'Missing path: %s\n' "$path"; exit 1; }
 done
 ```
@@ -395,7 +399,7 @@ User request and acceptance criteria:
 - Keep AGENTS.md concise and precise so agents preserve context.
 - Create docs/README.md primarily as an index.
 - Update PRD or decisions_list only for demonstrated factual inconsistencies.
-- Document current capabilities without claiming future Phase 11 or Phase 13 repository files exist.
+- Document the existing Phase 11 CI and Phase 13 architecture-review files accurately.
 
 Changed files to review:
 - AGENTS.md
@@ -408,9 +412,9 @@ Deterministic validation:
 - npm run check: PASS
 - Playwright: not run because there is no browser-visible change
 
-Future-phase exclusion:
-- Missing .github/workflows/ci.yml belongs to Phase 11 and is not a Phase 12 finding.
-- Missing .opencode/agents/architecture-review.md belongs to Phase 13 and is not a Phase 12 finding.
+Scope exclusion:
+- .github/workflows/ci.yml and .opencode/agents/architecture-review.md already exist and are unchanged reference files, not Phase 12 implementation changes.
+- Capabilities assigned to later, genuinely unimplemented phases are out of scope.
 
 Review for Phase 12 acceptance, ADR 010, ADR 022, ADR 023, factual accuracy, context efficiency, and unsupported implementation claims. Return structured high, medium, and low findings. High and medium findings block completion.
 ```

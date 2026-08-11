@@ -6,7 +6,7 @@ Phase 12 creates the repository documentation that helps AI agents find the mini
 
 `docs/PRD.md` remains unchanged because the implementation review did not reveal a Phase 12-specific product inconsistency.
 
-This phase documents the current repository state. It must not claim that the unimplemented Phase 11 CI workflow or the repository-owned Phase 13 architecture-review subagent already exists.
+This phase documents the current repository state, including the implemented Phase 11 CI workflow and repository-owned Phase 13 architecture-review subagent.
 
 ## Documentation Architecture
 
@@ -35,7 +35,7 @@ Update `AGENTS.md` surgically rather than replacing it with a handbook. It will 
 
 The contract will point to `docs/README.md` for deeper navigation and will not reproduce ADR rationale or detailed recipes. It will remove the stale statement that CI and later architectural layers are intentionally pending without replacing it with claims about unavailable repository files.
 
-The architecture-review rule will distinguish availability precisely: architecture review is part of the required operating model and can use a configured reviewer, while Phase 13 supplies the repository-owned reviewer definition.
+The architecture-review rule will point agents to the repository-owned definition at `.opencode/agents/architecture-review.md`.
 
 ## Documentation Index
 
@@ -66,11 +66,11 @@ Update `docs/decisions_list.md` only where the current repository proves it fact
 
 Do not alter accepted decisions, add new decisions, or rewrite ADR rationale.
 
-## Current and Future Phase Boundary
+## Implemented Workflow Boundary
 
-The documentation describes commands, files, and examples that currently exist. It may describe the accepted architecture-review workflow, but it must state that Phase 13 introduces the repository-owned architecture-review subagent definition.
+The documentation describes commands, files, and examples that currently exist. It links the implemented CI workflow at `.github/workflows/ci.yml` and architecture-review subagent at `.opencode/agents/architecture-review.md`.
 
-The documentation must not claim that `.github/workflows/ci.yml` exists until Phase 11 is implemented. `docs/PHASES.md` remains the source for implementation sequencing.
+Planning artifacts do not prove implementation status; agents must verify referenced repository files. `docs/PHASES.md` remains the source for implementation sequencing.
 
 ## Validation
 
@@ -96,7 +96,7 @@ Phase 12 is complete when:
 - `docs/README.md` routes an agent to relevant authoritative documents and working examples without becoming a procedural manual;
 - `docs/decisions_list.md` contains accurate ADR references and current implementation-status guidance;
 - `docs/PRD.md` is untouched unless a concrete factual inconsistency is discovered during implementation;
-- no documentation claims unavailable CI or repository-owned reviewer files exist;
+- documentation links the existing CI and repository-owned reviewer files;
 - formatting and `npm run check` pass; and
 - architecture review has no blocking findings.
 

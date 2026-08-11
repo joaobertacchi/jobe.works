@@ -38,6 +38,8 @@ Planning artifacts record intent but do not prove that a phase is implemented. V
 | Understand published URLs and static validation | [`app/routes.ts`](../app/routes.ts) | [`app/routing/canonical-url-manifest.ts`](../app/routing/canonical-url-manifest.ts), [`react-router.config.ts`](../react-router.config.ts), [`scripts/finalize-static-build.ts`](../scripts/finalize-static-build.ts) |
 | Add a focused unit test | [`app/components/domain/service-card.test.tsx`](../app/components/domain/service-card.test.tsx) | colocate the test with the implementation |
 | Add a browser test | [`tests/e2e/routing.spec.ts`](../tests/e2e/routing.spec.ts) | [`tests/e2e/fixtures.ts`](../tests/e2e/fixtures.ts), [`playwright.config.ts`](../playwright.config.ts) |
+| Review architecture after validation | [`.opencode/agents/architecture-review.md`](../.opencode/agents/architecture-review.md) | [ADR 022](adrs/022-agent-documentation-and-architecture-review.md) |
+| Understand continuous integration | [`.github/workflows/ci.yml`](../.github/workflows/ci.yml) | [`package.json`](../package.json), [`playwright.config.ts`](../playwright.config.ts) |
 
 Copy and adapt the nearest example. Do not create a parallel abstraction when an existing boundary already fits.
 
@@ -53,12 +55,12 @@ Copy and adapt the nearest example. Do not create a parallel abstraction when an
 | Configuration, SEO, and assets | [ADR 018](adrs/018-configuration-and-constants.md), [ADR 019](adrs/019-seo-architecture.md), [ADR 020](adrs/020-images-assets-fonts-and-cache-invalidation.md) |
 | Validation and dependencies | [ADR 021](adrs/021-quality-toolchain-and-validation.md), [ADR 023](adrs/023-dependency-policy.md) |
 
-## Current Phase Boundaries
+## Validation Workflow
 
-`PHASES.md` defines sequence and scope. At Phase 12:
+The repository-owned validation workflow is implemented:
 
-- the Phase 11 CI workflow is designed but `.github/workflows/ci.yml` is not yet present;
-- the Phase 13 architecture-review subagent is designed, but `.opencode/agents/architecture-review.md` is not yet present;
-- a configured external architecture reviewer may still be used for the required post-validation review.
+- `npm run check` is the canonical deterministic local gate;
+- `npm run test:e2e` covers browser-visible behavior and runs in [CI](../.github/workflows/ci.yml);
+- the [`architecture-review`](../.opencode/agents/architecture-review.md) subagent runs after deterministic validation and treats high and medium findings as blocking.
 
-Update this section when those repository-owned files are introduced. Do not report missing future-phase capabilities as defects in the current phase.
+`PHASES.md` defines implementation sequence and scope. Do not report capabilities assigned to a later, genuinely unimplemented phase as defects in the current phase.

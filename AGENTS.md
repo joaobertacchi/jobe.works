@@ -44,7 +44,7 @@ This repository is an AI-agent harness for localized static marketing and conten
 2. Add or update meaningful tests for behavior changes.
 3. Run `npm run check` and fix root causes.
 4. Run `npm run test:e2e` for browser-visible changes.
-5. After deterministic validation passes, run the configured architecture-review subagent against the current change and fix all high and medium findings. Phase 13 supplies the repository-owned reviewer definition.
+5. After deterministic validation passes, run the repository's `architecture-review` subagent against the current change and fix all high and medium findings.
 6. Do not weaken validation, thresholds, tests, or hooks to make changes pass.
 
 ## graphify
