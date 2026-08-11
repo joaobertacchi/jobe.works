@@ -1,3 +1,4 @@
+import aboutWorkflowImage from "../assets/images/about-workflow.svg?no-inline";
 import { Container } from "../components/ui/container";
 import { ContentSection } from "../components/sections/content-section";
 import { Heading } from "../components/ui/heading";
@@ -36,7 +37,15 @@ export default function About() {
         <ContentSection
           title={translate("about.sections.examples.title")}
           description={translate("about.sections.examples.description")}
-        />
+        >
+          <img
+            alt={translate("about.workflowImageAlt")}
+            className="w-full rounded-2xl border border-border bg-surface"
+            height={540}
+            src={aboutWorkflowImage}
+            width={960}
+          />
+        </ContentSection>
       </div>
     </main>
   );

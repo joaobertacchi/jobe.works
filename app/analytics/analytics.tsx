@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -42,12 +43,17 @@ export function AnalyticsProvider({
     return parseCampaignAttribution(new URLSearchParams(search));
   });
 
-  const capture = useCallback(
-    (event: AnalyticsCustomEvent) => {
-      void dispatchEvent(trackers, event, consent);
-    },
-    [trackers, consent],
-  );
+  const currentConsent = useRef(consent);
+  const currentTrackers = useRef(trackers);
+
+  useLayoutEffect(() => {
+    currentConsent.current = consent;
+    currentTrackers.current = trackers;
+  });
+
+  const capture = useCallback((event: AnalyticsCustomEvent) => {
+    void dispatchEvent(currentTrackers.current, event, currentConsent.current);
+  }, []);
 
   const analyticsEligible = consent.analytics;
   const marketingEligible = consent.marketing;

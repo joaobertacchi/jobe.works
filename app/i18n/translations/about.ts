@@ -7,6 +7,7 @@ export type AboutTranslation = {
   };
   title: string;
   description: string;
+  workflowImageAlt: string;
   sections: {
     boundaries: { title: string; description: string };
     examples: { title: string; description: string };
@@ -23,6 +24,8 @@ export const aboutTranslations = {
     title: "About",
     description:
       "A focused starting point that keeps structure, content, and quality checks clear so people and AI agents can build together.",
+    workflowImageAlt:
+      "Workflow connecting requirements, implementation, and validation.",
     sections: {
       boundaries: {
         title: "Clear boundaries",
@@ -45,6 +48,8 @@ export const aboutTranslations = {
     title: "Sobre",
     description:
       "Um ponto de partida objetivo que mantém estrutura, conteúdo e verificações de qualidade claros para pessoas e agentes de IA criarem juntos.",
+    workflowImageAlt:
+      "Fluxo de trabalho entre requisitos, implementação e validação.",
     sections: {
       boundaries: {
         title: "Limites claros",

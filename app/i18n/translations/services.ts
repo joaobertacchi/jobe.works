@@ -25,6 +25,24 @@ export type ServicesTranslation = {
     title: string;
     description: string;
   };
+  contact: {
+    title: string;
+    description: string;
+    fields: {
+      name: string;
+      email: string;
+      message: string;
+    };
+    submit: string;
+    submitting: string;
+    success: string;
+    error: string;
+    validation: {
+      required: string;
+      email: string;
+      summary: string;
+    };
+  };
 };
 
 export const servicesTranslations = {
@@ -59,6 +77,25 @@ export const servicesTranslations = {
       description:
         "These examples stay intentionally small so each fork can establish its own content and visual system.",
     },
+    contact: {
+      title: "Tell us about your project",
+      description:
+        "This example keeps form state, privacy, attribution, analytics, and the provider boundary visible in one small flow.",
+      fields: {
+        name: "Name",
+        email: "Email",
+        message: "Message",
+      },
+      submit: "Send inquiry",
+      submitting: "Sending...",
+      success: "Thanks. We will be in touch soon.",
+      error: "We could not send your inquiry. Keep your details and try again.",
+      validation: {
+        required: "This field is required.",
+        email: "Enter a valid email address.",
+        summary: "Check the highlighted fields.",
+      },
+    },
   },
   "pt-BR": {
     seo: {
@@ -90,6 +127,26 @@ export const servicesTranslations = {
       title: "Uma base, não uma plataforma",
       description:
         "Estes exemplos permanecem intencionalmente pequenos para que cada fork estabeleça seu próprio conteúdo e sistema visual.",
+    },
+    contact: {
+      title: "Fale sobre seu projeto",
+      description:
+        "Este exemplo mantém estado do formulário, privacidade, atribuição, analytics e o limite do provedor visíveis em um fluxo pequeno.",
+      fields: {
+        name: "Nome",
+        email: "E-mail",
+        message: "Mensagem",
+      },
+      submit: "Enviar solicitação",
+      submitting: "Enviando...",
+      success: "Obrigado. Entraremos em contato em breve.",
+      error:
+        "Não foi possível enviar sua solicitação. Mantenha seus dados e tente novamente.",
+      validation: {
+        required: "Este campo é obrigatório.",
+        email: "Informe um endereço de e-mail válido.",
+        summary: "Verifique os campos destacados.",
+      },
     },
   },
 } satisfies Record<SupportedLocale, ServicesTranslation>;

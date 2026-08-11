@@ -1,3 +1,4 @@
+import { ContactForm } from "../components/domain/contact-form";
 import { ServiceCard } from "../components/domain/service-card";
 import { Container } from "../components/ui/container";
 import { DividedSection } from "../components/ui/divided-section";
@@ -52,6 +53,9 @@ export default function Services() {
             {translate("services.closing.description")}
           </Text>
         </div>
+      </DividedSection>
+      <DividedSection className="mt-16">
+        <ContactForm />
       </DividedSection>
     </main>
   );

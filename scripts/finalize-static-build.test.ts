@@ -7,7 +7,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
 
 import { describe, expect, it } from "vitest";
 
@@ -41,11 +41,21 @@ function html(lang: string, href = "/en/about", pathname?: string) {
   return `<!doctype html><html lang="${lang}"><head><title>Page</title><meta name="description" content="Description"><meta name="robots" content="index,follow"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="en" href="https://example.com/en${suffix}"><link rel="alternate" hreflang="pt-BR" href="https://example.com/pt-BR${suffix}"><link rel="alternate" hreflang="x-default" href="https://example.com/pt-BR${suffix}"><meta property="og:type" content="website"><meta property="og:site_name" content="Agent-ready sites"><meta property="og:url" content="${canonical}"><meta property="og:title" content="Page"><meta property="og:description" content="Description"><meta property="og:image" content="https://example.com/social-card.svg"><meta property="og:locale" content="${ogLocale}"><meta property="og:locale:alternate" content="${alternateOgLocale}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Page"><meta name="twitter:description" content="Description"><meta name="twitter:image" content="https://example.com/social-card.svg"></head><body><a href="${href}">Link</a></body></html>`;
 }
 
+function withImage(content: string, src: string) {
+  return content.replace("</body>", `<img src="${src}" alt="Workflow"></body>`);
+}
+
 function writeHtml(client: string, url: string, content: string) {
   const segments = url.split("/").filter(Boolean);
   const directory = join(client, ...segments);
   mkdirSync(directory, { recursive: true });
   writeFileSync(join(directory, "index.html"), content);
+}
+
+function writeAsset(client: string, path: string) {
+  const file = join(client, ...path.split("/").filter(Boolean));
+  mkdirSync(dirname(file), { recursive: true });
+  writeFileSync(file, "asset");
 }
 
 function createCompleteBuild() {
@@ -218,5 +228,174 @@ describe("finalizeStaticBuild", () => {
     expect(() => finalizeStaticBuild(client, manifest)).toThrow(
       "Invalid prerender evidence: __spa-fallback.html",
     );
+  });
+
+  it("accepts an existing hashed application image", () => {
+    const { client } = createCompleteBuild();
+    const image = "/assets/about-workflow-Ab12Cd34.svg";
+    writeHtml(
+      client,
+      "/en/about",
+      withImage(html("en", "/en/about", "/en/about"), image),
+    );
+    writeAsset(client, image);
+
+    expect(() => finalizeStaticBuild(client, manifest)).not.toThrow();
+  });
+
+  it("accepts an existing lowercase-only hashed application image", () => {
+    const { client } = createCompleteBuild();
+    const image = "/assets/about-workflow-abcdefgh.svg";
+    writeHtml(
+      client,
+      "/en/about",
+      withImage(html("en", "/en/about", "/en/about"), image),
+    );
+    writeAsset(client, image);
+
+    expect(() => finalizeStaticBuild(client, manifest)).not.toThrow();
+  });
+
+  it("resolves relative images from the public page pathname", () => {
+    const { client } = createCompleteBuild();
+    const image = "workflow.svg";
+    writeHtml(
+      client,
+      "/en/about",
+      withImage(html("en", "/en/about", "/en/about"), image),
+    );
+    writeAsset(client, "/en/workflow.svg");
+
+    expect(() => finalizeStaticBuild(client, manifest)).not.toThrow();
+  });
+
+  it.each(["apng", "bmp", "jfif", "pjpeg", "pjp", "cur", "jxl"])(
+    "accepts an existing hashed image with the %s extension",
+    (extension) => {
+      const { client } = createCompleteBuild();
+      const image = `/assets/workflow-Ab12Cd34.${extension}`;
+      writeHtml(
+        client,
+        "/en/about",
+        withImage(html("en", "/en/about", "/en/about"), image),
+      );
+      writeAsset(client, image);
+
+      expect(() => finalizeStaticBuild(client, manifest)).not.toThrow();
+    },
+  );
+
+  it("rejects a missing local application image", () => {
+    const { client } = createCompleteBuild();
+    const image = "/assets/about-workflow-Ab12Cd34.svg";
+    writeHtml(
+      client,
+      "/en/about",
+      withImage(html("en", "/en/about", "/en/about"), image),
+    );
+
+    expect(() => finalizeStaticBuild(client, manifest)).toThrow(
+      "Missing local image /assets/about-workflow-Ab12Cd34.svg in en/about/index.html",
+    );
+  });
+
+  it("rejects an unhashed local application image", () => {
+    const { client } = createCompleteBuild();
+    const image = "/assets/about-image.svg";
+    writeHtml(
+      client,
+      "/en/about",
+      withImage(html("en", "/en/about", "/en/about"), image),
+    );
+    writeAsset(client, image);
+
+    expect(() => finalizeStaticBuild(client, manifest)).toThrow(
+      "Unhashed application image /assets/about-image.svg in en/about/index.html",
+    );
+  });
+
+  it.each(["", "/", "?v=1", "#fragment"])(
+    "rejects an invalid local image source %s",
+    (src) => {
+      const { client } = createCompleteBuild();
+      const label = src || "(empty)";
+      writeHtml(
+        client,
+        "/en/about",
+        withImage(html("en", "/en/about", "/en/about"), src),
+      );
+
+      expect(() => finalizeStaticBuild(client, manifest)).toThrow(
+        `Invalid local image source ${label} in en/about/index.html`,
+      );
+    },
+  );
+
+  it("validates an image's exact src attribute instead of data-src", () => {
+    const { client } = createCompleteBuild();
+    const image = "/assets/good-Ab12Cd34.svg";
+    writeHtml(
+      client,
+      "/en/about",
+      html("en", "/en/about", "/en/about").replace(
+        "</body>",
+        `<img src="${image}" data-src="/assets/missing.svg"></body>`,
+      ),
+    );
+    writeAsset(client, image);
+
+    expect(() => finalizeStaticBuild(client, manifest)).not.toThrow();
+  });
+
+  it.each(['<img alt="Workflow">', '<img src alt="Workflow">'])(
+    "rejects an image without an assigned src attribute",
+    (imageTag) => {
+      const { client } = createCompleteBuild();
+      writeHtml(
+        client,
+        "/en/about",
+        html("en", "/en/about", "/en/about").replace(
+          "</body>",
+          `${imageTag}</body>`,
+        ),
+      );
+
+      expect(() => finalizeStaticBuild(client, manifest)).toThrow(
+        "Missing image src in en/about/index.html",
+      );
+    },
+  );
+
+  it("finds an image src after greater-than signs in quoted values", () => {
+    const { client } = createCompleteBuild();
+    const image = "/assets/missing.svg";
+    writeHtml(
+      client,
+      "/en/about",
+      html("en", "/en/about", "/en/about").replace(
+        "</body>",
+        `<img alt="1 > 0" src="${image}"></body>`,
+      ),
+    );
+
+    expect(() => finalizeStaticBuild(client, manifest)).toThrow(
+      `Missing local image ${image} in en/about/index.html`,
+    );
+  });
+
+  it.each([
+    "https://cdn.example.com/about-workflow.svg",
+    "data:image/svg+xml,<svg></svg>",
+    "https://static.invalid/external.svg",
+    "//static.invalid/external.svg",
+  ])("ignores non-local image %s", (image) => {
+    const { client } = createCompleteBuild();
+    writeHtml(
+      client,
+      "/en/about",
+      withImage(html("en", "/en/about", "/en/about"), image),
+    );
+
+    expect(() => finalizeStaticBuild(client, manifest)).not.toThrow();
   });
 });

@@ -79,6 +79,18 @@ async function settleBrowserEffects(page: Page) {
   );
 }
 
+async function completeContactForm(page: Page) {
+  await page.getByLabel("Name", { exact: true }).fill("Ada Lovelace");
+  await page.getByLabel("Email", { exact: true }).fill("ada@example.com");
+  await page
+    .getByLabel("Message", { exact: true })
+    .fill("I would like to discuss a static website.");
+  await page.getByRole("button", { name: "Send inquiry", exact: true }).click();
+  await expect(
+    page.getByText("Thanks. We will be in touch soon."),
+  ).toBeVisible();
+}
+
 function storedConsent(page: Page) {
   return page.evaluate((key) => localStorage.getItem(key), CONSENT_STORAGE_KEY);
 }
@@ -257,4 +269,59 @@ test("hero call to action emits cta_pressed after consent", async ({
     )
     .toBe(true);
   await analytics.flush();
+});
+
+test("contact submission works without analytics consent and emits no lead event", async ({
+  page,
+}) => {
+  await setStoredConsent(page, {
+    version: CONSENT_VERSION,
+    analytics: false,
+    marketing: false,
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  });
+  const analytics = collectAnalyticsEvents(page);
+
+  await page.goto("/en/services?utm_source=newsletter&unknown=ignored");
+  await completeContactForm(page);
+  await settleBrowserEffects(page);
+  await analytics.flush();
+
+  expect(
+    analytics.events.some((event) => event.eventName === "lead_submitted"),
+  ).toBe(false);
+});
+
+test("contact submission emits lead_submitted after analytics consent", async ({
+  page,
+}) => {
+  await setStoredConsent(page, {
+    version: CONSENT_VERSION,
+    analytics: true,
+    marketing: false,
+    updatedAt: "2026-01-01T00:00:00.000Z",
+  });
+  const analytics = collectAnalyticsEvents(page);
+
+  await page.goto("/en/services?utm_source=newsletter");
+  await completeContactForm(page);
+  await expect
+    .poll(() =>
+      analytics.events.some(
+        (event) =>
+          event.eventName === "lead_submitted" &&
+          event.formId === "services-contact",
+      ),
+    )
+    .toBe(true);
+  await analytics.flush();
+  const leadEvent = analytics.events.find(
+    (event) =>
+      event.eventName === "lead_submitted" &&
+      event.formId === "services-contact",
+  );
+  expect(leadEvent).toEqual({
+    eventName: "lead_submitted",
+    formId: "services-contact",
+  });
 });

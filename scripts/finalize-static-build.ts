@@ -3,6 +3,7 @@ import {
   readFileSync,
   readdirSync,
   rmSync,
+  statSync,
   writeFileSync,
 } from "node:fs";
 import { dirname, join, relative, sep } from "node:path";
@@ -23,6 +24,11 @@ import {
   validateRobots,
   validateSitemap,
 } from "./seo-static";
+
+const applicationImagePattern =
+  /^\/assets\/.+-(?=[A-Za-z0-9_-]{8}\.[^/]+$)[A-Za-z0-9_-]{8}\.[^/]+$/;
+const browserImageExtensionPattern =
+  /\.(?:svg|png|jpe?g|gif|webp|avif|ico|apng|bmp|jfif|pjpeg|pjp|cur|jxl)$/i;
 
 function artifactPath(url: string): string {
   if (url === "/") return "index.html";
@@ -90,6 +96,182 @@ function validateLinks(
   }
 }
 
+function resolveLocalImage(
+  src: string,
+  pathname: string,
+  artifact: string,
+): URL | undefined {
+  if (/^(?:[a-z][a-z\d+.-]*:|\/\/)/i.test(src)) return undefined;
+  let destination: URL;
+  try {
+    destination = new URL(src, new URL(pathname, "https://static.invalid/"));
+  } catch {
+    throw new Error(`Missing local image ${src} in ${artifact}`);
+  }
+  return destination.origin === "https://static.invalid"
+    ? destination
+    : undefined;
+}
+
+function imageFilePath(
+  clientDirectory: string,
+  decodedPathname: string,
+  artifact: string,
+  src: string,
+): string {
+  const file = join(
+    clientDirectory,
+    ...decodedPathname.split("/").filter(Boolean),
+  );
+  const outsideClient = relative(clientDirectory, file);
+  if (outsideClient === ".." || outsideClient.startsWith(`..${sep}`)) {
+    throw new Error(`Missing local image ${src} in ${artifact}`);
+  }
+  return file;
+}
+
+function invalidImageSource(src: string, artifact: string): never {
+  const label = src === "" ? "(empty)" : src;
+  throw new Error(`Invalid local image source ${label} in ${artifact}`);
+}
+
+function validateImageTarget(
+  file: string,
+  pathname: string,
+  src: string,
+  artifact: string,
+): void {
+  if (!browserImageExtensionPattern.test(pathname)) {
+    invalidImageSource(src, artifact);
+  }
+  if (!existsSync(file)) {
+    throw new Error(`Missing local image ${src} in ${artifact}`);
+  }
+  if (!statSync(file).isFile()) {
+    invalidImageSource(src, artifact);
+  }
+}
+
+function validateImageSource(
+  src: string,
+  artifact: string,
+  pathname: string,
+  clientDirectory: string,
+): void {
+  const destination = resolveLocalImage(src, pathname, artifact);
+  if (!destination) return;
+  let decodedPathname: string;
+  try {
+    decodedPathname = decodeURIComponent(destination.pathname);
+  } catch {
+    throw new Error(`Missing local image ${src} in ${artifact}`);
+  }
+  const file = imageFilePath(clientDirectory, decodedPathname, artifact, src);
+  validateImageTarget(file, decodedPathname, src, artifact);
+  if (
+    decodedPathname.startsWith("/assets/") &&
+    !applicationImagePattern.test(decodedPathname)
+  ) {
+    throw new Error(`Unhashed application image ${src} in ${artifact}`);
+  }
+}
+
+function findImageTagEnd(html: string, start: number): number {
+  let quote: string | undefined;
+  for (let index = start; index < html.length; index += 1) {
+    const character = html[index];
+    if (quote) {
+      if (character === quote) quote = undefined;
+      continue;
+    }
+    if (character === '"' || character === "'") {
+      quote = character;
+    } else if (character === ">") {
+      return index;
+    }
+  }
+  return -1;
+}
+
+function skipAttributeWhitespace(tag: string, start: number): number {
+  let index = start;
+  while (index < tag.length && /\s/.test(tag[index])) index += 1;
+  return index;
+}
+
+function readAttributeName(tag: string, start: number): [string, number] {
+  let index = start;
+  while (index < tag.length && !/[\s=/>]/.test(tag[index])) index += 1;
+  return [tag.slice(start, index).toLowerCase(), index];
+}
+
+function readQuotedAttributeValue(
+  tag: string,
+  start: number,
+  quote: string,
+): [string, number] | undefined {
+  let index = start + 1;
+  while (index < tag.length && tag[index] !== quote) index += 1;
+  if (index >= tag.length) return undefined;
+  return [tag.slice(start + 1, index), index + 1];
+}
+
+function readUnquotedAttributeValue(
+  tag: string,
+  start: number,
+): [string, number] {
+  let index = start;
+  while (index < tag.length && !/[\s>]/.test(tag[index])) index += 1;
+  return [tag.slice(start, index), index];
+}
+
+function readAttributeValue(
+  tag: string,
+  start: number,
+): [string, number] | undefined {
+  const index = skipAttributeWhitespace(tag, start);
+  const quote = tag[index];
+  if (quote === '"' || quote === "'") {
+    return readQuotedAttributeValue(tag, index, quote);
+  }
+  return readUnquotedAttributeValue(tag, index);
+}
+
+function extractImageSource(tag: string): string | undefined {
+  let index = 4;
+  while (index < tag.length - 1) {
+    index = skipAttributeWhitespace(tag, index);
+    if (tag[index] === "/" || tag[index] === ">") break;
+    const [name, nameEnd] = readAttributeName(tag, index);
+    index = skipAttributeWhitespace(tag, nameEnd);
+    if (tag[index] !== "=") continue;
+    const value = readAttributeValue(tag, index + 1);
+    if (!value) return undefined;
+    index = value[1];
+    if (name === "src") return value[0];
+  }
+  return undefined;
+}
+
+function validateImages(
+  html: string,
+  artifact: string,
+  pathname: string,
+  clientDirectory: string,
+): void {
+  const imageStartPattern = /<img(?=[\s/>])/gi;
+  for (const match of html.matchAll(imageStartPattern)) {
+    const start = match.index ?? 0;
+    const end = findImageTagEnd(html, start);
+    if (end < 0) continue;
+    const src = extractImageSource(html.slice(start, end + 1));
+    if (src === undefined) {
+      throw new Error(`Missing image src in ${artifact}`);
+    }
+    validateImageSource(src, artifact, pathname, clientDirectory);
+  }
+}
+
 function validateLocaleDirectories(clientDirectory: string): void {
   const localePattern = /^[a-z]{2}(?:-[A-Za-z]{2})?$/;
   for (const entry of readdirSync(clientDirectory, { withFileTypes: true })) {
@@ -115,6 +297,7 @@ function validateLocalizedHtml(
       const artifact = artifactPath(entry.urls[locale]);
       const html = readRequiredHtml(clientDirectory, artifact);
       validateLinks(html, artifact, entry.urls[locale], publishedUrls, site);
+      validateImages(html, artifact, entry.urls[locale], clientDirectory);
       pages.push(
         parseAndValidateSeoPage({
           html,
@@ -165,6 +348,7 @@ export function finalizeStaticBuild(
 
   const publishedUrls = new Set(canonicalUrls);
   validateLinks(rootHtml, "index.html", "/", publishedUrls, site);
+  validateImages(rootHtml, "index.html", "/", clientDirectory);
   const renderedPages = validateLocalizedHtml(
     clientDirectory,
     manifest,

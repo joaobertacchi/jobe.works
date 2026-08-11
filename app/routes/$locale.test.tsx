@@ -202,6 +202,34 @@ describe("localized route layout", () => {
     ).toBeVisible();
   });
 
+  it("renders the localized About workflow image", async () => {
+    renderLocalizedRoute("/pt-BR/about");
+
+    const image = await screen.findByRole("img", {
+      name: "Fluxo de trabalho entre requisitos, implementação e validação.",
+    });
+
+    expect(image.tagName).toBe("IMG");
+    expect(image).toHaveAttribute(
+      "src",
+      expect.stringContaining("about-workflow"),
+    );
+  });
+
+  it("renders the localized services contact form", async () => {
+    renderLocalizedRoute("/pt-BR/services");
+
+    expect(
+      await screen.findByRole("heading", {
+        name: "Fale sobre seu projeto",
+      }),
+    ).toBeVisible();
+    expect(screen.getByLabelText("Nome")).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Enviar solicitação" }),
+    ).toBeVisible();
+  });
+
   it.each([
     ["en", "Error", "An unexpected error occurred."],
     ["pt-BR", "Erro", "Ocorreu um erro inesperado."],

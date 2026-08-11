@@ -41,6 +41,20 @@ test("serves and hydrates a representative prerendered localized page", async ({
   await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
 });
 
+test("serves the About workflow image as an emitted asset", async ({
+  page,
+}) => {
+  await page.goto("/pt-BR/about");
+
+  const image = page.getByRole("img", {
+    name: "Fluxo de trabalho entre requisitos, implementação e validação.",
+    exact: true,
+  });
+  const src = await image.getAttribute("src");
+
+  expect(src).toMatch(/^\/assets\/about-workflow-[A-Za-z0-9_-]{8}\.svg$/);
+});
+
 test("canonical hydration reuses prerendered loader data", async ({ page }) => {
   const dataRequests: string[] = [];
   page.on("request", (request) => {

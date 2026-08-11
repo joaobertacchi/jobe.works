@@ -5,6 +5,7 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
+import { useRef } from "react";
 import { Link, MemoryRouter } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -46,6 +47,25 @@ function Probe() {
       <Link to="/en/about">About</Link>
       <span data-testid="attribution-source">{attribution.source ?? ""}</span>
     </div>
+  );
+}
+
+function RetainedCaptureProbe() {
+  const { capture } = useAnalytics();
+  const initialCapture = useRef(capture);
+
+  return (
+    <button
+      onClick={() =>
+        initialCapture.current({
+          eventName: "cta_pressed",
+          ctaId: "retained-probe",
+          context: "test",
+        })
+      }
+    >
+      Emit retained
+    </button>
   );
 }
 
@@ -248,6 +268,43 @@ describe("AnalyticsProvider", () => {
     );
     fireEvent.click(screen.getByRole("button", { name: "Emit" }));
     fireEvent.click(screen.getByRole("link", { name: "About" }));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(tracker).toHaveBeenCalledTimes(1);
+  });
+
+  it("checks current consent for a capture function retained across rerenders", async () => {
+    const tracker = vi.fn();
+    const { rerender } = render(
+      <Harness
+        consent={{ analytics: true, marketing: false }}
+        trackers={[{ tracker, consentCategory: "analytics" }]}
+      >
+        <RetainedCaptureProbe />
+      </Harness>,
+    );
+
+    await waitFor(() => {
+      expect(tracker).toHaveBeenCalledWith({
+        eventName: "page_view",
+        pathname: "/en/",
+        locale: "en",
+      });
+    });
+    expect(tracker).toHaveBeenCalledTimes(1);
+
+    rerender(
+      <Harness
+        consent={rejected}
+        trackers={[{ tracker, consentCategory: "analytics" }]}
+      >
+        <RetainedCaptureProbe />
+      </Harness>,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Emit retained" }));
 
     await act(async () => {
       await Promise.resolve();
