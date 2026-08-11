@@ -1,10 +1,10 @@
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it } from "vitest";
 
 import type { SupportedLocale } from "../../i18n/config";
 import { ConsentProvider, useConsent } from "../../consent/consent-context";
-import { CONSENT_STORAGE_KEY, CONSENT_VERSION } from "../../consent/consent";
+import { CONSENT_STORAGE_KEY } from "../../consent/consent";
 import { ConsentBanner } from "./consent-banner";
 
 function SettingsOpener() {
@@ -12,15 +12,6 @@ function SettingsOpener() {
   return (
     <button type="button" onClick={openSettings}>
       Open settings
-    </button>
-  );
-}
-
-function AcceptAllTrigger() {
-  const { acceptAll } = useConsent();
-  return (
-    <button type="button" onClick={acceptAll}>
-      Accept all while open
     </button>
   );
 }
@@ -45,7 +36,6 @@ function storedConsent() {
 
 afterEach(() => {
   window.localStorage.clear();
-  delete (HTMLDialogElement.prototype as { showModal?: unknown }).showModal;
 });
 
 describe("ConsentBanner", () => {
@@ -112,27 +102,7 @@ describe("ConsentBanner", () => {
     ).toBeNull();
   });
 
-  it("accept all persists consent and hides the banner", async () => {
-    renderBanner("en");
-
-    await waitFor(() =>
-      expect(
-        screen.getByRole("region", { name: "Cookie preferences" }),
-      ).toBeVisible(),
-    );
-    fireEvent.click(screen.getByRole("button", { name: "Accept all" }));
-
-    expect(storedConsent()).toMatchObject({
-      version: CONSENT_VERSION,
-      analytics: true,
-      marketing: true,
-    });
-    expect(
-      screen.queryByRole("region", { name: "Cookie preferences" }),
-    ).toBeNull();
-  });
-
-  it("reject non-essential persists optional categories disabled", async () => {
+  it("dismisses the banner and persists rejected consent", async () => {
     renderBanner("en");
 
     await waitFor(() =>
@@ -144,13 +114,15 @@ describe("ConsentBanner", () => {
       screen.getByRole("button", { name: "Reject non-essential" }),
     );
 
-    expect(storedConsent()).toMatchObject({
-      analytics: false,
-      marketing: false,
+    await waitFor(() => {
+      expect(
+        screen.queryByRole("region", { name: "Cookie preferences" }),
+      ).toBeNull();
+      expect(storedConsent()).toMatchObject({
+        analytics: false,
+        marketing: false,
+      });
     });
-    expect(
-      screen.queryByRole("region", { name: "Cookie preferences" }),
-    ).toBeNull();
   });
 
   it("customize opens the dialog with the current choices", async () => {
@@ -300,49 +272,5 @@ describe("ConsentBanner", () => {
     expect(
       screen.queryByRole("dialog", { name: "Cookie settings" }),
     ).toBeNull();
-  });
-
-  it("does not rerun the modal open sequence when consent changes while the dialog is open", async () => {
-    const showModal = vi
-      .fn()
-      .mockImplementationOnce(function (this: HTMLDialogElement) {
-        this.setAttribute("open", "");
-      })
-      .mockImplementation(() => {
-        throw new DOMException(
-          "The dialog is already open.",
-          "InvalidStateError",
-        );
-      });
-    Object.defineProperty(HTMLDialogElement.prototype, "showModal", {
-      configurable: true,
-      value: showModal,
-    });
-
-    render(
-      <MemoryRouter>
-        <ConsentProvider>
-          <ConsentBanner locale="en" />
-          <AcceptAllTrigger />
-        </ConsentProvider>
-      </MemoryRouter>,
-    );
-
-    await waitFor(() =>
-      expect(
-        screen.getByRole("region", { name: "Cookie preferences" }),
-      ).toBeVisible(),
-    );
-    fireEvent.click(screen.getByRole("button", { name: "Customize" }));
-    expect(showModal).toHaveBeenCalledTimes(1);
-
-    fireEvent.click(
-      screen.getByRole("button", { name: "Accept all while open" }),
-    );
-
-    expect(showModal).toHaveBeenCalledTimes(1);
-    expect(
-      screen.getByRole("dialog", { name: "Cookie settings" }),
-    ).toBeVisible();
   });
 });

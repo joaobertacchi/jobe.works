@@ -1,5 +1,3 @@
-import { readFileSync, readdirSync } from "node:fs";
-
 import {
   CONSENT_STORAGE_KEY,
   CONSENT_VERSION,
@@ -29,28 +27,19 @@ const test = base.extend<{ consented: void }>({
   ],
 });
 
-const publishedPages = [
-  ["/en/", "Static website template"],
-  ["/en/about", "About"],
-  ["/en/services", "Services"],
-  ["/en/privacy", "Privacy notice"],
-  ["/en/404", "Page not found"],
-  ["/pt-BR/", "Modelo de site estático"],
-  ["/pt-BR/about", "Sobre"],
-  ["/pt-BR/services", "Serviços"],
-  ["/pt-BR/privacy", "Aviso de privacidade"],
-  ["/pt-BR/404", "Página não encontrada"],
-] as const;
+test("serves and hydrates a representative prerendered localized page", async ({
+  page,
+  request,
+}) => {
+  const response = await request.get("/pt-BR/about");
+  expect(response.status()).toBe(200);
 
-for (const [url, heading] of publishedPages) {
-  test(`serves prerendered ${url}`, async ({ page, request }) => {
-    const response = await request.get(url);
-    expect(response.status()).toBe(200);
-
-    await page.goto(url);
-    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
-  });
-}
+  await page.goto("/pt-BR/about");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Sobre" }),
+  ).toBeVisible();
+  await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+});
 
 test("canonical hydration reuses prerendered loader data", async ({ page }) => {
   const dataRequests: string[] = [];
@@ -94,41 +83,20 @@ test("keeps localized Home content after hydration", async ({ page }) => {
   ).toBeVisible();
 });
 
-const englishPagesWithPortugueseSiblings = [
-  ["Home", "/en/", "/pt-BR/", "Modelo de site estático"],
-  ["About", "/en/about", "/pt-BR/about", "Sobre"],
-  ["Services", "/en/services", "/pt-BR/services", "Serviços"],
-  ["Privacy", "/en/privacy", "/pt-BR/privacy", "Aviso de privacidade"],
-  ["404", "/en/404", "/pt-BR/404", "Página não encontrada"],
-] as const;
-
-for (const [
-  pageName,
-  englishUrl,
-  portugueseUrl,
-  portugueseHeading,
-] of englishPagesWithPortugueseSiblings) {
-  test(`${pageName} language switch preserves logical page identity`, async ({
-    page,
-  }) => {
-    await page.goto(englishUrl);
-    const languageNavigation = page.getByRole("navigation", {
-      name: "Choose language",
-    });
-    await expect(languageNavigation.getByRole("link")).toHaveCount(1);
-    await expect(
-      languageNavigation.getByRole("link", { name: "Português" }),
-    ).toHaveAttribute("href", portugueseUrl);
-
-    await languageNavigation.getByRole("link", { name: "Português" }).click();
-
-    await expect(page).toHaveURL(portugueseUrl);
-    await expect(
-      page.getByRole("heading", { name: portugueseHeading }),
-    ).toBeVisible();
-    await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+test("language switching preserves nested page identity", async ({ page }) => {
+  await page.goto("/en/about");
+  const switcher = page.getByRole("navigation", {
+    name: "Choose language",
   });
-}
+  const portuguese = switcher.getByRole("link", { name: "Português" });
+
+  await expect(portuguese).toHaveAttribute("href", "/pt-BR/about");
+  await portuguese.click();
+
+  await expect(page).toHaveURL("/pt-BR/about");
+  await expect(page.getByRole("heading", { name: "Sobre" })).toBeVisible();
+  await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
+});
 
 test("does not persist a language choice", async ({ page }) => {
   const snapshotPersistence = () =>
@@ -156,185 +124,14 @@ test("keeps navigation in the active locale", async ({ page }) => {
   await expect(page.getByRole("heading", { name: "Sobre" })).toBeVisible();
 });
 
-test("returns real 404 responses for unpublished URLs", async ({ request }) => {
-  expect((await request.get("/fr/about")).status()).toBe(404);
-  expect((await request.get("/en/not-published")).status()).toBe(404);
-  expect((await request.get("/pt-BR/not-published")).status()).toBe(404);
-});
-
-const unpublishedAliases = [
-  {
-    alias: "/en/about/",
-    heading: "Page not found",
-    description:
-      "This page may have moved or never existed. Use the navigation to find your way back.",
-    canonicalHeading: "About",
-  },
-  {
-    alias: "/en/About",
-    heading: "Page not found",
-    description:
-      "This page may have moved or never existed. Use the navigation to find your way back.",
-    canonicalHeading: "About",
-  },
-  {
-    alias: "/pt-BR/about/",
-    heading: "Página não encontrada",
-    description:
-      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
-    canonicalHeading: "Sobre",
-  },
-  {
-    alias: "/pt-BR/About",
-    heading: "Página não encontrada",
-    description:
-      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
-    canonicalHeading: "Sobre",
-  },
-] as const;
-
-test.describe("unpublished aliases", () => {
-  for (const {
-    alias,
-    heading,
-    description,
-    canonicalHeading,
-  } of unpublishedAliases) {
-    test(`rejects client navigation to ${alias}`, async ({ page }) => {
-      await page.goto("/en/services");
-      await page.waitForFunction(() => {
-        const router = Reflect.get(window, "__reactRouterDataRouter") as {
-          state: { navigation: { state: string } };
-        };
-        return router.state.navigation.state === "idle";
-      });
-      await page.evaluate(async (url) => {
-        const router = Reflect.get(window, "__reactRouterDataRouter") as {
-          navigate(to: string): Promise<void>;
-        };
-        await router.navigate(url);
-      }, alias);
-      await page.waitForFunction(() => {
-        const router = Reflect.get(window, "__reactRouterDataRouter") as {
-          state: { navigation: { state: string } };
-        };
-        return router.state.navigation.state === "idle";
-      });
-
-      await expect(page).toHaveURL(alias);
-      await expect(page.getByRole("heading", { name: heading })).toBeVisible();
-      await expect(page.getByText(description, { exact: true })).toBeVisible();
-      await expect(
-        page.getByRole("heading", { name: canonicalHeading }),
-      ).toHaveCount(0);
-    });
-  }
-});
-
-test("does not publish alias URLs or generate alias artifacts", () => {
-  const manifest = readFileSync(
-    ".react-router/canonical-url-manifest.json",
-    "utf8",
-  );
-  const englishArtifacts = readdirSync("build/client/en");
-  const portugueseArtifacts = readdirSync("build/client/pt-BR");
-
-  expect(manifest).not.toContain('"/en/about/"');
-  expect(manifest).not.toContain('"/en/About"');
-  expect(manifest).not.toContain('"/pt-BR/about/"');
-  expect(manifest).not.toContain('"/pt-BR/About"');
-  expect(englishArtifacts).toContain("about");
-  expect(englishArtifacts).not.toContain("About");
-  expect(portugueseArtifacts).toContain("about");
-  expect(portugueseArtifacts).not.toContain("About");
-});
-
-const supportedLocaleCatchAllPages = [
-  [
-    "/en/about",
-    "/en/not-published",
-    "Page not found",
-    "This page may have moved or never existed. Use the navigation to find your way back.",
-    "Choose language",
-  ],
-  [
-    "/pt-BR/about",
-    "/pt-BR/not-published",
-    "Página não encontrada",
-    "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
-    "Escolher idioma",
-  ],
-] as const;
-
-for (const [
-  initialUrl,
-  unknownUrl,
-  heading,
-  description,
-  switcherLabel,
-] of supportedLocaleCatchAllPages) {
-  test(`renders localized catch-all after client navigation to ${unknownUrl}`, async ({
-    page,
-  }) => {
-    await page.goto(initialUrl);
-    await page.waitForFunction(() => {
-      const router = Reflect.get(window, "__reactRouterDataRouter") as {
-        state: { initialized: boolean };
-      };
-      return router.state.initialized;
-    });
-    await page.evaluate(async (url) => {
-      const router = Reflect.get(window, "__reactRouterDataRouter") as {
-        navigate(to: string): Promise<void>;
-      };
-      await router.navigate(url);
-    }, unknownUrl);
-
-    await expect(page).toHaveURL(unknownUrl);
-    await expect(page.getByRole("heading", { name: heading })).toBeVisible();
-    await expect(page.getByText(description, { exact: true })).toBeVisible();
-    await expect(page.getByText("An unexpected error occurred.")).toHaveCount(
-      0,
-    );
-    await expect(
-      page.getByRole("navigation", { name: switcherLabel }),
-    ).toHaveCount(0);
+for (const [url, category] of [
+  ["/fr/about", "unsupported locale"],
+  ["/en/not-published", "unpublished localized route"],
+] as const) {
+  test(`returns a real 404 for ${url} (${category})`, async ({ request }) => {
+    expect((await request.get(url)).status()).toBe(404);
   });
 }
-
-test("uses the route error boundary for unsupported client navigation", async ({
-  page,
-}) => {
-  await page.goto("/en/about");
-  await page.evaluate(async () => {
-    const router = Reflect.get(window, "__reactRouterDataRouter") as {
-      navigate(to: string): Promise<void>;
-    };
-    await router.navigate("/fr/about");
-  });
-
-  await expect(page).toHaveURL("/fr/about");
-  await expect(page.locator("html")).toHaveAttribute("lang", "und");
-  await expect(page.getByRole("heading", { name: "404" })).toBeVisible();
-  await expect(page.getByText("Page not found", { exact: true })).toHaveCount(
-    0,
-  );
-  await expect(
-    page.getByText("Página não encontrada", { exact: true }),
-  ).toHaveCount(0);
-  await expect(
-    page.getByText(
-      "This page may have moved or never existed. Use the navigation to find your way back.",
-      { exact: true },
-    ),
-  ).toHaveCount(0);
-  await expect(
-    page.getByText(
-      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
-      { exact: true },
-    ),
-  ).toHaveCount(0);
-});
 
 test.describe("English browser locale", () => {
   test.use({ locale: "en-US" });
@@ -361,75 +158,6 @@ test.describe("unsupported browser locale", () => {
     await page.goto("/");
     await expect(page).toHaveURL("/pt-BR/");
   });
-});
-
-test("renders complete localized SEO metadata", async ({ page }) => {
-  await page.goto("/en/about");
-
-  await expect(page).toHaveTitle("About the Static Website Template");
-  await expect(page.locator('meta[name="description"]')).toHaveAttribute(
-    "content",
-    /agent-ready template/,
-  );
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
-    "href",
-    "https://example.com/en/about",
-  );
-  await expect(page.locator('link[hreflang="en"]')).toHaveAttribute(
-    "href",
-    "https://example.com/en/about",
-  );
-  await expect(page.locator('link[hreflang="pt-BR"]')).toHaveAttribute(
-    "href",
-    "https://example.com/pt-BR/about",
-  );
-  await expect(page.locator('link[hreflang="x-default"]')).toHaveAttribute(
-    "href",
-    "https://example.com/pt-BR/about",
-  );
-  await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
-    "content",
-    "https://example.com/social-card.svg",
-  );
-  await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute(
-    "content",
-    "summary_large_image",
-  );
-});
-
-test("renders explicit Home JSON-LD and 404 noindex metadata", async ({
-  page,
-}) => {
-  await page.goto("/en/");
-  const jsonLd = JSON.parse(
-    (await page.locator('script[type="application/ld+json"]').textContent()) ??
-      "null",
-  );
-  expect(jsonLd).toMatchObject({
-    "@context": "https://schema.org",
-    "@type": "Organization",
-  });
-
-  await page.goto("/en/404");
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-    "content",
-    "noindex,follow",
-  );
-});
-
-test("serves sitemap and robots generated from indexable routes", async ({
-  request,
-}) => {
-  const sitemap = await (await request.get("/sitemap.xml")).text();
-  expect(sitemap).toContain("https://example.com/en/about");
-  expect(sitemap).toContain("https://example.com/pt-BR/services");
-  expect(sitemap).toContain("https://example.com/en/privacy");
-  expect(sitemap).not.toContain("https://example.com/en/404");
-  expect(sitemap).not.toContain("https://example.com/pt-BR/404");
-
-  const robots = await (await request.get("/robots.txt")).text();
-  expect(robots).toContain("Allow: /");
-  expect(robots).toContain("Sitemap: https://example.com/sitemap.xml");
 });
 
 test("keeps localized Privacy navigation in the footer", async ({ page }) => {

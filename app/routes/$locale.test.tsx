@@ -1,6 +1,4 @@
-import { readFileSync } from "node:fs";
-
-import { fireEvent, render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import {
   createMemoryRouter,
   isRouteErrorResponse,
@@ -14,8 +12,6 @@ import { describe, expect, it, vi } from "vitest";
 import { AnalyticsProvider } from "../analytics/analytics";
 import type { TrackerRegistration } from "../analytics/types";
 import { ConsentProvider } from "../consent/consent-context";
-import { defaultLocale } from "../i18n/config";
-import { privacyTranslations } from "../i18n/translations/privacy";
 import type { CanonicalUrlManifest } from "../routing/canonical-url-manifest";
 import NotFound from "./$locale.404";
 import About from "./$locale.about";
@@ -120,6 +116,7 @@ function renderLocalizedRoute(
                     },
                   } as never)
               : ({ request }) => getLoaderData(new URL(request.url).pathname),
+            shouldRevalidate,
             children: [
               { index: true, Component: Home },
               { path: "about", Component: About },
@@ -143,15 +140,6 @@ function renderLocalizedRoute(
 }
 
 describe("localized route layout", () => {
-  it("uses the React-facing i18n API instead of translation dictionaries", () => {
-    const source = readFileSync("app/routes/$locale.tsx", "utf8");
-
-    expect(source).not.toContain('from "../i18n/translations"');
-    expect(source).toContain("useI18n");
-    expect(source).toContain('"notFound.title"');
-    expect(source).toContain('"common.errors.title"');
-  });
-
   it.each([
     [
       "en",
@@ -178,23 +166,6 @@ describe("localized route layout", () => {
     },
   );
 
-  it("composes Home principles and a localized call to action", async () => {
-    renderLocalizedRoute("/en/");
-
-    expect(
-      await screen.findByRole("heading", { name: "Static delivery" }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("heading", { name: "Typed localization" }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("heading", { name: "Deterministic quality" }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("link", { name: "Explore the examples" }),
-    ).toHaveAttribute("href", "/en/services");
-  });
-
   it("emits cta_pressed when the hero call to action is clicked", async () => {
     const tracker = vi.fn();
     renderLocalizedRoute("/en/", false, [
@@ -214,25 +185,22 @@ describe("localized route layout", () => {
     });
   });
 
-  it.each([
-    ["/en/privacy", "Privacy notice", "Data handled by the template"],
-    ["/pt-BR/privacy", "Aviso de privacidade", "Dados tratados pelo modelo"],
-  ])(
-    "renders localized Privacy content for %s",
-    async (pathname, title, section) => {
-      renderLocalizedRoute(pathname);
+  it("renders representative localized privacy content", async () => {
+    renderLocalizedRoute("/pt-BR/privacy");
 
-      expect(
-        await screen.findByRole("heading", { level: 1, name: title }),
-      ).toBeVisible();
-      expect(
-        screen.getByRole("heading", { level: 2, name: section }),
-      ).toBeVisible();
-      expect(screen.getAllByRole("heading", { level: 2 })).toHaveLength(
-        Object.keys(privacyTranslations[defaultLocale].sections).length,
-      );
-    },
-  );
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Aviso de privacidade",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Dados tratados pelo modelo",
+      }),
+    ).toBeVisible();
+  });
 
   it.each([
     ["en", "Error", "An unexpected error occurred."],
@@ -290,257 +258,12 @@ describe("localized route layout", () => {
     expect(screen.queryByText("Página não encontrada")).toBeNull();
   });
 
-  it.each([
-    [
-      "/en/",
-      "Built for agents, ready for people",
-      "Static website template",
-      "A thoughtful static foundation for AI-assisted teams to shape, localize, and ship with confidence.",
-    ],
-    [
-      "/pt-BR/",
-      "Feito para agentes, pronto para pessoas",
-      "Modelo de site estático",
-      "Uma base estática bem estruturada para equipes que desenvolvem com apoio de IA, com decisões explícitas e validação confiável.",
-    ],
-  ])(
-    "renders the localized Home hero for %s",
-    async (pathname, eyebrow, title, description) => {
-      renderLocalizedRoute(pathname);
-
-      const heading = await screen.findByRole("heading", {
-        level: 1,
-        name: title,
-      });
-      const hero = heading.closest("section");
-
-      expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(1);
-      expect(hero).toHaveTextContent(eyebrow);
-      expect(hero).toHaveTextContent(description);
-    },
-  );
-
-  it("composes About from shared semantic content sections", async () => {
-    renderLocalizedRoute("/en/about");
-
-    expect(await screen.findByRole("heading", { name: "About" })).toBeVisible();
-    expect(
-      screen.getByRole("heading", { level: 2, name: "Clear boundaries" }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("heading", { level: 2, name: "Working examples" }),
-    ).toBeVisible();
-  });
-
-  it.each([
-    [
-      "/en/about",
-      "About",
-      "A focused starting point that keeps structure, content, and quality checks clear so people and AI agents can build together.",
-    ],
-    [
-      "/pt-BR/about",
-      "Sobre",
-      "Um ponto de partida objetivo que mantém estrutura, conteúdo e verificações de qualidade claros para pessoas e agentes de IA criarem juntos.",
-    ],
-  ])(
-    "renders the localized About page for %s",
-    async (pathname, title, description) => {
-      renderLocalizedRoute(pathname);
-
-      expect(
-        await screen.findByRole("heading", { level: 1, name: title }),
-      ).toBeVisible();
-      expect(screen.getByText(description)).toBeVisible();
-    },
-  );
-
-  it("closes Services without adding a speculative fourth card", async () => {
-    renderLocalizedRoute("/en/services");
-
-    expect(
-      await screen.findByRole("heading", {
-        level: 2,
-        name: "A foundation, not a platform",
-      }),
-    ).toBeVisible();
-    expect(document.querySelectorAll("article")).toHaveLength(3);
-  });
-
-  it.each([
-    [
-      "/en/services",
-      "Services",
-      "Everything needed to turn a clear idea into a fast, durable website.",
-      ["Foundation", "Localization", "Delivery"],
-      [
-        "Composable React patterns and a static-first architecture keep each page easy to understand and evolve.",
-        "Typed dictionaries keep every supported language complete, consistent, and ready to publish.",
-        "Built-in quality checks and prerendering make confident releases routine.",
-      ],
-    ],
-    [
-      "/pt-BR/services",
-      "Serviços",
-      "Tudo o que é necessário para transformar uma ideia clara em um site rápido e duradouro.",
-      ["Base", "Localização", "Entrega"],
-      [
-        "Rotas pré-renderizadas, contratos tipados e validações objetivas mantêm cada página simples de evoluir.",
-        "Dicionários completos e URLs explícitas mantêm o conteúdo consistente em todos os idiomas.",
-        "Verificações de qualidade e pré-renderização tornam as entregas confiáveis e previsíveis.",
-      ],
-    ],
-  ])(
-    "renders three localized Services cards for %s",
-    async (
-      pathname,
-      title,
-      description,
-      serviceTitles,
-      serviceDescriptions,
-    ) => {
-      renderLocalizedRoute(pathname);
-
-      expect(
-        await screen.findByRole("heading", { level: 1, name: title }),
-      ).toBeVisible();
-      expect(screen.getByText(description)).toBeVisible();
-      expect(document.querySelectorAll("article")).toHaveLength(3);
-      for (const [index, serviceTitle] of serviceTitles.entries()) {
-        const serviceHeading = screen.getByRole("heading", {
-          level: 2,
-          name: serviceTitle,
-        });
-        expect(serviceHeading).toBeVisible();
-        expect(serviceHeading.closest("article")).toHaveTextContent(
-          serviceDescriptions[index],
-        );
-      }
-    },
-  );
-
-  it.each([
-    [
-      "/en/404",
-      "Page not found",
-      "This page may have moved or never existed. Use the navigation to find your way back.",
-    ],
-    [
-      "/pt-BR/404",
-      "Página não encontrada",
-      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
-    ],
-  ])(
-    "renders the polished localized 404 page for %s",
-    async (pathname, title, description) => {
-      renderLocalizedRoute(pathname);
-
-      expect(
-        await screen.findByRole("heading", { level: 1, name: title }),
-      ).toBeVisible();
-      expect(screen.getByText(description)).toBeVisible();
-    },
-  );
-
   it("links localized 404 visitors back to canonical Home", async () => {
     renderLocalizedRoute("/pt-BR/404");
 
     expect(
       await screen.findByRole("link", { name: "Voltar ao início" }),
     ).toHaveAttribute("href", "/pt-BR/");
-  });
-
-  it("binds English content and navigation", async () => {
-    renderLocalizedRoute("/en/about");
-
-    expect(await screen.findByRole("heading", { name: "About" })).toBeVisible();
-    expect(screen.getByRole("banner")).toHaveTextContent("Agent-ready sites");
-    const navigation = screen.getByRole("navigation", {
-      name: "Primary navigation",
-    });
-    expect(navigation).toBeVisible();
-    expect(
-      within(navigation).getByRole("link", { name: "Home" }),
-    ).toHaveAttribute("href", "/en/");
-    expect(
-      within(navigation).getByRole("link", { name: "About" }),
-    ).toHaveAttribute("href", "/en/about");
-    expect(
-      within(navigation).getByRole("link", { name: "Services" }),
-    ).toHaveAttribute("href", "/en/services");
-    expect(screen.getByRole("group", { name: "Theme" })).toBeVisible();
-  });
-
-  it("links English About only to its Portuguese sibling", async () => {
-    renderLocalizedRoute("/en/about");
-
-    const languageNavigation = await screen.findByRole("navigation", {
-      name: "Choose language",
-    });
-    expect(languageNavigation.querySelectorAll("a")).toHaveLength(1);
-    expect(screen.getByRole("link", { name: "Português" })).toHaveAttribute(
-      "href",
-      "/pt-BR/about",
-    );
-    expect(screen.queryByRole("link", { name: "English" })).toBeNull();
-  });
-
-  it("binds Brazilian Portuguese content", async () => {
-    renderLocalizedRoute("/pt-BR/services");
-
-    expect(
-      await screen.findByRole("heading", { name: "Serviços" }),
-    ).toBeVisible();
-    const navigation = screen.getByRole("navigation", {
-      name: "Navegação principal",
-    });
-    expect(
-      within(navigation).getByRole("link", { name: "Início" }),
-    ).toHaveAttribute("href", "/pt-BR/");
-    expect(
-      within(navigation).getByRole("link", { name: "Sobre" }),
-    ).toHaveAttribute("href", "/pt-BR/about");
-    expect(
-      within(navigation).getByRole("link", { name: "Serviços" }),
-    ).toHaveAttribute("href", "/pt-BR/services");
-  });
-
-  it("links Portuguese Services only to its English sibling", async () => {
-    renderLocalizedRoute("/pt-BR/services");
-
-    const languageNavigation = await screen.findByRole("navigation", {
-      name: "Escolher idioma",
-    });
-    expect(languageNavigation.querySelectorAll("a")).toHaveLength(1);
-    expect(screen.getByRole("link", { name: "English" })).toHaveAttribute(
-      "href",
-      "/en/services",
-    );
-    expect(screen.queryByRole("link", { name: "Português" })).toBeNull();
-  });
-
-  it("preserves the target trailing slash for Home", async () => {
-    renderLocalizedRoute("/en/");
-
-    expect(
-      await screen.findByRole("link", { name: "Português" }),
-    ).toHaveAttribute("href", "/pt-BR/");
-  });
-
-  it("preserves localized 404 identity", async () => {
-    renderLocalizedRoute("/en/404");
-
-    expect(
-      await screen.findByRole("link", { name: "Português" }),
-    ).toHaveAttribute("href", "/pt-BR/404");
-  });
-
-  it("renders localized not-found content", async () => {
-    renderLocalizedRoute("/pt-BR/404");
-
-    expect(
-      await screen.findByRole("heading", { name: "Página não encontrada" }),
-    ).toBeVisible();
   });
 
   it("rejects an unsupported locale", async () => {
@@ -559,47 +282,52 @@ describe("localized route layout", () => {
     ).toBe(true);
   });
 
+  it("renders localized not-found behavior after client navigation", async () => {
+    const router = renderLocalizedRoute("/en/about", true);
+    expect(await screen.findByRole("heading", { name: "About" })).toBeVisible();
+
+    await router.navigate("/en/not-published");
+
+    expect(router.state.location.pathname).toBe("/en/not-published");
+    expect(
+      await screen.findByRole("heading", { name: "Page not found" }),
+    ).toBeVisible();
+    expect(
+      screen.queryByRole("navigation", { name: "Choose language" }),
+    ).not.toBeInTheDocument();
+  });
+
   it.each([
-    [
-      "/en/about",
-      "/en/not-published",
-      "About",
-      "Page not found",
-      "This page may have moved or never existed. Use the navigation to find your way back.",
-    ],
-    [
-      "/pt-BR/about",
-      "/pt-BR/not-published",
-      "Sobre",
-      "Página não encontrada",
-      "Esta página pode ter mudado ou nunca ter existido. Use a navegação para encontrar o caminho de volta.",
-    ],
-  ])(
-    "renders localized catch-all content after navigating from %s to %s",
-    async (initialUrl, unknownUrl, initialHeading, heading, description) => {
-      const router = renderLocalizedRoute(initialUrl, true);
+    ["/en/about/", "/en/about", "Page not found", "About"],
+    ["/en/About", "/en/about", "Page not found", "About"],
+    ["/pt-BR/about/", "/pt-BR/about", "Página não encontrada", "Sobre"],
+    ["/pt-BR/About", "/pt-BR/about", "Página não encontrada", "Sobre"],
+  ] as const)(
+    "rejects noncanonical alias navigation to %s",
+    async (alias, canonicalPath, notFoundHeading, canonicalHeading) => {
+      const router = renderLocalizedRoute(canonicalPath, true);
       expect(
-        await screen.findByRole("heading", { name: initialHeading }),
-      ).toBeVisible();
-
-      await router.navigate(unknownUrl);
-
-      expect(router.state.location.pathname).toBe(unknownUrl);
-      expect(
-        await screen.findByRole("heading", { name: heading }),
-      ).toBeVisible();
-      expect(screen.getByText(description)).toBeVisible();
-      expect(screen.queryByText("An unexpected error occurred.")).toBeNull();
-      expect(
-        screen.queryByRole("navigation", { name: /language|idioma/i }),
-      ).toBeNull();
-      expect(screen.getByRole("banner")).toBeVisible();
-      expect(
-        screen.getByRole("navigation", {
-          name: /primary navigation|navegação principal/i,
+        await screen.findByRole("heading", {
+          level: 1,
+          name: canonicalHeading,
         }),
       ).toBeVisible();
-      expect(screen.getByRole("group", { name: /theme|tema/i })).toBeVisible();
+
+      await router.navigate(alias);
+
+      expect(router.state.location.pathname).toBe(alias);
+      expect(
+        await screen.findByRole("heading", {
+          level: 1,
+          name: notFoundHeading,
+        }),
+      ).toBeVisible();
+      expect(
+        screen.queryByRole("heading", {
+          level: 1,
+          name: canonicalHeading,
+        }),
+      ).not.toBeInTheDocument();
     },
   );
 });
@@ -716,10 +444,6 @@ describe("localized route clientLoader", () => {
       expect(serverLoader).not.toHaveBeenCalled();
     },
   );
-
-  it("runs during hydration to validate direct document URLs", () => {
-    expect(clientLoader.hydrate).toBe(true);
-  });
 });
 
 describe("localized route build loader data", () => {

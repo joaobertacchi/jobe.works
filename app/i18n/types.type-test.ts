@@ -1,46 +1,14 @@
 import type { SupportedLocale } from "./config";
-import type { useI18n } from "./i18n";
-import type { Translate, Translation, TranslationScope } from "./types";
-import type { HomeTranslation } from "./translations/home";
-import type { ServicesTranslation } from "./translations/services";
+import type { Translate, Translation } from "./types";
 
 declare const translate: Translate;
-declare const contextTranslate: ReturnType<typeof useI18n>["translate"];
 
 translate("about.title");
 translate("home.exampleCount", { count: 3 });
 translate("home.greeting", { values: { name: "Agent" } });
 
-const unsafeInterpolationValues = {
-  name: "Agent",
-  locale: "pt-BR",
-  missingBehavior: "guess",
-  defaultValue: "Fallback",
-};
-
-// @ts-expect-error Interpolation values cannot override translation behavior.
-translate("home.greeting", { values: unsafeInterpolationValues });
-
 // @ts-expect-error Callers cannot override the provider locale.
 translate("about.title", { locale: "pt-BR" });
-
-// @ts-expect-error Callers cannot override strict missing behavior.
-translate("about.title", { missingBehavior: "guess" });
-
-// @ts-expect-error Callers cannot provide fallback translation values.
-translate("about.title", { defaultValue: "Fallback" });
-
-const unsafeOptions = {
-  count: 2,
-  locale: "pt-BR",
-  missingBehavior: "guess",
-  defaultValue: "Fallback",
-  defaults: [{ message: "Fallback" }],
-  scope: "home",
-};
-
-// @ts-expect-error Predeclared options cannot override translation behavior.
-translate("home.exampleCount", unsafeOptions);
 
 // @ts-expect-error Invalid translation path.
 translate("about.missing");
@@ -51,32 +19,9 @@ translate("home.exampleCount.zero");
 // @ts-expect-error Plural translations require a numeric count.
 translate("home.exampleCount");
 
-// @ts-expect-error Context plural translations also require a numeric count.
-contextTranslate("home.exampleCount");
-
-const servicesTitle: TranslationScope = "services.title";
-const servicesFoundationTitle: TranslationScope =
-  "services.items.foundation.title";
-
-// @ts-expect-error Home translations must include every field.
-const incompleteHome: HomeTranslation = {
-  title: "Home",
-  description: "Description",
-};
-
-// @ts-expect-error Services translations must include every named item.
-const incompleteServices: ServicesTranslation = {
-  title: "Services",
-  description: "Description",
-};
-
 // @ts-expect-error The registry must include every supported locale.
 const incompleteRegistry: Record<SupportedLocale, Translation> = {
   en: {} as Translation,
 };
 
-void servicesTitle;
-void servicesFoundationTitle;
-void incompleteHome;
-void incompleteServices;
 void incompleteRegistry;

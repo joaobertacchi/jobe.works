@@ -9,6 +9,7 @@ export default defineConfig({
     },
   },
   test: {
+    allowOnly: !process.env.CI,
     environment: "jsdom",
     include: [
       "app/**/*.test.{ts,tsx}",

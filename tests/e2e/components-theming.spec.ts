@@ -172,28 +172,14 @@ test("invalid stored theme follows system preference without browser errors", as
   await expectTheme(page, "dark", "System");
 });
 
-test("representative pages use semantic headings and one selected theme", async ({
+test("representative page uses semantic headings and one selected theme", async ({
   page,
 }) => {
-  for (const url of [
-    "/en/",
-    "/en/about",
-    "/en/services",
-    "/en/privacy",
-    "/en/404",
-  ]) {
-    await page.goto(url);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-    await expect(
-      page
-        .getByRole("group", { name: "Theme" })
-        .locator('[aria-pressed="true"]'),
-    ).toHaveCount(1);
-  }
-
-  await page.goto("/en/services");
-  await expect(page.locator("article h2")).toHaveCount(3);
-  await expect(page.locator("article")).toHaveCount(3);
+  await page.goto("/en/");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
+  await expect(
+    page.getByRole("group", { name: "Theme" }).locator('[aria-pressed="true"]'),
+  ).toHaveCount(1);
 });
 
 test("keyboard traversal reaches navigation and visibly focused theme controls", async ({
@@ -221,22 +207,14 @@ test("keyboard traversal reaches navigation and visibly focused theme controls",
   expect(themeFocusOutline.width).toBeGreaterThan(0);
 });
 
-test("new page and footer links expose visible keyboard focus", async ({
-  page,
-}) => {
-  for (const [url, name] of [
-    ["/en/", "Explore the examples"],
-    ["/en/404", "Return home"],
-    ["/en/about", "Privacy"],
-  ] as const) {
-    await page.goto(url);
-    const link = page.getByRole("link", { name }).last();
-    await tabTo(page, link);
-    await expect(link).toBeFocused();
-    const outline = await computedOutline(link);
-    expect(outline.style).not.toBe("none");
-    expect(outline.width).toBeGreaterThan(0);
-  }
+test("CTA link exposes visible keyboard focus", async ({ page }) => {
+  await page.goto("/en/");
+  const link = page.getByRole("link", { name: "Explore the examples" });
+  await tabTo(page, link);
+  await expect(link).toBeFocused();
+  const outline = await computedOutline(link);
+  expect(outline.style).not.toBe("none");
+  expect(outline.width).toBeGreaterThan(0);
 });
 
 test("theme bootstrap appears before the first stylesheet in raw HTML", async ({
@@ -277,7 +255,6 @@ test("stored dark theme is applied no later than first contentful paint", async 
           currentScript instanceof HTMLScriptElement &&
           currentScript.parentElement === document.head &&
           currentScript.textContent === bootstrapScript &&
-          !("__reactRouterContext" in window) &&
           performance.getEntriesByName("theme-bootstrap-applied").length === 0
         ) {
           performance.mark("theme-bootstrap-applied");
@@ -317,15 +294,6 @@ test("stored dark theme is applied no later than first contentful paint", async 
   expect(immediateTheme).toEqual({ dark: true, colorScheme: "dark" });
   expect(themeBootstrapApplied).toBeDefined();
   expect(themeBootstrapApplied!).toBeLessThanOrEqual(firstContentfulPaint);
-
-  const marksAfterHydrationToggle = await page.evaluate(() => {
-    if (!("__reactRouterContext" in window)) {
-      throw new Error("React Router hydration context was not installed");
-    }
-    document.documentElement.classList.toggle("dark", true);
-    return performance.getEntriesByName("theme-bootstrap-applied").length;
-  });
-  expect(marksAfterHydrationToggle).toBe(1);
   await expectTheme(page, "dark", "Dark");
 });
 
@@ -387,6 +355,7 @@ test("services remain usable and stack on a mobile viewport", async ({
   await expect(theme.getByRole("button", { name: "Light" })).toBeVisible();
   await expect(theme.getByRole("button", { name: "Dark" })).toBeVisible();
   await expect(theme.getByRole("button", { name: "System" })).toBeVisible();
+  await expect(page.getByRole("contentinfo")).toBeVisible();
 
   expect(
     await page.evaluate(
@@ -424,27 +393,4 @@ test("service cards use multiple columns on a desktop viewport", async ({
     );
 
   expect(new Set(leftCoordinates).size).toBeGreaterThanOrEqual(2);
-});
-
-test("all example pages fit mobile viewports and expose the shared footer", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-
-  for (const url of [
-    "/en/",
-    "/en/about",
-    "/en/services",
-    "/en/privacy",
-    "/en/404",
-  ]) {
-    await page.goto(url);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
-    await expect(page.getByRole("contentinfo")).toBeVisible();
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= window.innerWidth,
-      ),
-    ).toBe(true);
-  }
 });

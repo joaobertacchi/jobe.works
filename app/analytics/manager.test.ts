@@ -27,7 +27,6 @@ function registration(
 
 afterEach(() => {
   vi.restoreAllMocks();
-  vi.unstubAllEnvs();
 });
 
 describe("isTrackerEligible", () => {
@@ -93,25 +92,12 @@ describe("dispatchEvent", () => {
     expect(marketingTracker).not.toHaveBeenCalled();
   });
 
-  it("changes eligibility when the consent snapshot changes", async () => {
-    const marketingTracker = vi.fn();
-    const trackers = [registration(marketingTracker, "marketing")];
-
-    await dispatchEvent(trackers, ctaEvent, consentWith());
-    expect(marketingTracker).not.toHaveBeenCalled();
-
-    await dispatchEvent(trackers, ctaEvent, consentWith({ marketing: true }));
-    expect(marketingTracker).toHaveBeenCalledWith(ctaEvent);
-  });
-
   it("keeps other trackers running when one tracker throws", async () => {
     const failingTracker = vi.fn(() => {
       throw new Error("Provider down");
     });
     const healthyTracker = vi.fn();
-    const consoleError = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
 
     await expect(
       dispatchEvent(
@@ -125,10 +111,6 @@ describe("dispatchEvent", () => {
     ).resolves.toBeUndefined();
 
     expect(healthyTracker).toHaveBeenCalledWith(ctaEvent);
-    expect(consoleError).toHaveBeenCalledWith(
-      "[analytics] tracker failed",
-      expect.any(Error),
-    );
   });
 
   it("keeps other trackers running when one tracker rejects", async () => {
@@ -148,39 +130,5 @@ describe("dispatchEvent", () => {
     );
 
     expect(healthyTracker).toHaveBeenCalledWith(ctaEvent);
-  });
-
-  it("suppresses tracker error reporting outside development", async () => {
-    const failingTracker = vi.fn(() => {
-      throw new Error("Provider down");
-    });
-    const consoleError = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-    vi.stubEnv("DEV", false);
-
-    await dispatchEvent(
-      [registration(failingTracker, "necessary")],
-      ctaEvent,
-      consentWith(),
-    );
-
-    expect(consoleError).not.toHaveBeenCalled();
-  });
-
-  it("awaits asynchronous trackers before resolving", async () => {
-    const order: string[] = [];
-    const trackers = [
-      registration(async () => {
-        order.push("first");
-      }, "necessary"),
-      registration(() => {
-        order.push("second");
-      }, "necessary"),
-    ];
-
-    await dispatchEvent(trackers, ctaEvent, consentWith());
-
-    expect(order).toEqual(["first", "second"]);
   });
 });

@@ -5,7 +5,6 @@ import {
   screen,
   waitFor,
 } from "@testing-library/react";
-import { StrictMode } from "react";
 import { Link, MemoryRouter } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
@@ -190,15 +189,13 @@ describe("AnalyticsProvider", () => {
     });
   });
 
-  it("dispatches a single page view per pathname under StrictMode", async () => {
+  it("does not dispatch same page view twice without navigation or newly eligible trackers", async () => {
     const tracker = vi.fn();
-    render(
-      <StrictMode>
-        <Harness
-          consent={accepted}
-          trackers={[{ tracker, consentCategory: "analytics" }]}
-        />
-      </StrictMode>,
+    const { rerender } = render(
+      <Harness
+        consent={accepted}
+        trackers={[{ tracker, consentCategory: "analytics" }]}
+      />,
     );
 
     await waitFor(() => {
@@ -208,12 +205,55 @@ describe("AnalyticsProvider", () => {
         locale: "en",
       });
     });
-    await act(() => Promise.resolve());
+
+    rerender(
+      <Harness
+        consent={{ analytics: true, marketing: true }}
+        trackers={[{ tracker, consentCategory: "analytics" }]}
+      />,
+    );
+    await act(async () => {
+      await Promise.resolve();
+    });
 
     const pageViews = tracker.mock.calls.filter(
       ([event]) => event.eventName === "page_view",
     );
     expect(pageViews).toHaveLength(1);
+  });
+
+  it("stops dispatching events and page views after consent is withdrawn", async () => {
+    const tracker = vi.fn();
+    const { rerender } = render(
+      <Harness
+        consent={{ analytics: true, marketing: false }}
+        trackers={[{ tracker, consentCategory: "analytics" }]}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(tracker).toHaveBeenCalledWith({
+        eventName: "page_view",
+        pathname: "/en/",
+        locale: "en",
+      });
+    });
+    expect(tracker).toHaveBeenCalledTimes(1);
+
+    rerender(
+      <Harness
+        consent={rejected}
+        trackers={[{ tracker, consentCategory: "analytics" }]}
+      />,
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Emit" }));
+    fireEvent.click(screen.getByRole("link", { name: "About" }));
+
+    await act(async () => {
+      await Promise.resolve();
+    });
+
+    expect(tracker).toHaveBeenCalledTimes(1);
   });
 
   it("dispatches a page view for the current pathname when consent becomes eligible", async () => {
@@ -243,7 +283,7 @@ describe("AnalyticsProvider", () => {
     });
   });
 
-  it("dispatches a page view when a second category becomes eligible", async () => {
+  it("only dispatches the current page view to trackers that become eligible", async () => {
     const analyticsTracker = vi.fn();
     const marketingTracker = vi.fn();
     const trackers: readonly TrackerRegistration[] = [
@@ -265,6 +305,11 @@ describe("AnalyticsProvider", () => {
       });
     });
     expect(marketingTracker).not.toHaveBeenCalled();
+    expect(
+      analyticsTracker.mock.calls.filter(
+        ([event]) => event.eventName === "page_view",
+      ),
+    ).toHaveLength(1);
 
     rerender(
       <Harness
@@ -280,6 +325,16 @@ describe("AnalyticsProvider", () => {
         locale: "en",
       });
     });
+    expect(
+      marketingTracker.mock.calls.filter(
+        ([event]) => event.eventName === "page_view",
+      ),
+    ).toHaveLength(1);
+    expect(
+      analyticsTracker.mock.calls.filter(
+        ([event]) => event.eventName === "page_view",
+      ),
+    ).toHaveLength(1);
   });
 
   it("exposes landing attribution parsed from the current URL", () => {

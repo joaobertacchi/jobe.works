@@ -11,16 +11,12 @@ function Probe() {
     acceptAll,
     rejectNonEssential,
     updatePreferences,
-    settingsOpen,
-    openSettings,
-    closeSettings,
   } = useConsent();
   return (
     <div>
       <span data-testid="analytics">{String(consent.analytics)}</span>
       <span data-testid="marketing">{String(consent.marketing)}</span>
       <span data-testid="banner-visible">{String(bannerVisible)}</span>
-      <span data-testid="settings-open">{String(settingsOpen)}</span>
       <button onClick={acceptAll}>Accept</button>
       <button onClick={rejectNonEssential}>Reject</button>
       <button
@@ -28,8 +24,6 @@ function Probe() {
       >
         Custom
       </button>
-      <button onClick={openSettings}>Open</button>
-      <button onClick={closeSettings}>Close</button>
     </div>
   );
 }
@@ -47,10 +41,12 @@ afterEach(() => {
 });
 
 describe("ConsentProvider", () => {
-  it("hides the banner before the consent check completes", () => {
+  it("starts unresolved with optional categories disabled before the consent check completes", () => {
     renderProbe();
 
     expect(screen.getByTestId("banner-visible")).toHaveTextContent("false");
+    expect(screen.getByTestId("analytics")).toHaveTextContent("false");
+    expect(screen.getByTestId("marketing")).toHaveTextContent("false");
   });
 
   it("defaults to no decision with optional categories disabled", async () => {
@@ -61,7 +57,6 @@ describe("ConsentProvider", () => {
     );
     expect(screen.getByTestId("analytics")).toHaveTextContent("false");
     expect(screen.getByTestId("marketing")).toHaveTextContent("false");
-    expect(screen.getByTestId("settings-open")).toHaveTextContent("false");
   });
 
   it("accept all enables both optional categories and persists", async () => {
@@ -157,41 +152,5 @@ describe("ConsentProvider", () => {
     );
     expect(screen.getByTestId("analytics")).toHaveTextContent("false");
     expect(screen.getByTestId("marketing")).toHaveTextContent("false");
-  });
-
-  it("treats malformed stored records as unresolved", async () => {
-    window.localStorage.setItem(
-      CONSENT_STORAGE_KEY,
-      JSON.stringify({ version: CONSENT_VERSION, analytics: "yes" }),
-    );
-
-    renderProbe();
-
-    await waitFor(() =>
-      expect(screen.getByTestId("banner-visible")).toHaveTextContent("true"),
-    );
-  });
-
-  it("treats unparsable stored records as unresolved", async () => {
-    window.localStorage.setItem(CONSENT_STORAGE_KEY, "{not json");
-
-    renderProbe();
-
-    await waitFor(() =>
-      expect(screen.getByTestId("banner-visible")).toHaveTextContent("true"),
-    );
-  });
-
-  it("exposes settings dialog state", async () => {
-    renderProbe();
-
-    await waitFor(() =>
-      expect(screen.getByTestId("banner-visible")).toHaveTextContent("true"),
-    );
-    fireEvent.click(screen.getByRole("button", { name: "Open" }));
-    expect(screen.getByTestId("settings-open")).toHaveTextContent("true");
-
-    fireEvent.click(screen.getByRole("button", { name: "Close" }));
-    expect(screen.getByTestId("settings-open")).toHaveTextContent("false");
   });
 });

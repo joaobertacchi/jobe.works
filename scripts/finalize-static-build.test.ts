@@ -3,6 +3,7 @@ import {
   mkdtempSync,
   mkdirSync,
   readFileSync,
+  rmSync,
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
@@ -77,22 +78,43 @@ describe("finalizeStaticBuild", () => {
     );
   });
 
-  it("rejects a missing manifest artifact", () => {
+  it.each([
+    ["index.html", "Missing HTML artifact: index.html"],
+    ["pt-BR/about/index.html", "Missing HTML artifact: pt-BR/about/index.html"],
+  ])(
+    "rejects a physically missing required artifact %s",
+    (artifact, message) => {
+      const { client } = createCompleteBuild();
+      rmSync(join(client, artifact));
+
+      expect(() => finalizeStaticBuild(client, manifest)).toThrow(message);
+    },
+  );
+
+  it("rejects an empty required artifact", () => {
     const { client } = createCompleteBuild();
-    const missing = join(client, "pt-BR", "about", "index.html");
-    writeFileSync(missing, "");
+    writeFileSync(join(client, "en", "about", "index.html"), "");
 
     expect(() => finalizeStaticBuild(client, manifest)).toThrow(
-      "Invalid HTML artifact: pt-BR/about/index.html",
+      "Invalid HTML artifact: en/about/index.html",
     );
   });
 
-  it("rejects an unexpected unsupported-locale artifact", () => {
+  it("rejects an unsupported-locale artifact", () => {
     const { client } = createCompleteBuild();
     writeHtml(client, "/fr/about", html("fr"));
 
     expect(() => finalizeStaticBuild(client, manifest)).toThrow(
       "Unsupported locale directory: fr",
+    );
+  });
+
+  it("rejects an unexpected artifact under a supported locale", () => {
+    const { client } = createCompleteBuild();
+    writeHtml(client, "/en/unexpected", html("en"));
+
+    expect(() => finalizeStaticBuild(client, manifest)).toThrow(
+      "Unexpected HTML artifact: en/unexpected/index.html",
     );
   });
 
@@ -178,77 +200,6 @@ describe("finalizeStaticBuild", () => {
     expect(() => finalizeStaticBuild(client, manifest)).not.toThrow();
   });
 
-  it.each([
-    [
-      (content: string) => content.replace("<title>Page</title>", ""),
-      "Missing title in en/about/index.html",
-    ],
-    [
-      (content: string) =>
-        content.replace('<meta name="description" content="Description">', ""),
-      "Missing description in en/about/index.html",
-    ],
-    [
-      (content: string) =>
-        content.replace(
-          "</head>",
-          '<link rel="canonical" href="https://example.com/en/about"></head>',
-        ),
-      "Expected exactly one canonical in en/about/index.html",
-    ],
-    [
-      (content: string) =>
-        content.replace(
-          'rel="canonical" href="https://example.com/en/about"',
-          'rel="canonical" href="https://"',
-        ),
-      "Invalid canonical in en/about/index.html",
-    ],
-    [
-      (content: string) =>
-        content.replace(
-          "https://example.com/pt-BR/about",
-          "https://example.com/pt-BR/services",
-        ),
-      "Invalid hreflang pt-BR in en/about/index.html",
-    ],
-    [
-      (content: string) =>
-        content.replace(/<link rel="alternate" hreflang="x-default"[^>]+>/, ""),
-      "Missing hreflang x-default in en/about/index.html",
-    ],
-    [
-      (content: string) =>
-        content.replace(
-          "</head>",
-          '<link rel="alternate" hreflang="en" href="https://example.com/en/about"></head>',
-        ),
-      "Invalid hreflang in en/about/index.html",
-    ],
-    [
-      (content: string) =>
-        content.replace(
-          '<meta name="robots" content="index,follow">',
-          '<meta name="robots" content="index,noindex">',
-        ),
-      "Invalid robots metadata in en/about/index.html",
-    ],
-    [
-      (content: string) =>
-        content.replace('<meta property="og:title" content="Page">', ""),
-      "Missing og:title in en/about/index.html",
-    ],
-  ])(
-    "rejects invalid rendered SEO at the build boundary",
-    (mutate, message) => {
-      const { client } = createCompleteBuild();
-      const artifact = join(client, "en", "about", "index.html");
-      writeFileSync(artifact, mutate(readFileSync(artifact, "utf8")));
-
-      expect(() => finalizeStaticBuild(client, manifest)).toThrow(message);
-    },
-  );
-
   it("rejects unsupported locale directories without HTML", () => {
     const { client } = createCompleteBuild();
     const localeDirectory = join(client, "fr");
@@ -257,15 +208,6 @@ describe("finalizeStaticBuild", () => {
 
     expect(() => finalizeStaticBuild(client, manifest)).toThrow(
       "Unsupported locale directory: fr",
-    );
-  });
-
-  it("rejects output without a prerendered root", () => {
-    const { client } = createCompleteBuild();
-    writeFileSync(join(client, "index.html"), "");
-
-    expect(() => finalizeStaticBuild(client, manifest)).toThrow(
-      "Invalid HTML artifact: index.html",
     );
   });
 

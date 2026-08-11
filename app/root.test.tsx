@@ -1,16 +1,9 @@
-import { readFileSync } from "node:fs";
-
 import { render, screen, waitFor } from "@testing-library/react";
-import { Links, MemoryRouter, Meta, Outlet } from "react-router";
+import { renderToStaticMarkup } from "react-dom/server";
+import { createMemoryRouter, MemoryRouter, RouterProvider } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 
-import * as rootModule from "./root";
 import App, { Document, ErrorBoundary, Layout } from "./root";
-import {
-  THEME_MEDIA_QUERY,
-  THEME_STORAGE_KEY,
-  themeInitializationScript,
-} from "./theme";
 
 vi.mock("react-router", async (importOriginal) => {
   const actual = await importOriginal<typeof import("react-router")>();
@@ -33,67 +26,34 @@ function routeError(status: number, statusText = "") {
 }
 
 describe("root document", () => {
-  it("defines the localized document shell", () => {
-    const child = <p>Page content</p>;
-    const document = Document({ children: child, locale: "pt-BR" });
-    const [head, body] = document.props.children;
-
-    expect(document.type).toBe("html");
-    expect(document.props.lang).toBe("pt-BR");
-    expect(document.props.suppressHydrationWarning).toBe(true);
-    expect(head.props.suppressHydrationWarning).toBeUndefined();
-    expect(body.props.suppressHydrationWarning).toBeUndefined();
-    expect(body.props.children[0]).toBe(child);
-  });
-
-  it("defines a language-neutral document shell for unsupported paths", () => {
-    expect(() =>
-      Document({ children: null, locale: null } as never),
-    ).not.toThrow();
-    const document = Document({ children: null, locale: null } as never);
-
-    expect(document.props.lang).toBe("und");
-  });
-
-  it("initializes the theme before discovering route styles", () => {
-    const document = Document({ children: null, locale: "en" });
-    const headChildren = document.props.children[0].props.children;
-    const scriptIndex = headChildren.findIndex(
-      (child: React.ReactElement) => child.type === "script",
+  it.each([
+    ["pt-BR", 'lang="pt-BR"'],
+    [null, 'lang="und"'],
+  ] as const)("renders the document language for %s", (locale, expected) => {
+    const html = renderToStaticMarkup(
+      <Document locale={locale}>
+        <p>Page content</p>
+      </Document>,
     );
 
-    expect(headChildren.slice(0, scriptIndex).map(metaIdentity)).toEqual([
-      "charset",
-      "viewport",
-    ]);
-    expect(headChildren[scriptIndex].props.children).toBe(
-      themeInitializationScript,
+    expect(html).toContain(expected);
+    expect(html).toContain("<p>Page content</p>");
+  });
+
+  it("renders the matched child route", async () => {
+    const router = createMemoryRouter(
+      [
+        {
+          path: "/",
+          Component: App,
+          children: [{ index: true, element: <p>Child route</p> }],
+        },
+      ],
+      { initialEntries: ["/"] },
     );
-    expect(themeInitializationScript).toContain(THEME_STORAGE_KEY);
-    expect(themeInitializationScript).toContain(THEME_MEDIA_QUERY);
-    expect(headChildren[scriptIndex + 1].type).toBe(Meta);
-    expect(headChildren[scriptIndex + 2].type).toBe(Links);
-  });
 
-  it("leaves stylesheet discovery to Links without remote font links", () => {
-    const source = readFileSync("app/root.tsx", "utf8");
-
-    expect(rootModule).not.toHaveProperty("links");
-    expect(source).not.toContain("fonts.googleapis.com");
-    expect(source).not.toContain("fonts.gstatic.com");
-  });
-
-  it("uses the React-facing i18n API instead of translation dictionaries", () => {
-    const source = readFileSync("app/root.tsx", "utf8");
-
-    expect(source).not.toContain('from "./i18n/translations"');
-    expect(source).toContain("useI18n");
-    expect(source).toContain('translate("notFound.title")');
-    expect(source).toContain('translate("common.errors.title")');
-  });
-
-  it("renders child routes through an outlet", () => {
-    expect(App().type).toBe(Outlet);
+    render(<RouterProvider router={router} />);
+    expect(await screen.findByText("Child route")).toBeVisible();
   });
 
   it("wraps page content with consent providers and renders the banner", async () => {
@@ -116,32 +76,7 @@ describe("root document", () => {
   });
 });
 
-function metaIdentity(
-  element: React.ReactElement<{ charSet?: string; name?: string }>,
-) {
-  return element.props.charSet ? "charset" : element.props.name;
-}
-
 describe("root error boundary", () => {
-  it("uses typography primitives for global error content", () => {
-    render(
-      ErrorBoundary({
-        error: routeError(404),
-        params: { locale: "en" },
-      } as never),
-    );
-
-    expect(screen.getByRole("heading", { name: "Page not found" })).toHaveClass(
-      "font-serif",
-      "text-foreground",
-    );
-    expect(
-      screen.getByText(
-        "This page may have moved or never existed. Use the navigation to find your way back.",
-      ),
-    ).toHaveClass("text-base", "leading-relaxed", "text-foreground");
-  });
-
   it.each([
     [
       "en",

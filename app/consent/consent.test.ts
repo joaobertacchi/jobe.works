@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
 import {
-  CONSENT_STORAGE_KEY,
   CONSENT_VERSION,
   createStoredConsent,
   defaultConsent,
@@ -25,11 +24,6 @@ function stored(
 describe("consent constants", () => {
   it("uses a conservative default with optional categories disabled", () => {
     expect(defaultConsent).toEqual({ analytics: false, marketing: false });
-  });
-
-  it("defines a stable storage key and initial version", () => {
-    expect(CONSENT_STORAGE_KEY).toBe("consent");
-    expect(CONSENT_VERSION).toBe(1);
   });
 });
 
@@ -83,7 +77,6 @@ describe("readConsent", () => {
     const storage = { getItem: vi.fn(() => null) };
 
     expect(readConsent(storage)).toBeNull();
-    expect(storage.getItem).toHaveBeenCalledWith(CONSENT_STORAGE_KEY);
   });
 
   it("returns a parsed valid stored consent", () => {
@@ -120,16 +113,17 @@ describe("readConsent", () => {
 });
 
 describe("writeConsent", () => {
-  it("persists the consent as JSON under the storage key", () => {
-    const storage = { setItem: vi.fn() };
+  it("persists consent so it can be read back", () => {
+    const values = new Map<string, string>();
+    const storage = {
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => values.set(key, value),
+    };
     const consent = stored() as never;
 
     writeConsent(consent, storage);
 
-    expect(storage.setItem).toHaveBeenCalledWith(
-      CONSENT_STORAGE_KEY,
-      JSON.stringify(consent),
-    );
+    expect(readConsent(storage)).toEqual(consent);
   });
 
   it("swallows storage write failures", () => {

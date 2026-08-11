@@ -73,7 +73,10 @@ describe("canonical URL manifest", () => {
     ]);
   });
 
-  it("resolves localized siblings for every canonical page identity", () => {
+  it.each([
+    ["/en/", { en: "/en/", "pt-BR": "/pt-BR/" }],
+    ["/en/about", { en: "/en/about", "pt-BR": "/pt-BR/about" }],
+  ] as const)("resolves localized siblings for %s", (pathname, expected) => {
     const manifest = createCanonicalUrlManifest(
       localizedRoutes([
         { file: "routes/$locale._index.tsx", index: true },
@@ -84,27 +87,7 @@ describe("canonical URL manifest", () => {
       ]),
     );
 
-    expect(getLocalizedUrlsForPathname(manifest, "/en/")).toEqual({
-      en: "/en/",
-      "pt-BR": "/pt-BR/",
-    });
-    expect(getLocalizedUrlsForPathname(manifest, "/en/about")).toEqual({
-      en: "/en/about",
-      "pt-BR": "/pt-BR/about",
-    });
-    expect(getLocalizedUrlsForPathname(manifest, "/en/services")).toEqual({
-      en: "/en/services",
-      "pt-BR": "/pt-BR/services",
-    });
-    expect(getLocalizedUrlsForPathname(manifest, "/en/404")).toEqual({
-      en: "/en/404",
-      "pt-BR": "/pt-BR/404",
-    });
-
-    const aboutUrls = getLocalizedUrlsForPathname(manifest, "/en/about");
-    expect(getLocalizedUrlsForPathname(manifest, "/pt-BR/about")).toBe(
-      aboutUrls,
-    );
+    expect(getLocalizedUrlsForPathname(manifest, pathname)).toEqual(expected);
   });
 
   it("rejects a pathname absent from the canonical manifest", () => {

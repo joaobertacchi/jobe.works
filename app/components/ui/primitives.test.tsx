@@ -21,14 +21,13 @@ describe("TextLink", () => {
       </MemoryRouter>,
     );
 
-    expect(screen.getByRole("link", { name: "Primary" })).toHaveClass(
-      "bg-brand",
-      "focus-visible:outline-brand",
-    );
-    expect(screen.getByRole("link", { name: "Secondary" })).toHaveClass(
-      "underline",
-      "text-foreground",
-    );
+    const primary = screen.getByRole("link", { name: "Primary" });
+    const secondary = screen.getByRole("link", { name: "Secondary" });
+
+    expect(primary).toHaveAttribute("href", "/primary");
+    expect(primary).toHaveClass("bg-brand");
+    expect(secondary).toHaveAttribute("href", "/secondary");
+    expect(secondary).toHaveClass("underline");
   });
 });
 
@@ -40,10 +39,10 @@ describe("Button", () => {
 
     expect(button).toBeVisible();
     expect(button).toHaveAttribute("type", "button");
-    expect(button).toHaveClass("bg-brand", "min-h-11", "py-3", "transition");
+    expect(button).toHaveClass("bg-brand", "min-h-11");
   });
 
-  it("renders a disabled secondary small button with caller classes", () => {
+  it("renders a disabled secondary small button", () => {
     render(
       <Button className="w-full" disabled size="sm" variant="secondary">
         Save
@@ -53,7 +52,8 @@ describe("Button", () => {
     const button = screen.getByRole("button", { name: "Save" });
 
     expect(button).toBeDisabled();
-    expect(button).toHaveClass("border-border", "min-h-9", "py-2", "w-full");
+    expect(button).toHaveClass("border-border", "min-h-9");
+    expect(button).toHaveClass("w-full");
   });
 
   it("forwards native props and allows callers to override the type", () => {
@@ -96,7 +96,7 @@ describe("Heading", () => {
     expect(heading).toHaveClass("text-3xl", "sm:text-4xl", "text-foreground");
   });
 
-  it("appends caller classes and forwards native heading props", () => {
+  it("forwards native heading props", () => {
     render(
       <Heading className="tracking-wide" id="services-heading">
         Services
@@ -105,8 +105,8 @@ describe("Heading", () => {
 
     const heading = screen.getByRole("heading", { name: "Services" });
 
-    expect(heading.className).toMatch(/text-foreground tracking-wide$/);
     expect(heading).toHaveAttribute("id", "services-heading");
+    expect(heading).toHaveClass("tracking-wide");
   });
 });
 
@@ -133,7 +133,7 @@ describe("Text", () => {
     expect(text).toHaveClass("text-muted-foreground");
   });
 
-  it("appends caller classes and forwards native props", () => {
+  it("forwards native text props", () => {
     render(
       <Text className="max-w-prose" title="Introduction">
         Introductory copy
@@ -142,13 +142,13 @@ describe("Text", () => {
 
     const text = screen.getByText("Introductory copy");
 
-    expect(text.className).toMatch(/text-foreground max-w-prose$/);
     expect(text).toHaveAttribute("title", "Introduction");
+    expect(text).toHaveClass("max-w-prose");
   });
 });
 
 describe("Card", () => {
-  it("renders children in a styled div and forwards caller props", () => {
+  it("renders children in a div and forwards caller props", () => {
     render(
       <Card className="mt-4" data-testid="card">
         Card content
@@ -158,15 +158,15 @@ describe("Card", () => {
     const card = screen.getByTestId("card");
 
     expect(card.tagName).toBe("DIV");
-    expect(card.className).toBe(
-      "rounded-2xl border border-border bg-surface p-6 shadow-sm mt-4",
-    );
+    expect(card).toHaveAttribute("data-testid", "card");
     expect(card).toHaveTextContent("Card content");
+    expect(card).toHaveClass("mt-4");
+    expect(card).toHaveClass("rounded-2xl", "bg-surface");
   });
 });
 
 describe("Container", () => {
-  it("renders children in a responsive div and forwards caller props", () => {
+  it("renders children in a div and forwards caller props", () => {
     render(
       <Container className="relative" data-testid="container">
         Page content
@@ -176,27 +176,24 @@ describe("Container", () => {
     const container = screen.getByTestId("container");
 
     expect(container.tagName).toBe("DIV");
-    expect(container.className).toBe(
-      "mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 relative",
-    );
+    expect(container).toHaveAttribute("data-testid", "container");
     expect(container).toHaveTextContent("Page content");
+    expect(container).toHaveClass("relative");
+    expect(container).toHaveClass("max-w-6xl", "px-4");
   });
 });
 
 describe("DividedSection", () => {
-  it("renders a content-column divider inside a section with caller classes", () => {
-    const { container } = render(
-      <DividedSection className="mt-16">Section content</DividedSection>,
-    );
+  it("renders section content in a semantic section", () => {
+    render(<DividedSection className="mt-16">Section content</DividedSection>);
 
-    const section = container.querySelector("section");
-    const divider = section?.querySelector(".border-t");
+    const section = screen.getByText("Section content").closest("section");
 
     expect(section).toBeInTheDocument();
-    expect(section).toHaveClass("mt-16");
-    expect(section?.querySelector(".max-w-6xl")).toBeInTheDocument();
-    expect(divider).toBeInTheDocument();
-    expect(divider).toHaveClass("border-border", "pt-10");
     expect(section).toHaveTextContent("Section content");
+    expect(section).toHaveClass("mt-16");
+    const divider = section?.querySelector(".border-t");
+
+    expect(divider).toHaveClass("border-border");
   });
 });

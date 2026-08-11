@@ -1,5 +1,6 @@
 import type { Page } from "@playwright/test";
 
+import type { AnalyticsCustomEvent } from "../../app/analytics/types";
 import {
   CONSENT_STORAGE_KEY,
   CONSENT_VERSION,
@@ -21,24 +22,61 @@ async function setStoredConsent(page: Page, value: unknown) {
   );
 }
 
-function collectAnalyticsMessages(page: Page) {
-  const messages: string[] = [];
+function collectAnalyticsEvents(page: Page) {
+  const events: AnalyticsCustomEvent[] = [];
+  const pendingReads = new Set<Promise<void>>();
+
   page.on("console", (message) => {
-    if (message.type() === "debug" && message.text().startsWith("[analytics]"))
-      messages.push(message.text());
+    if (message.type() !== "debug") return;
+
+    const [prefixArgument, eventArgument] = message.args();
+    if (!prefixArgument || !eventArgument) return;
+
+    const pendingRead = prefixArgument.jsonValue().then(async (prefix) => {
+      if (prefix !== "[analytics]" && !message.text().startsWith("[analytics]"))
+        return;
+
+      events.push((await eventArgument.jsonValue()) as AnalyticsCustomEvent);
+    });
+    pendingReads.add(pendingRead);
+    void pendingRead.then(
+      () => pendingReads.delete(pendingRead),
+      () => pendingReads.delete(pendingRead),
+    );
   });
-  return messages;
+
+  return {
+    events,
+    async flush() {
+      while (pendingReads.size > 0) {
+        await Promise.all([...pendingReads]);
+      }
+    },
+  };
 }
 
-function hasPageView(messages: string[], pathname: string): boolean {
-  return messages.some(
-    (message) =>
-      message.includes("eventName: page_view") && message.includes(pathname),
+function hasPageView(
+  events: readonly AnalyticsCustomEvent[],
+  pathname: string,
+): boolean {
+  return events.some(
+    (event) => event.eventName === "page_view" && event.pathname === pathname,
   );
 }
 
-function pageViewMessages(messages: string[]): string[] {
-  return messages.filter((message) => message.includes("eventName: page_view"));
+function pageViewEvents(
+  events: readonly AnalyticsCustomEvent[],
+): AnalyticsCustomEvent[] {
+  return events.filter((event) => event.eventName === "page_view");
+}
+
+async function settleBrowserEffects(page: Page) {
+  await page.evaluate(
+    () =>
+      new Promise<void>((resolve) =>
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
+      ),
+  );
 }
 
 function storedConsent(page: Page) {
@@ -61,20 +99,22 @@ test("shows the consent banner and keeps analytics idle before a choice", async 
   page,
 }) => {
   await setStoredConsent(page, null);
-  const messages = collectAnalyticsMessages(page);
+  const analytics = collectAnalyticsEvents(page);
 
   await page.goto("/en/");
   await expectBanner(page);
 
   await page.getByRole("link", { name: "About", exact: true }).click();
   await expect(page).toHaveURL("/en/about");
+  await settleBrowserEffects(page);
+  await analytics.flush();
 
-  expect(pageViewMessages(messages)).toHaveLength(0);
+  expect(pageViewEvents(analytics.events)).toHaveLength(0);
 });
 
 test("accept all enables analytics and logs page views", async ({ page }) => {
   await setStoredConsent(page, null);
-  const messages = collectAnalyticsMessages(page);
+  const analytics = collectAnalyticsEvents(page);
 
   await page.goto("/en/");
   await page.getByRole("button", { name: "Accept all" }).click();
@@ -82,12 +122,16 @@ test("accept all enables analytics and logs page views", async ({ page }) => {
   await expect(
     page.getByRole("region", { name: "Cookie preferences" }),
   ).toHaveCount(0);
-  await expect.poll(() => hasPageView(messages, "/en/")).toBe(true);
+  await expect.poll(() => hasPageView(analytics.events, "/en/")).toBe(true);
+  await analytics.flush();
 
   await page.getByRole("link", { name: "About", exact: true }).click();
   await expect(page).toHaveURL("/en/about");
 
-  await expect.poll(() => hasPageView(messages, "/en/about")).toBe(true);
+  await expect
+    .poll(() => hasPageView(analytics.events, "/en/about"))
+    .toBe(true);
+  await analytics.flush();
   const persisted = JSON.parse((await storedConsent(page)) ?? "null");
   expect(persisted).toMatchObject({
     version: CONSENT_VERSION,
@@ -96,28 +140,9 @@ test("accept all enables analytics and logs page views", async ({ page }) => {
   });
 });
 
-test("reject non-essential keeps analytics disabled", async ({ page }) => {
-  await setStoredConsent(page, null);
-  const messages = collectAnalyticsMessages(page);
-
-  await page.goto("/en/");
-  await page.getByRole("button", { name: "Reject non-essential" }).click();
-
-  await expect(
-    page.getByRole("region", { name: "Cookie preferences" }),
-  ).toHaveCount(0);
-
-  await page.getByRole("link", { name: "About", exact: true }).click();
-  await expect(page).toHaveURL("/en/about");
-
-  expect(pageViewMessages(messages)).toHaveLength(0);
-  const persisted = JSON.parse((await storedConsent(page)) ?? "null");
-  expect(persisted).toMatchObject({ analytics: false, marketing: false });
-});
-
 test("customize enables only the selected categories", async ({ page }) => {
   await setStoredConsent(page, null);
-  const messages = collectAnalyticsMessages(page);
+  const analytics = collectAnalyticsEvents(page);
 
   await page.goto("/en/");
   await page.getByRole("button", { name: "Customize" }).click();
@@ -138,40 +163,44 @@ test("customize enables only the selected categories", async ({ page }) => {
   await dialog.getByRole("button", { name: "Save preferences" }).click();
 
   await expect(dialog).toHaveCount(0);
-  await expect.poll(() => hasPageView(messages, "/en/")).toBe(true);
+  await expect.poll(() => hasPageView(analytics.events, "/en/")).toBe(true);
+  await analytics.flush();
   const persisted = JSON.parse((await storedConsent(page)) ?? "null");
   expect(persisted).toMatchObject({ analytics: true, marketing: false });
 });
 
-test("cookie settings remain accessible after dismissal and update consent", async ({
+test("withdrawing analytics consent prevents subsequent tracking", async ({
   page,
 }) => {
   await setStoredConsent(page, null);
+  const analytics = collectAnalyticsEvents(page);
 
   await page.goto("/en/");
   await page.getByRole("button", { name: "Accept all" }).click();
-  await expect(
-    page.getByRole("region", { name: "Cookie preferences" }),
-  ).toHaveCount(0);
+  await expect.poll(() => hasPageView(analytics.events, "/en/")).toBe(true);
+  await analytics.flush();
+  const baselineEventCount = analytics.events.length;
 
   const footer = page.getByRole("contentinfo");
   await footer.getByRole("button", { name: "Cookie settings" }).click();
 
   const dialog = page.getByRole("dialog", { name: "Cookie settings" });
-  await expect(dialog).toBeVisible();
-  await expect(
-    dialog.getByRole("checkbox", { name: "Analytics" }),
-  ).toBeChecked();
-  await expect(
-    dialog.getByRole("checkbox", { name: "Marketing" }),
-  ).toBeChecked();
-
-  await dialog.getByRole("checkbox", { name: "Marketing" }).uncheck();
+  await dialog.getByRole("checkbox", { name: "Analytics" }).uncheck();
   await dialog.getByRole("button", { name: "Save preferences" }).click();
+  await settleBrowserEffects(page);
+  await analytics.flush();
+  expect(analytics.events).toHaveLength(baselineEventCount);
 
-  await expect(dialog).toHaveCount(0);
-  const persisted = JSON.parse((await storedConsent(page)) ?? "null");
-  expect(persisted).toMatchObject({ analytics: true, marketing: false });
+  await page.getByRole("link", { name: "About", exact: true }).click();
+  await expect(page).toHaveURL("/en/about");
+  await settleBrowserEffects(page);
+  await analytics.flush();
+
+  expect(analytics.events).toHaveLength(baselineEventCount);
+  expect(JSON.parse((await storedConsent(page)) ?? "null")).toMatchObject({
+    analytics: false,
+    marketing: true,
+  });
 });
 
 test("consent persists across reloads", async ({ page }) => {
@@ -206,43 +235,11 @@ test("a stored consent from an older version shows the banner again", async ({
   await expectBanner(page);
 });
 
-test("malformed stored consent is treated as unresolved", async ({ page }) => {
-  await setStoredConsent(
-    page,
-    JSON.stringify({
-      version: CONSENT_VERSION,
-      analytics: "yes",
-      marketing: false,
-      updatedAt: "2026-01-01T00:00:00.000Z",
-    }),
-  );
-
-  await page.goto("/en/");
-  await expectBanner(page);
-});
-
-test("escape closes the customize dialog without persisting", async ({
-  page,
-}) => {
-  await setStoredConsent(page, null);
-
-  await page.goto("/en/");
-  await page.getByRole("button", { name: "Customize" }).click();
-
-  const dialog = page.getByRole("dialog", { name: "Cookie settings" });
-  await expect(dialog).toBeVisible();
-  await page.keyboard.press("Escape");
-
-  await expect(dialog).toHaveCount(0);
-  expect(await storedConsent(page)).toBeNull();
-  await expectBanner(page);
-});
-
 test("hero call to action emits cta_pressed after consent", async ({
   page,
 }) => {
   await setStoredConsent(page, null);
-  const messages = collectAnalyticsMessages(page);
+  const analytics = collectAnalyticsEvents(page);
 
   await page.goto("/en/");
   await page.getByRole("button", { name: "Accept all" }).click();
@@ -251,31 +248,13 @@ test("hero call to action emits cta_pressed after consent", async ({
   await expect(page).toHaveURL("/en/services");
   await expect
     .poll(() =>
-      messages.some(
-        (message) =>
-          message.includes("eventName: cta_pressed") &&
-          message.includes("hero-cta"),
+      analytics.events.some(
+        (event) =>
+          event.eventName === "cta_pressed" &&
+          event.ctaId === "hero-cta" &&
+          event.context === "homepage",
       ),
     )
     .toBe(true);
-});
-
-test("renders the Portuguese consent banner", async ({ page }) => {
-  await setStoredConsent(page, null);
-
-  await page.goto("/pt-BR/");
-
-  const banner = page.getByRole("region", {
-    name: "Preferências de cookies",
-  });
-  await expect(banner).toBeVisible();
-  await expect(
-    banner.getByRole("button", { name: "Aceitar tudo" }),
-  ).toBeVisible();
-  await expect(
-    banner.getByRole("button", { name: "Recusar não essenciais" }),
-  ).toBeVisible();
-  await expect(
-    banner.getByRole("button", { name: "Personalizar" }),
-  ).toBeVisible();
+  await analytics.flush();
 });

@@ -60,17 +60,28 @@ export function AnalyticsProvider({
       analyticsEligible && !wasAnalyticsEligible.current;
     const marketingBecameEligible =
       marketingEligible && !wasMarketingEligible.current;
+    const candidateTrackers =
+      pathname !== lastDispatchedPathname.current
+        ? trackers
+        : trackers.filter(
+            ({ consentCategory }) =>
+              (analyticsBecameEligible && consentCategory === "analytics") ||
+              (marketingBecameEligible && consentCategory === "marketing"),
+          );
     wasAnalyticsEligible.current = analyticsEligible;
     wasMarketingEligible.current = marketingEligible;
-    const becameEligible = analyticsBecameEligible || marketingBecameEligible;
-    if (pathname === lastDispatchedPathname.current && !becameEligible) return;
+    if (candidateTrackers.length === 0) return;
     lastDispatchedPathname.current = pathname;
-    capture({
-      eventName: "page_view",
-      pathname,
-      locale: getLocaleFromPathname(pathname) ?? defaultLocale,
-    });
-  }, [analyticsEligible, marketingEligible, capture, pathname]);
+    void dispatchEvent(
+      candidateTrackers,
+      {
+        eventName: "page_view",
+        pathname,
+        locale: getLocaleFromPathname(pathname) ?? defaultLocale,
+      },
+      consent,
+    );
+  }, [analyticsEligible, marketingEligible, consent, pathname, trackers]);
 
   const value = useMemo<AnalyticsValue>(
     () => ({ attribution, capture }),

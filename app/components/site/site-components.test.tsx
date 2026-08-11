@@ -4,14 +4,13 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
-import { StrictMode } from "react";
 import { MemoryRouter } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import type { SupportedLocale } from "../../i18n/config";
 import { I18nProvider } from "../../i18n/i18n";
-import { commonTranslations } from "../../i18n/translations/common";
 import { THEME_STORAGE_KEY } from "../../theme";
 import { ConsentProvider } from "../../consent/consent-context";
 import { ConsentBanner } from "./consent-banner";
@@ -32,31 +31,6 @@ afterEach(() => {
   window.localStorage.clear();
   document.documentElement.className = "";
   document.documentElement.style.colorScheme = "";
-});
-
-describe("common translations", () => {
-  it("defines shared site, navigation, and theme labels in both locales", () => {
-    expect(commonTranslations.en.siteName).toBe("Agent-ready sites");
-    expect(commonTranslations.en.navigationLabel).toBe("Primary navigation");
-    expect(commonTranslations.en.theme).toEqual({
-      label: "Theme",
-      light: "Light",
-      dark: "Dark",
-      system: "System",
-    });
-    expect(commonTranslations["pt-BR"].siteName).toBe(
-      "Sites prontos para agentes",
-    );
-    expect(commonTranslations["pt-BR"].navigationLabel).toBe(
-      "Navegação principal",
-    );
-    expect(commonTranslations["pt-BR"].theme).toEqual({
-      label: "Tema",
-      light: "Claro",
-      dark: "Escuro",
-      system: "Sistema",
-    });
-  });
 });
 
 describe("PrimaryNavigation", () => {
@@ -97,7 +71,7 @@ describe("PrimaryNavigation", () => {
     },
   );
 
-  it("marks only the active destination and matches Home exactly", () => {
+  it("marks only the active destination with aria-current", () => {
     renderWithRouter(<PrimaryNavigation />, "en", "/en/about");
 
     const activeLink = screen.getByRole("link", { name: "About" });
@@ -107,10 +81,8 @@ describe("PrimaryNavigation", () => {
     ];
 
     expect(activeLink).toHaveAttribute("aria-current", "page");
-    expect(activeLink).toHaveClass("text-brand");
     for (const link of inactiveLinks) {
       expect(link).not.toHaveAttribute("aria-current");
-      expect(link).not.toHaveClass("text-brand");
     }
   });
 
@@ -141,11 +113,10 @@ describe("LanguageSwitcher", () => {
       renderWithRouter(<LanguageSwitcher urls={urls} />, locale, pathname);
 
       const navigation = screen.getByRole("navigation", { name: label });
-      expect(navigation.querySelectorAll("a")).toHaveLength(1);
-      expect(screen.getByRole("link", { name: linkName })).toHaveAttribute(
-        "href",
-        href,
-      );
+      expect(within(navigation).getAllByRole("link")).toHaveLength(1);
+      expect(
+        within(navigation).getByRole("link", { name: linkName }),
+      ).toHaveAttribute("href", href);
     },
   );
 });
@@ -362,46 +333,9 @@ describe("ThemeSwitcher", () => {
     },
   );
 
-  it("removes the system listener on mode change and unmount", () => {
-    const media = installMatchMedia(false);
-    const { unmount } = renderThemeSwitcher();
-
-    expect(media.listenerCount()).toBe(1);
-
-    fireEvent.click(screen.getByRole("button", { name: "Dark" }));
-
-    expect(media.listenerCount()).toBe(0);
-    expect(media.removeEventListener).toHaveBeenCalledOnce();
-
-    fireEvent.click(screen.getByRole("button", { name: "System" }));
-
-    expect(media.listenerCount()).toBe(1);
-
-    unmount();
-
-    expect(media.listenerCount()).toBe(0);
-    expect(media.removeEventListener).toHaveBeenCalledTimes(2);
-  });
-
-  it("cancels the pending mount update when unmounted in the same turn", async () => {
-    const media = installMatchMedia(false);
-    const consoleError = vi
-      .spyOn(console, "error")
-      .mockImplementation(() => undefined);
-    const { unmount } = renderThemeSwitcher();
-
-    unmount();
-    await act(() => Promise.resolve());
-
-    expect(media.listenerCount()).toBe(0);
-    expect(media.addEventListener).toHaveBeenCalledOnce();
-    expect(media.removeEventListener).toHaveBeenCalledOnce();
-    expect(consoleError).not.toHaveBeenCalled();
-  });
-
-  it("does not let stored theme sync overwrite a same-turn system selection", async () => {
+  it("preserves a user selection made while stored preferences are loading", async () => {
     window.localStorage.setItem(THEME_STORAGE_KEY, "dark");
-    const media = installMatchMedia(false);
+    installMatchMedia(false);
     renderThemeSwitcher();
 
     fireEvent.click(screen.getByRole("button", { name: "System" }));
@@ -411,81 +345,9 @@ describe("ThemeSwitcher", () => {
       "aria-pressed",
       "true",
     );
-    expect(media.listenerCount()).toBe(1);
     expect(document.documentElement).not.toHaveClass("dark");
     expect(document.documentElement.style.colorScheme).toBe("light");
     expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
-  });
-
-  it("does not leak listeners or stale mount updates in StrictMode", async () => {
-    window.localStorage.setItem(THEME_STORAGE_KEY, "dark");
-    const media = installMatchMedia(false);
-    const { unmount } = render(
-      <StrictMode>
-        <I18nProvider locale="en">
-          <ThemeSwitcher />
-        </I18nProvider>
-      </StrictMode>,
-    );
-
-    fireEvent.click(screen.getByRole("button", { name: "System" }));
-    await act(() => Promise.resolve());
-
-    expect(screen.getByRole("button", { name: "System" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    expect(media.listenerCount()).toBe(1);
-    expect(document.documentElement.style.colorScheme).toBe("light");
-    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
-
-    unmount();
-
-    expect(media.listenerCount()).toBe(0);
-    expect(media.removeEventListener).toHaveBeenCalledTimes(
-      media.addEventListener.mock.calls.length,
-    );
-  });
-
-  it("uses system when storage contains an invalid value", () => {
-    window.localStorage.setItem(THEME_STORAGE_KEY, "invalid");
-    installMatchMedia(true);
-
-    expect(() => renderThemeSwitcher()).not.toThrow();
-
-    expect(screen.getByRole("button", { name: "System" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    expect(document.documentElement).toHaveClass("dark");
-  });
-
-  it("uses system when storage throws", () => {
-    installMatchMedia(true);
-    vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
-      throw new Error("Storage unavailable");
-    });
-
-    expect(() => renderThemeSwitcher()).not.toThrow();
-
-    expect(screen.getByRole("button", { name: "System" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    expect(document.documentElement).toHaveClass("dark");
-  });
-
-  it("falls back to light when matchMedia is missing", () => {
-    vi.stubGlobal("matchMedia", undefined);
-
-    expect(() => renderThemeSwitcher()).not.toThrow();
-
-    expect(screen.getByRole("button", { name: "System" })).toHaveAttribute(
-      "aria-pressed",
-      "true",
-    );
-    expect(document.documentElement).not.toHaveClass("dark");
-    expect(document.documentElement.style.colorScheme).toBe("light");
   });
 });
 
@@ -537,7 +399,6 @@ function installMatchMedia(initialMatches: boolean) {
       const event = { matches } as MediaQueryListEvent;
       listeners.forEach((listener) => listener(event));
     },
-    listenerCount: () => listeners.size,
   };
 
   vi.stubGlobal(

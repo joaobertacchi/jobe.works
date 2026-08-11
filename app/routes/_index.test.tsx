@@ -1,6 +1,4 @@
-import { readFileSync } from "node:fs";
-
-import { render, waitFor } from "@testing-library/react";
+import { render, waitFor, within } from "@testing-library/react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { afterEach, describe, expect, it } from "vitest";
@@ -35,16 +33,7 @@ async function renderRedirect(languages: readonly string[]) {
 }
 
 describe("root locale redirect", () => {
-  it("uses the default-locale provider and React-facing translation API", () => {
-    const source = readFileSync("app/routes/_index.tsx", "utf8");
-
-    expect(source).not.toContain('from "../i18n/translations"');
-    expect(source).toContain("I18nProvider");
-    expect(source).toContain("useI18n");
-    expect(source).toContain('translate("common.selectingLanguage")');
-  });
-
-  it("renders Portuguese infrastructure copy before selecting a locale", () => {
+  it("announces locale selection before redirecting", () => {
     const router = createMemoryRouter(
       [
         { path: "/", Component: RootRedirect },
@@ -53,9 +42,11 @@ describe("root locale redirect", () => {
       { initialEntries: ["/"] },
     );
 
-    const html = renderToStaticMarkup(<RouterProvider router={router} />);
+    const host = document.createElement("div");
+    host.innerHTML = renderToStaticMarkup(<RouterProvider router={router} />);
 
-    expect(html).toContain('<p role="status">Selecionando idioma</p>');
+    const status = within(host).getByRole("status");
+    expect(status).toHaveTextContent("Selecionando idioma");
     expect(router.state.location.pathname).toBe("/");
   });
 

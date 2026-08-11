@@ -1,6 +1,7 @@
 import { defineConfig, devices } from "@playwright/test";
 
 export default defineConfig({
+  forbidOnly: !!process.env.CI,
   testDir: "./tests/e2e",
   outputDir: "test-results",
   reporter: [["html", { open: "never" }]],

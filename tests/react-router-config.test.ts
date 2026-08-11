@@ -19,16 +19,13 @@ const manifest = [
 ] satisfies CanonicalUrlManifest;
 
 describe("React Router static configuration", () => {
-  it("disables runtime SSR and prerenders canonical URLs", () => {
+  it("disables runtime SSR and expands concrete prerender boundaries", () => {
     expect(config.ssr).toBe(false);
-    expect(config.prerender).toEqual(expect.any(Function));
-    expect(config.buildEnd).toEqual(expect.any(Function));
-    expect(getPrerenderPaths(["/", "/:locale/about"], manifest)).toEqual([
-      "/",
-      "/en/",
-      "/pt-BR/",
-      "/en/about",
-      "/pt-BR/about",
-    ]);
+    expect(
+      getPrerenderPaths(
+        ["/", "/health", "/:locale/about", "/files/*", "/en/about"],
+        manifest,
+      ),
+    ).toEqual(["/", "/health", "/en/about", "/en/", "/pt-BR/", "/pt-BR/about"]);
   });
 });

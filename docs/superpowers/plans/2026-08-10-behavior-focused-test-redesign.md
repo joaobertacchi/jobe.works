@@ -581,15 +581,14 @@ Keep accessibility, explicit selection, system selection, persistence, and live 
 
 - [ ] **Step 3: Remove consent component/provider duplication and lifecycle spies**
 
-In `consent-banner.test.tsx`, retain banner semantics, localization, customize/save/cancel/Escape, reopening, focus, and outside-click behavior. Delete:
+In `consent-banner.test.tsx`, retain banner semantics, localization, customize/save/cancel/Escape, reopening, focus, outside-click behavior, and one `Reject non-essential` click-through smoke. The smoke renders the actual provider/banner wiring, clicks the visible reject control, and asserts dismissal plus persisted disabled categories. Delete:
 
 ```text
 accept all persists consent and hides the banner
-reject non-essential persists optional categories disabled
 does not rerun the modal open sequence when consent changes while the dialog is open
 ```
 
-The first two are owned by provider state-transition tests; the last asserts `showModal` call count rather than user behavior.
+The accept-all persistence case is owned by provider state-transition tests. Retain the reject smoke because it proves the distinct UI-to-provider wiring and distinguishes reject from accept; provider tests alone cannot detect that wiring risk. The last test asserts `showModal` call count rather than user behavior.
 
 In `consent-context.test.tsx`, keep initial state, accept, reject, update, stored decision, and stale-version behavior. Delete malformed/unparseable record duplication and direct settings-dialog state because `consent.test.ts` and the banner component own those behaviors.
 
@@ -809,15 +808,18 @@ test("language switching preserves logical page identity", async ({ page }) => {
 Replace repeated localized unpublished paths and alias matrices with:
 
 ```ts
-test.each([
+for (const [url, category] of [
   ["/fr/about", "unsupported locale"],
   ["/en/not-published", "unpublished localized route"],
-  ["/en/about/", "noncanonical trailing-slash alias"],
-  ["/en/About", "noncanonical case alias"],
-] as const)("returns a real 404 for %s (%s)", async ({ request }, url) => {
-  expect((await request.get(url)).status()).toBe(404);
-});
+] as const) {
+  test(`returns a real 404 for ${url} (${category})`, async ({ request }) => {
+    expect((await request.get(url)).status()).toBe(404);
+  });
+}
 ```
+
+Alias HTTP normalization is deployment/static-server-specific; the canonical
+manifest, static validation, and React Testing Library layers own alias policy.
 
 Delete client-navigation tests that call `window.__reactRouterDataRouter`; `createMemoryRouter` route tests already own those client outcomes.
 

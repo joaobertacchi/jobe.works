@@ -2,9 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { meta as rootMeta } from "./_index";
 import { meta as notFoundMeta } from "./$locale.404";
-import { meta as aboutMeta } from "./$locale.about";
 import { meta as homeMeta } from "./$locale._index";
-import { meta as servicesMeta } from "./$locale.services";
 import { meta as privacyMeta } from "./$locale.privacy";
 
 const site = {
@@ -49,16 +47,6 @@ describe("route SEO metadata", () => {
         }),
       }),
     );
-  });
-
-  it("emits localized About and Services metadata", () => {
-    expect(aboutMeta(args("/pt-BR/about", "pt-BR"))).toContainEqual({
-      title: "Sobre o Modelo de Site Estático",
-    });
-    expect(servicesMeta(args("/en/services", "en"))).toContainEqual({
-      property: "og:image",
-      content: "https://example.com/social-card.svg",
-    });
   });
 
   it("marks localized 404 and root infrastructure noindex", () => {

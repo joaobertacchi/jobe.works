@@ -53,7 +53,6 @@ npm run check
   ├── format:check
   ├── lint
   ├── typecheck
-  ├── test
   ├── coverage
   ├── complexity
   ├── build
@@ -177,6 +176,91 @@ Use React Testing Library when React component behavior benefits from DOM-level 
 Not every component requires a dedicated component test.
 
 Tests should target meaningful behavior rather than implementation details.
+
+## Behavior-Focused Test Ownership
+
+Each required behavior has one authoritative test owner. Another layer may
+contain a narrow smoke check when it catches a distinct integration risk, but
+it must not repeat an exhaustive behavior matrix owned by another layer.
+
+| Layer | Authoritative ownership |
+|-|-|
+| TypeScript | Compile-time contracts, including localization dictionary completeness, valid translation keys, typed analytics event payloads, and generated React Router route types. |
+| Vitest | Deterministic transformations and policies that do not require React or a real browser, including locale and pathname parsing, canonical URL and metadata construction or validation, consent parsing and persistence rules, analytics eligibility and attribution parsing, and static artifact validation against synthetic fixtures. |
+| React Testing Library | Observable React, context, DOM, accessibility, and in-memory navigation behavior, including accessible names and roles, interaction, public prop forwarding, provider state transitions, route navigation outcomes, localized output selection, and analytics dispatch caused by navigation or consent changes. |
+| Static validation | Exhaustive generated route, locale, link, and metadata contracts, including the complete prerendered route inventory, locale and document-language correctness, internal links, canonical and alternate metadata, sitemap and robots consistency, and required SEO and social metadata. |
+| Playwright | Representative real-browser behavior, including hydration and client navigation, browser language selection, HTTP status behavior, local storage and reload behavior, consent boundaries, browser runtime and console errors, theme behavior before first paint, focus, responsive layout, and relevant network behavior. |
+
+TypeScript owns compile-time shape checks, static validation owns exhaustive
+generated-product checks, and Playwright covers representative browser
+journeys. Test count and coverage percentage do not change these ownership
+boundaries.
+
+## Test Classification (Keep/Rewrite/Move/Delete)
+
+Every existing test is classified as one of the following:
+
+- **Keep:** directly proves a PRD or ADR behavior through an appropriate public
+  boundary.
+- **Rewrite:** protects important behavior but currently relies on private
+  implementation details.
+- **Move:** protects important behavior at an unnecessarily expensive or
+  inaccurate layer and belongs with its authoritative owner.
+- **Delete:** duplicates stronger coverage or protects no explicit behavior.
+
+Each retained or rewritten test must identify the requirement or risk it
+protects. A deleted test does not require a one-for-one replacement when a
+stronger owner already provides the confidence.
+
+## Assertion Policy
+
+Tests must assert public, observable behavior and deterministic contracts, not
+incidental implementation details.
+
+- Tests must not inspect TSX source to require imports, hook names,
+  translation calls, or other implementation choices. Use rendered behavior,
+  an exported public contract, a deterministic validator or lint rule when the
+  source restriction is itself architectural, or delete the check when
+  another layer already proves the requirement.
+- Tests must not compare complete utility class strings or class ordering.
+  Individual stable design-token classes are allowed only when they define a
+  documented variant, state, spacing constraint, or minimum target size.
+- Tests must not traverse private React element structure or assert private
+  React element objects, incidental wrapper depth, or private child ordering.
+  Prefer semantic elements, accessible roles, public props, user interaction,
+  and visible state.
+- Tests must not assert lifecycle bookkeeping, such as listener counts,
+  cleanup call order, same-turn scheduling, or Strict Mode bookkeeping, when
+  it has no unique regression value expressible through observable behavior.
+- Tests must not duplicate exhaustive route, locale, link, metadata, or copy
+  matrices across layers when TypeScript or static validation already owns the
+  contract. Browser tests use representative pages and locales.
+
+Static artifact tests may read generated files because generated files are the
+product contract. Mocks are limited to external or architectural boundaries,
+and assertions must verify application behavior rather than only mock calls.
+
+## Focused Tests And Canonical Execution
+
+Focused tests are useful during local development, but they are never a
+substitute for the complete validation gate. CI rejects focused tests such as
+Vitest or Playwright `.only` tests: Vitest disallows them when `CI` is set and
+Playwright forbids them when `CI` is set.
+
+The canonical `npm run check` command runs Vitest exactly once through the
+`coverage` script. The standalone `test` and `coverage` scripts remain
+available for focused or diagnostic local execution, but `check` does not run
+both `test` and `coverage`. The existing global coverage thresholds remain:
+
+```text
+Statements: 80%
+Branches:   75%
+Functions:  80%
+Lines:      80%
+```
+
+The complete CI validation suite continues to run `npm run check` and
+`npm run test:e2e`.
 
 ## Code Coverage
 

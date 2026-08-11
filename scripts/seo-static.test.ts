@@ -43,32 +43,60 @@ function parse(
 
 describe("parseAndValidateSeoPage", () => {
   it("parses complete indexable metadata", () => {
-    expect(parse()).toMatchObject({
+    const page = parse();
+
+    expect(page).toMatchObject({
       lang: "en",
       title: "About",
       description: "About the template",
       canonical: "https://example.com/en/about",
       indexable: true,
     });
-    expect(parse().alternates.get("pt-BR")).toBe(
-      "https://example.com/pt-BR/about",
+    expect(page.alternates).toEqual(
+      new Map([
+        ["en", "https://example.com/en/about"],
+        ["pt-BR", "https://example.com/pt-BR/about"],
+        ["x-default", "https://example.com/pt-BR/about"],
+      ]),
     );
   });
 
-  it.each([
-    [html({ title: "" }), "Missing title"],
-    [html({ description: "" }), "Missing description"],
-    [html({ canonical: "/en/about" }), "Invalid canonical"],
-    [
-      html({ canonical: "https://example.com/en/services" }),
-      "Invalid canonical",
-    ],
-    [
-      html({ lang: "pt-BR" }),
+  it("rejects a missing title", () => {
+    expect(() => parse({ html: html({ title: "" }) })).toThrow(
+      "Missing title in en/about/index.html",
+    );
+  });
+
+  it("rejects a missing description", () => {
+    expect(() => parse({ html: html({ description: "" }) })).toThrow(
+      "Missing description in en/about/index.html",
+    );
+  });
+
+  it("rejects a non-absolute canonical URL", () => {
+    expect(() => parse({ html: html({ canonical: "/en/about" }) })).toThrow(
+      "Invalid canonical in en/about/index.html: /en/about",
+    );
+  });
+
+  it("rejects a malformed canonical URL", () => {
+    expect(() => parse({ html: html({ canonical: "https://" }) })).toThrow(
+      "Invalid canonical in en/about/index.html: https://",
+    );
+  });
+
+  it("rejects a canonical URL for another pathname", () => {
+    expect(() =>
+      parse({ html: html({ canonical: "https://example.com/en/services" }) }),
+    ).toThrow(
+      "Invalid canonical in en/about/index.html: https://example.com/en/services",
+    );
+  });
+
+  it("rejects a document-language mismatch", () => {
+    expect(() => parse({ html: html({ lang: "pt-BR" }) })).toThrow(
       "Expected en/about/index.html to use html lang en",
-    ],
-  ])("rejects invalid page metadata", (invalidHtml, message) => {
-    expect(() => parse({ html: invalidHtml })).toThrow(message);
+    );
   });
 
   it("rejects duplicate canonical declarations", () => {
@@ -79,10 +107,10 @@ describe("parseAndValidateSeoPage", () => {
           '<link rel="canonical" href="https://example.com/en/about"></head>',
         ),
       }),
-    ).toThrow("Expected exactly one canonical");
+    ).toThrow("Expected exactly one canonical in en/about/index.html");
   });
 
-  it("rejects invalid and missing localized alternates", () => {
+  it("rejects an invalid localized alternate target", () => {
     expect(() =>
       parse({
         html: html().replace(
@@ -90,12 +118,63 @@ describe("parseAndValidateSeoPage", () => {
           "https://example.com/pt-BR/services",
         ),
       }),
-    ).toThrow("Invalid hreflang pt-BR");
+    ).toThrow(
+      "Invalid hreflang pt-BR in en/about/index.html: https://example.com/pt-BR/services",
+    );
+  });
+
+  it("rejects a missing localized alternate", () => {
     expect(() =>
       parse({
         html: html().replace(/<link rel="alternate" hreflang="en"[^>]+>/, ""),
       }),
-    ).toThrow("Missing hreflang en");
+    ).toThrow("Missing hreflang en in en/about/index.html");
+  });
+
+  it("rejects a missing x-default alternate", () => {
+    expect(() =>
+      parse({
+        html: html().replace(
+          /<link rel="alternate" hreflang="x-default"[^>]+>/,
+          "",
+        ),
+      }),
+    ).toThrow("Missing hreflang x-default in en/about/index.html");
+  });
+
+  it("rejects an invalid x-default alternate target", () => {
+    expect(() =>
+      parse({
+        html: html().replace(
+          'hreflang="x-default" href="https://example.com/pt-BR/about"',
+          'hreflang="x-default" href="https://example.com/pt-BR/services"',
+        ),
+      }),
+    ).toThrow(
+      "Invalid hreflang x-default in en/about/index.html: https://example.com/pt-BR/services",
+    );
+  });
+
+  it("rejects a duplicate alternate declaration", () => {
+    expect(() =>
+      parse({
+        html: html().replace(
+          "</head>",
+          '<link rel="alternate" hreflang="en" href="https://example.com/en/about"></head>',
+        ),
+      }),
+    ).toThrow("Invalid hreflang in en/about/index.html");
+  });
+
+  it("rejects an unexpected alternate declaration", () => {
+    expect(() =>
+      parse({
+        html: html().replace(
+          "</head>",
+          '<link rel="alternate" hreflang="fr" href="https://example.com/fr/about"></head>',
+        ),
+      }),
+    ).toThrow("Unexpected hreflang in en/about/index.html");
   });
 
   it("recognizes explicit noindex metadata", () => {
@@ -104,11 +183,20 @@ describe("parseAndValidateSeoPage", () => {
     );
   });
 
+  it("rejects unsupported robots metadata", () => {
+    expect(() => parse({ html: html({ robots: "index,noindex" }) })).toThrow(
+      "Invalid robots metadata in en/about/index.html",
+    );
+  });
+
   it.each([
-    ['<meta property="og:title" content="About">', "Missing og:title"],
+    [
+      '<meta property="og:title" content="About">',
+      "Missing og:title in en/about/index.html",
+    ],
     [
       '<meta name="twitter:description" content="About the template">',
-      "Missing twitter:description",
+      "Missing twitter:description in en/about/index.html",
     ],
   ])("rejects missing social metadata", (descriptor, message) => {
     expect(() => parse({ html: html().replace(descriptor, "") })).toThrow(
@@ -129,7 +217,7 @@ describe("parseAndValidateSeoPage", () => {
             '<meta name="twitter:image" content="https://">',
           ),
       }),
-    ).toThrow("Invalid og:image");
+    ).toThrow("Invalid og:image in en/about/index.html");
   });
 });
 
