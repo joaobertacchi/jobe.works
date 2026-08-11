@@ -2,7 +2,7 @@
 
 ## Scope
 
-Phases 10 and 11 finalize the repository's quality gate and browser-level agent feedback loop as defined by `docs/PHASES.md`, `docs/PRD.md`, and ADR 021.
+Phases 10 and 11 finalize the repository's quality gate and browser-level agent feedback loop as defined by `docs/template/PHASES.md`, `docs/template/PRD.md`, and ADR 021.
 
 - Phase 10 completes the canonical local validation command `npm run check`.
 - Phase 11 completes the Playwright browser feedback loop and adds the CI workflow that runs the complete validation suite.

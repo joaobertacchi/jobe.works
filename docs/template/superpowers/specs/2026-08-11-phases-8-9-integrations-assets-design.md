@@ -5,7 +5,7 @@
 
 ## Scope
 
-Implement Phase 8 (a representative browser-safe third-party integration) and Phase 9 (representative production asset handling) from `docs/PHASES.md`.
+Implement Phase 8 (a representative browser-safe third-party integration) and Phase 9 (representative production asset handling) from `docs/template/PHASES.md`.
 
 The implementation follows ADR 017 (Third-Party Integration Architecture), ADR 020 (Images, Assets, Fonts, and Cache Invalidation), and the existing localization, analytics, consent, privacy, and static-build architecture. The two phases remain independent vertical slices.
 

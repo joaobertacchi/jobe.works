@@ -2,7 +2,7 @@
 
 ## Project
 
-This repository is an AI-agent harness for localized static marketing and content websites. Start with `docs/README.md`; `docs/PRD.md` defines the product and accepted ADRs under `docs/adrs/` are authoritative for architecture.
+This repository is an AI-agent harness for localized static marketing and content websites. `docs/INDEX.md` navigates active documentation, `docs/PRD.md` defines the fork's product when present, and accepted ADRs under `docs/adrs/` are authoritative for architecture.
 
 ## Invariants
 
@@ -37,6 +37,14 @@ This repository is an AI-agent harness for localized static marketing and conten
 - Reuse `app/components/ui/` primitives. Add domain components for feature semantics, sections for reusable page regions, and site components for site-wide chrome. Keep unique page composition in its route until reuse is demonstrated.
 - Before adding a dependency, check the platform, React Router, and installed packages; record the build-vs-buy reason. A dependency that changes primary architecture requires an ADR.
 - Read only ADRs relevant to the changed area. If a requirement conflicts with an accepted ADR, obtain explicit user authorization and document the exception in a new ADR.
+
+## Documentation Lifecycle
+
+- Website forks may remove `docs/template/`; active fork architecture does not depend on it.
+- Consult `docs/template/PRD.md` and `docs/template/PHASES.md` only when evolving the reusable template itself.
+- Keep reusable-template plans and specifications under `docs/template/superpowers/`.
+- Keep fork-specific plans and specifications under `docs/superpowers/`.
+- Preserve `docs/adrs/` and `docs/decisions_list.md` in forks; inherited decisions remain active until superseded by a later ADR.
 
 ## Completion
 

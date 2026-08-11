@@ -4,7 +4,7 @@
 
 **Goal:** Add versioned persisted consent (necessary/analytics/marketing), a localized consent banner with accept/reject/customize, a persistent cookie-settings entry point, an expanded localized privacy page, a sample form privacy-notice pattern, and browser-level validation of all Phase 7 invariants.
 
-**Architecture:** `ConsentProvider` (root) owns versioned localStorage consent and exposes `acceptAll`, `rejectNonEssential`, `updatePreferences`, and dialog state. The consent banner and customize dialog self-localize from the URL locale and consume the context; the footer's Cookie settings button reopens the dialog. `AnalyticsProvider` (Phase 6) consumes the consent snapshot as a prop, so eligibility changes immediately when consent changes. ADR 016 defines the model; the design spec `docs/superpowers/specs/2026-08-10-phases-6-7-analytics-consent-design.md` is authoritative.
+**Architecture:** `ConsentProvider` (root) owns versioned localStorage consent and exposes `acceptAll`, `rejectNonEssential`, `updatePreferences`, and dialog state. The consent banner and customize dialog self-localize from the URL locale and consume the context; the footer's Cookie settings button reopens the dialog. `AnalyticsProvider` (Phase 6) consumes the consent snapshot as a prop, so eligibility changes immediately when consent changes. ADR 016 defines the model; the design spec `docs/template/superpowers/specs/2026-08-10-phases-6-7-analytics-consent-design.md` is authoritative.
 
 **Tech Stack:** React Router Framework Mode v8, React 19, TypeScript 5.9, Vitest, React Testing Library, Playwright
 
@@ -2007,7 +2007,7 @@ Expected: graph update completes without modifying application behavior.
 
 - [ ] **Step 7: Request architecture review**
 
-Delegate to `architecture-review` with Phase 7 acceptance criteria (`docs/PHASES.md` Phase 7 validation list), the complete Phase 6+7 diff, fresh `npm run check` and `npm run test:e2e` results, and an explicit statement that Phase 8 form/integration and later capabilities are out of scope. Resolve every high or medium finding before completion.
+Delegate to `architecture-review` with Phase 7 acceptance criteria (`docs/template/PHASES.md` Phase 7 validation list), the complete Phase 6+7 diff, fresh `npm run check` and `npm run test:e2e` results, and an explicit statement that Phase 8 form/integration and later capabilities are out of scope. Resolve every high or medium finding before completion.
 
 - [ ] **Step 8: Commit the browser evidence**
 

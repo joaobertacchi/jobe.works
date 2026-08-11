@@ -2,7 +2,7 @@
 
 # Architecture Decisions Status
 
-This document provides a high-level view of architectural decisions for the AI-agent website template.
+This document provides a high-level view of architectural decisions inherited from the AI-agent website template and evolved by its forks.
 
 Detailed rationale and tradeoffs are documented in individual ADRs under:
 
@@ -34,14 +34,7 @@ docs/adrs/
 | P018 | Dependency Policy | Accepted | [ADR 023](adrs/023-dependency-policy.md) |
 | P019 | Agent Documentation and Mechanical Guardrails | Covered by ADR 022 | [ADR 022](adrs/022-agent-documentation-and-architecture-review.md) |
 | P020 | Agent Effectiveness Metrics and Evaluation | Accepted | [ADR 024](adrs/024-agent-effectiveness-metrics-and-evaluation.md) |
-
----
-
-# Implementation Status
-
-All architectural decisions required before implementation are complete.
-
-Use [`PHASES.md`](PHASES.md) for implementation sequence and scope. Confirm the referenced repository files before treating a planned phase or design as implemented.
+| P021 | Fork Documentation Lifecycle | Accepted | [ADR 025](adrs/025-fork-documentation-lifecycle.md) |
 
 ---
 

@@ -4,7 +4,7 @@
 
 **Goal:** Complete the canonical local validation command so `npm run check` covers the full ADR 021 capability contract with no new dependencies, no new scripts beyond the `validate:static` alias, and unchanged thresholds and pre-commit behavior.
 
-**Architecture:** `validate:static` is an alias of `build` because the `buildEnd` hook in `react-router.config.ts` already runs the project-specific static validation (`finalizeStaticBuild`) automatically. `npm run check` therefore runs `format:check`, `lint`, `typecheck`, `test`, `coverage`, and `validate:static`; the `build` capability is exercised inside `validate:static`. The `complexity` capability remains satisfied by the existing `complexity: ["error", 10]` rule inside `lint`. See `docs/superpowers/specs/2026-08-10-phases-10-11-quality-gate-ci-design.md` for the accepted design and ADR 021 for the validation contract.
+**Architecture:** `validate:static` is an alias of `build` because the `buildEnd` hook in `react-router.config.ts` already runs the project-specific static validation (`finalizeStaticBuild`) automatically. `npm run check` therefore runs `format:check`, `lint`, `typecheck`, `test`, `coverage`, and `validate:static`; the `build` capability is exercised inside `validate:static`. The `complexity` capability remains satisfied by the existing `complexity: ["error", 10]` rule inside `lint`. See `docs/template/superpowers/specs/2026-08-10-phases-10-11-quality-gate-ci-design.md` for the accepted design and ADR 021 for the validation contract.
 
 **Tech Stack:** npm scripts, ESLint (complexity rule already configured), Vitest (thresholds already configured), React Router production build (static validation already wired via `buildEnd`)
 
@@ -127,7 +127,7 @@ Expected: the pre-commit hook runs `npm run check` automatically and the commit 
 
 - [ ] **Step 1: Verify all acceptance criteria from the design document**
 
-Run: `grep -A 10 "Phase 10 is complete when" docs/superpowers/specs/2026-08-10-phases-10-11-quality-gate-ci-design.md`
+Run: `grep -A 10 "Phase 10 is complete when" docs/template/superpowers/specs/2026-08-10-phases-10-11-quality-gate-ci-design.md`
 
 Expected:
 

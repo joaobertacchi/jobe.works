@@ -1,6 +1,6 @@
 # ADR 022 — Agent Documentation and Architecture Review Model
 
-**Status:** Accepted
+**Status:** Accepted; documentation paths superseded in part by ADR 025
 
 ## Context
 
@@ -176,7 +176,7 @@ The ADR does not need to exist before the exception is approved, but the decisio
 
 ## Documentation Index
 
-`docs/README.md` provides navigation.
+Under the original model, `docs/README.md` provided navigation. ADR 025 replaces that path with `docs/INDEX.md`.
 
 Conceptually:
 
@@ -200,7 +200,7 @@ why architecture works this way
 
 ## PRD
 
-`docs/PRD.md` defines the template as a product.
+Under the original model, `docs/PRD.md` defined the template as a product. ADR 025 moves that definition to `docs/template/PRD.md` and reserves `docs/PRD.md` for fork-owned requirements.
 
 It describes:
 

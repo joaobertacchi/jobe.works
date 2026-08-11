@@ -1,6 +1,4 @@
-# PRD.md
-
-# AI-Agent Static Website Template
+# Template Product Definition
 
 ## Product Definition
 
@@ -380,9 +378,11 @@ The repository contains:
 AGENTS.md
 
 docs/
-  PRD.md
+  INDEX.md
   decisions_list.md
   adrs/
+  template/
+    PRD.md
 ```
 
 Responsibilities:
@@ -391,9 +391,17 @@ Responsibilities:
 
 Operational instructions.
 
-## PRD.md
+## INDEX.md
 
-Product definition.
+Active documentation navigation.
+
+## docs/PRD.md
+
+Fork-owned product requirements, when present.
+
+## template/PRD.md
+
+Reusable template product definition.
 
 ## ADRs
 

@@ -2,9 +2,9 @@
 
 ## Scope
 
-Phase 12 creates the repository documentation that helps AI agents find the minimum context needed to make architecturally consistent changes. The phase updates the existing root `AGENTS.md`, creates `docs/README.md`, and corrects factual inconsistencies in `docs/decisions_list.md`.
+Phase 12 creates the repository documentation that helps AI agents find the minimum context needed to make architecturally consistent changes. The phase updates the existing root `AGENTS.md`, creates `docs/INDEX.md`, and corrects factual inconsistencies in `docs/decisions_list.md`.
 
-`docs/PRD.md` remains unchanged because the implementation review did not reveal a Phase 12-specific product inconsistency.
+`docs/template/PRD.md` remains unchanged because the implementation review did not reveal a Phase 12-specific product inconsistency.
 
 This phase documents the current repository state, including the implemented Phase 11 CI workflow and repository-owned Phase 13 architecture-review subagent.
 
@@ -13,7 +13,7 @@ This phase documents the current repository state, including the implemented Pha
 Use a layered operational map:
 
 1. `AGENTS.md` is the concise, always-loaded operational contract.
-2. `docs/README.md` routes agents to authoritative documents and exact working examples.
+2. `docs/INDEX.md` routes agents to authoritative documents and exact working examples.
 3. Accepted ADRs contain architectural decisions and rationale.
 4. Working code remains the primary procedural documentation.
 
@@ -33,13 +33,13 @@ Update `AGENTS.md` surgically rather than replacing it with a handbook. It will 
 - ADR authority and the architectural-exception process;
 - the existing graphify discovery rules.
 
-The contract will point to `docs/README.md` for deeper navigation and will not reproduce ADR rationale or detailed recipes. It will remove the stale statement that CI and later architectural layers are intentionally pending without replacing it with claims about unavailable repository files.
+The contract will point to `docs/INDEX.md` for deeper navigation and will not reproduce ADR rationale or detailed recipes. It will remove the stale statement that CI and later architectural layers are intentionally pending without replacing it with claims about unavailable repository files.
 
 The architecture-review rule will point agents to the repository-owned definition at `.opencode/agents/architecture-review.md`.
 
 ## Documentation Index
 
-Create `docs/README.md` as a task-oriented index. It will organize links by what an agent needs to do:
+Create `docs/INDEX.md` as a task-oriented index. It will organize links by what an agent needs to do:
 
 - understand the product and implementation roadmap;
 - identify source-of-truth precedence;
@@ -62,7 +62,7 @@ ADRs will be grouped by concern so agents do not need to load every decision for
 Update `docs/decisions_list.md` only where the current repository proves it factually stale:
 
 - make decision references match the actual ADR filenames and subjects;
-- replace the obsolete statement that the next work is to build the template and later create `PROMPT.md` with a link to `docs/PHASES.md` as the implementation-status source.
+- replace the obsolete statement that the next work is to build the template and later create `PROMPT.md` with a link to `docs/template/PHASES.md` as the implementation-status source.
 
 Do not alter accepted decisions, add new decisions, or rewrite ADR rationale.
 
@@ -70,7 +70,7 @@ Do not alter accepted decisions, add new decisions, or rewrite ADR rationale.
 
 The documentation describes commands, files, and examples that currently exist. It links the implemented CI workflow at `.github/workflows/ci.yml` and architecture-review subagent at `.opencode/agents/architecture-review.md`.
 
-Planning artifacts do not prove implementation status; agents must verify referenced repository files. `docs/PHASES.md` remains the source for implementation sequencing.
+Planning artifacts do not prove implementation status; agents must verify referenced repository files. `docs/template/PHASES.md` remains the source for implementation sequencing.
 
 ## Validation
 
@@ -81,7 +81,7 @@ Verification consists of:
 1. Confirm every referenced source and document path exists.
 2. Confirm every ADR reference matches its actual filename and subject.
 3. Confirm `AGENTS.md` covers every Phase 12 requirement without duplicating full ADR content.
-4. Confirm `docs/README.md` remains primarily an index.
+4. Confirm `docs/INDEX.md` remains primarily an index.
 5. Activate the Node.js version from `.nvmrc` and run formatting and `npm run check`.
 6. Skip Playwright because no browser-visible behavior changes.
 7. Run the currently configured architecture reviewer after deterministic validation.
@@ -91,11 +91,11 @@ Verification consists of:
 
 Phase 12 is complete when:
 
-- `AGENTS.md` concisely covers all content required by `docs/PHASES.md`;
+- `AGENTS.md` concisely covers all content required by `docs/template/PHASES.md`;
 - an agent can identify where a change belongs and which validation applies from `AGENTS.md`;
-- `docs/README.md` routes an agent to relevant authoritative documents and working examples without becoming a procedural manual;
+- `docs/INDEX.md` routes an agent to relevant authoritative documents and working examples without becoming a procedural manual;
 - `docs/decisions_list.md` contains accurate ADR references and current implementation-status guidance;
-- `docs/PRD.md` is untouched unless a concrete factual inconsistency is discovered during implementation;
+- `docs/template/PRD.md` is untouched unless a concrete factual inconsistency is discovered during implementation;
 - documentation links the existing CI and repository-owned reviewer files;
 - formatting and `npm run check` pass; and
 - architecture review has no blocking findings.

@@ -2,7 +2,7 @@
 
 ## Scope
 
-Phase 1 implements the routing and static-generation foundation defined by `docs/PRD.md`, ADR 003, ADR 004, ADR 007, ADR 008, ADR 014, and ADR 021. It replaces the generated single-page demonstration with a small localized vertical slice that proves the accepted architecture through working code.
+Phase 1 implements the routing and static-generation foundation defined by `docs/template/PRD.md`, ADR 003, ADR 004, ADR 007, ADR 008, ADR 014, and ADR 021. It replaces the generated single-page demonstration with a small localized vertical slice that proves the accepted architecture through working code.
 
 The published placeholder pages are Home, About, Services, and a localized 404 utility page. They demonstrate locale roots, nested routes, shared page implementations, localized content completeness, and nested static output without introducing business content. Dynamic content routes, SEO metadata, sitemap generation, production hosting configuration, and application-level redirect management remain outside Phase 1.
 

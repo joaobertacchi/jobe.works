@@ -4,7 +4,7 @@
 
 **Goal:** Create concise, precise repository guidance that lets AI agents locate relevant context, follow existing patterns, and validate Phase 12 work without misrepresenting implementation status.
 
-**Architecture:** Keep the root `AGENTS.md` as the small operational contract, make `docs/README.md` a task-oriented navigation layer, and leave rationale in accepted ADRs and procedures in working code. Correct only demonstrated factual drift in `docs/decisions_list.md`; do not change application behavior or `docs/PRD.md`.
+**Architecture:** Keep the root `AGENTS.md` as the small operational contract, make `docs/INDEX.md` a task-oriented navigation layer, and leave rationale in accepted ADRs and procedures in working code. Correct only demonstrated factual drift in `docs/decisions_list.md`; do not change application behavior or `docs/template/PRD.md`.
 
 **Tech Stack:** Markdown, React Router Framework project conventions, npm validation, graphify, OpenCode architecture-review subagent
 
@@ -13,9 +13,9 @@
 ## File Structure
 
 - Modify `AGENTS.md`: concise always-loaded invariants, ownership map, routine-change rules, validation, architecture review, and graphify discovery.
-- Create `docs/README.md`: task-oriented index to product documents, examples, ADRs, planning artifacts, and current phase boundaries.
+- Create `docs/INDEX.md`: task-oriented index to product documents, examples, ADRs, planning artifacts, and current phase boundaries.
 - Modify `docs/decisions_list.md`: repair ADR references and replace obsolete next-work guidance with the phased roadmap pointer.
-- Preserve `docs/PRD.md`: no demonstrated product inconsistency requires a change.
+- Preserve `docs/template/PRD.md`: no demonstrated product inconsistency requires a change.
 - Preserve application and test files: Phase 12 introduces documentation only.
 
 No commits are created, per user instruction.
@@ -24,7 +24,7 @@ No commits are created, per user instruction.
 
 **Files:**
 - Modify: `AGENTS.md:1-38`
-- Reference: `docs/PHASES.md:572-610`
+- Reference: `docs/template/PHASES.md:572-610`
 - Reference: `docs/adrs/010-agent-contract.md`
 - Reference: `docs/adrs/022-agent-documentation-and-architecture-review.md`
 - Reference: `docs/adrs/023-dependency-policy.md`
@@ -42,7 +42,7 @@ Use this exact content:
 
 ## Project
 
-This repository is an AI-agent harness for localized static marketing and content websites. Start with `docs/README.md`; `docs/PRD.md` defines the product and accepted ADRs under `docs/adrs/` are authoritative for architecture.
+This repository is an AI-agent harness for localized static marketing and content websites. Start with `docs/INDEX.md`; `docs/template/PRD.md` defines the product and accepted ADRs under `docs/adrs/` are authoritative for architecture.
 
 ## Invariants
 
@@ -119,14 +119,14 @@ Expected: every requirement maps to concise operational guidance, and no section
 ### Task 2: Create the Context-Saving Documentation Index
 
 **Files:**
-- Create: `docs/README.md`
+- Create: `docs/INDEX.md`
 - Reference: `docs/adrs/022-agent-documentation-and-architecture-review.md:62-246`
 - Reference: `app/routes/$locale.services.tsx`
 - Reference: `app/i18n/translations/services.ts`
 - Reference: `react-router.config.ts`
 - Reference: `tests/e2e/fixtures.ts`
 
-- [ ] **Step 1: Create `docs/README.md` as an index, not a handbook**
+- [ ] **Step 1: Create `docs/INDEX.md` as an index, not a handbook**
 
 Use this exact content:
 
@@ -209,14 +209,14 @@ Check that:
 - the validation section links both implemented repository-owned files precisely;
 - no text describes the existing CI or Phase 13 subagent as unavailable.
 
-Expected: `docs/README.md` remains primarily navigation plus short source-priority and validation-workflow guidance.
+Expected: `docs/INDEX.md` remains primarily navigation plus short source-priority and validation-workflow guidance.
 
 ### Task 3: Correct the Decision Overview
 
 **Files:**
 - Modify: `docs/decisions_list.md:13-51`
 - Reference: `docs/adrs/*.md`
-- Reference: `docs/PHASES.md`
+- Reference: `docs/template/PHASES.md`
 
 - [ ] **Step 1: Replace the stale decision table with linked, accurate ADR references**
 
@@ -275,9 +275,9 @@ Expected: changes are limited to linked ADR corrections and the replacement of o
 
 **Files:**
 - Verify: `AGENTS.md`
-- Verify: `docs/README.md`
+- Verify: `docs/INDEX.md`
 - Verify: `docs/decisions_list.md`
-- Preserve: `docs/PRD.md`
+- Preserve: `docs/template/PRD.md`
 
 - [ ] **Step 1: Confirm every newly referenced path exists**
 
@@ -329,12 +329,12 @@ done
 
 Expected: exit status `0` with no output.
 
-- [ ] **Step 3: Confirm `docs/PRD.md` was not changed**
+- [ ] **Step 3: Confirm `docs/template/PRD.md` was not changed**
 
 Run:
 
 ```bash
-git diff --exit-code -- docs/PRD.md
+git diff --exit-code -- docs/template/PRD.md
 ```
 
 Expected: exit status `0` with no diff.
@@ -344,7 +344,7 @@ Expected: exit status `0` with no diff.
 Run:
 
 ```bash
-npx prettier --write AGENTS.md docs/README.md docs/decisions_list.md docs/superpowers/specs/2026-08-11-phase-12-agent-documentation-design.md docs/superpowers/plans/2026-08-11-phase-12-agent-documentation.md
+npx prettier --write AGENTS.md docs/INDEX.md docs/decisions_list.md docs/template/superpowers/specs/2026-08-11-phase-12-agent-documentation-design.md docs/template/superpowers/plans/2026-08-11-phase-12-agent-documentation.md
 ```
 
 Expected: Prettier reports the five Markdown files as formatted or unchanged.
@@ -355,7 +355,7 @@ Run:
 
 ```bash
 git diff --check
-git diff -- AGENTS.md docs/README.md docs/decisions_list.md docs/superpowers/specs/2026-08-11-phase-12-agent-documentation-design.md docs/superpowers/plans/2026-08-11-phase-12-agent-documentation.md
+git diff -- AGENTS.md docs/INDEX.md docs/decisions_list.md docs/template/superpowers/specs/2026-08-11-phase-12-agent-documentation-design.md docs/template/superpowers/plans/2026-08-11-phase-12-agent-documentation.md
 ```
 
 Expected: `git diff --check` exits `0`; the diff contains only the approved design artifact, implementation plan, and three Phase 12 documentation changes.
@@ -395,18 +395,18 @@ Provide this exact review request:
 Review Phase 12 agent-documentation changes only.
 
 User request and acceptance criteria:
-- Implement Phase 12 from docs/PHASES.md.
+- Implement Phase 12 from docs/template/PHASES.md.
 - Keep AGENTS.md concise and precise so agents preserve context.
-- Create docs/README.md primarily as an index.
+- Create docs/INDEX.md primarily as an index.
 - Update PRD or decisions_list only for demonstrated factual inconsistencies.
 - Document the existing Phase 11 CI and Phase 13 architecture-review files accurately.
 
 Changed files to review:
 - AGENTS.md
-- docs/README.md
+- docs/INDEX.md
 - docs/decisions_list.md
-- docs/superpowers/specs/2026-08-11-phase-12-agent-documentation-design.md
-- docs/superpowers/plans/2026-08-11-phase-12-agent-documentation.md
+- docs/template/superpowers/specs/2026-08-11-phase-12-agent-documentation-design.md
+- docs/template/superpowers/plans/2026-08-11-phase-12-agent-documentation.md
 
 Deterministic validation:
 - npm run check: PASS
@@ -426,7 +426,7 @@ Expected: `PASS` with no high or medium findings.
 If the reviewer reports a high or medium finding, change only the cited documentation needed to restore Phase 12 or ADR compliance. Then rerun:
 
 ```bash
-npx prettier --write AGENTS.md docs/README.md docs/decisions_list.md
+npx prettier --write AGENTS.md docs/INDEX.md docs/decisions_list.md
 npm run check
 ```
 

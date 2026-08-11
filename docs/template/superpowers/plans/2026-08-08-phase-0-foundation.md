@@ -132,7 +132,7 @@ node_modules/
 playwright-report/
 test-results/
 package-lock.json
-docs/PRD.md
+docs/template/PRD.md
 docs/decisions_list.md
 docs/adrs/
 ```
@@ -703,7 +703,7 @@ Create `AGENTS.md`:
 
 ## Project
 
-This repository is an AI-agent harness for localized static marketing and content websites. Product requirements are in `docs/PRD.md`; accepted architecture decisions under `docs/adrs/` are authoritative.
+This repository is an AI-agent harness for localized static marketing and content websites. Product requirements are in `docs/template/PRD.md`; accepted architecture decisions under `docs/adrs/` are authoritative.
 
 ## Invariants
 
@@ -764,7 +764,7 @@ Unknown paths must be handled as normal static-server 404 responses; do not conf
 
 ## Architecture
 
-Read `AGENTS.md` before making changes. Product requirements are in `docs/PRD.md`, decision status is in `docs/decisions_list.md`, and accepted decisions are under `docs/adrs/`.
+Read `AGENTS.md` before making changes. Product requirements are in `docs/template/PRD.md`, decision status is in `docs/decisions_list.md`, and accepted decisions are under `docs/adrs/`.
 
 CI wiring is deferred beyond Phase 0.
 ````
@@ -792,7 +792,7 @@ Expected: the full `npm run check` pipeline passes.
 - [ ] **Step 5: Commit documentation and hook infrastructure**
 
 ```bash
-git add AGENTS.md README.md .husky/pre-commit package.json package-lock.json docs/superpowers/plans/2026-08-08-phase-0-foundation.md
+git add AGENTS.md README.md .husky/pre-commit package.json package-lock.json docs/template/superpowers/plans/2026-08-08-phase-0-foundation.md
 git commit -m "docs: add agent workflow and validation hook"
 ```
 

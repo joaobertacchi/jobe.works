@@ -1290,4 +1290,4 @@ Expected: graph update completes without modifying application behavior.
 
 - [ ] **Step 4: Request architecture review**
 
-Delegate to `architecture-review` with Phase 6 acceptance criteria (`docs/PHASES.md` Phase 6 validation list), the complete Phase 6 diff, fresh `npm run check` and `npm run test:e2e` results, and an explicit statement that Phase 7 consent UI, Phase 8 form, and later capabilities are out of scope. Resolve every high or medium finding before completion.
+Delegate to `architecture-review` with Phase 6 acceptance criteria (`docs/template/PHASES.md` Phase 6 validation list), the complete Phase 6 diff, fresh `npm run check` and `npm run test:e2e` results, and an explicit statement that Phase 7 consent UI, Phase 8 form, and later capabilities are out of scope. Resolve every high or medium finding before completion.

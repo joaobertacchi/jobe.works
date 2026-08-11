@@ -2,7 +2,7 @@
 
 ## Scope
 
-Phase 2 completes the localization architecture defined by `docs/PRD.md`, ADR 013, ADR 014, and ADR 023. It extends the localization slice introduced during Phase 1 without changing the accepted route model, static output model, or canonical URL manifest.
+Phase 2 completes the localization architecture defined by `docs/template/PRD.md`, ADR 013, ADR 014, and ADR 023. It extends the localization slice introduced during Phase 1 without changing the accepted route model, static output model, or canonical URL manifest.
 
 The phase provides a rich typed central locale configuration, exhaustive page-scoped TypeScript dictionaries, typed translation paths, pluralization, a locale-bound React API, manifest-driven language switching, and validation of every published locale. It does not add localized slugs, runtime translation loading, locale persistence, cross-locale content fallback, or SEO features scheduled for a later phase.
 

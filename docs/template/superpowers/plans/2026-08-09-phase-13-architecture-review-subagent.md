@@ -163,7 +163,7 @@ Expected: the agent file is the only modified implementation file, `git diff --c
 **Files:**
 
 - Verify: `.opencode/agents/architecture-review.md`
-- Reference: `docs/superpowers/specs/2026-08-09-phase-13-architecture-review-subagent-design.md`
+- Reference: `docs/template/superpowers/specs/2026-08-09-phase-13-architecture-review-subagent-design.md`
 - Reference: `docs/adrs/022-agent-documentation-and-architecture-review.md`
 
 - [ ] **Step 1: Activate the repository's Node.js version**
@@ -201,7 +201,7 @@ Expected: formatting, linting, type checking, 191 or more tests, coverage thresh
 OpenCode does not hot-reload project-agent definitions. Run a fresh process and require delegation to the new subagent:
 
 ```bash
-opencode run "Delegate this review to the architecture-review subagent. Current implementation phase: Phase 13 - Architecture Review Subagent. Acceptance criteria: use docs/superpowers/specs/2026-08-09-phase-13-architecture-review-subagent-design.md. Changed implementation file: .opencode/agents/architecture-review.md. Deterministic validation result: npm run check passed. Capabilities assigned to future planned phases are explicitly out of scope. Review only this phase and return the subagent's YAML unchanged."
+opencode run "Delegate this review to the architecture-review subagent. Current implementation phase: Phase 13 - Architecture Review Subagent. Acceptance criteria: use docs/template/superpowers/specs/2026-08-09-phase-13-architecture-review-subagent-design.md. Changed implementation file: .opencode/agents/architecture-review.md. Deterministic validation result: npm run check passed. Capabilities assigned to future planned phases are explicitly out of scope. Review only this phase and return the subagent's YAML unchanged."
 ```
 
 Expected: YAML with `status: PASS` and no high or medium findings. Low findings are advisory. Do not commit while the status is `NEEDS_CHANGES`.

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Redesign the test suite around expected behavior, product risks, and architectural invariants instead of internal implementation details. The redesign may substantially reduce the number of tests when stronger coverage already exists elsewhere, but it must preserve or improve confidence in the requirements defined by `docs/PRD.md` and the accepted ADRs.
+Redesign the test suite around expected behavior, product risks, and architectural invariants instead of internal implementation details. The redesign may substantially reduce the number of tests when stronger coverage already exists elsewhere, but it must preserve or improve confidence in the requirements defined by `docs/template/PRD.md` and the accepted ADRs.
 
 This work includes the full suite rather than only mechanically replacing a few brittle assertions. It may include minimal production changes when a behavior-first failing test exposes a real defect or an inadequate public boundary.
 

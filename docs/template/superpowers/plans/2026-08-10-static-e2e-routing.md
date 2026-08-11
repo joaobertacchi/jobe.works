@@ -264,7 +264,7 @@ git add \
   app/routes/'$locale'.tsx \
   app/routes/'$locale.test.tsx' \
   tests/e2e/routing.spec.ts \
-  docs/superpowers/specs/2026-08-10-static-e2e-server-routing-design.md \
-  docs/superpowers/plans/2026-08-10-static-e2e-routing.md
+  docs/template/superpowers/specs/2026-08-10-static-e2e-server-routing-design.md \
+  docs/template/superpowers/plans/2026-08-10-static-e2e-routing.md
 git commit -m "test: align static alias routing expectations"
 ```

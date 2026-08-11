@@ -2,7 +2,7 @@
 
 ## Scope
 
-Phase 13 defines the dedicated architecture-review subagent required by `docs/PRD.md` and ADR 022. The subagent reviews completed work for architectural drift after deterministic validation has run. It complements rather than duplicates formatting, linting, type checking, tests, coverage, complexity checks, build validation, and Playwright.
+Phase 13 defines the dedicated architecture-review subagent required by `docs/template/PRD.md` and ADR 022. The subagent reviews completed work for architectural drift after deterministic validation has run. It complements rather than duplicates formatting, linting, type checking, tests, coverage, complexity checks, build validation, and Playwright.
 
 This phase adds one OpenCode project-agent definition. It does not add a general code-review agent, a command wrapper, prompt-contract tests, new validation infrastructure, CI integration, dependencies, or support for additional agent runtimes.
 

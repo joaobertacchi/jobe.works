@@ -8,7 +8,7 @@
 
 **Tech Stack:** TypeScript 5.9, React 19, React Router 8 Framework Mode, Vitest 4, React Testing Library 16, Playwright 1.62, jsdom 30.
 
-**Design:** `docs/superpowers/specs/2026-08-10-behavior-focused-test-redesign.md`
+**Design:** `docs/template/superpowers/specs/2026-08-10-behavior-focused-test-redesign.md`
 
 **Commit Policy:** This plan does not authorize commits. Create commits only if the user explicitly requests them during execution.
 

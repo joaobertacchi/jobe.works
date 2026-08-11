@@ -1,8 +1,8 @@
-# PROMPT.md — Phased Implementation of the AI-Agent Static Website Template
+# Template Implementation Phases
 
 You are implementing this repository as the reusable AI-agent static website template defined by:
 
-- `docs/PRD.md`
+- `docs/template/PRD.md`
 - `docs/decisions_list.md`
 - all accepted ADRs under `docs/adrs/`
 - `AGENTS.md`, once created
@@ -577,13 +577,13 @@ Implement:
 
 ```text
 AGENTS.md
-docs/README.md
+docs/INDEX.md
 ```
 
 Update:
 
 ```text
-docs/PRD.md
+docs/template/PRD.md
 docs/decisions_list.md
 ```
 
@@ -607,7 +607,7 @@ It should explain:
 
 Do not reproduce full ADR content.
 
-`docs/README.md` should primarily act as an index.
+`docs/INDEX.md` should primarily act as an index.
 
 ---
 

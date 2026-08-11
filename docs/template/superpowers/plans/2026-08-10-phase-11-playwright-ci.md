@@ -4,7 +4,7 @@
 
 **Goal:** Complete the browser-level agent feedback loop by adding the CI workflow that runs the canonical validation suite (`npm run check` plus `npm run test:e2e`), while the Playwright configuration itself is already compliant.
 
-**Architecture:** The Playwright configuration, browser-error detection, and representative browser tests already exist and are verified unchanged. The only deliverable is `.github/workflows/ci.yml`, a GitHub Actions workflow that runs the shared `npm run check` baseline (ADR 021: CI does not reimplement checks), installs the Chromium browser, runs the e2e suite, and uploads failure artifacts (traces, screenshots, videos) for agent debugging. Consent-flow browser tests are intentionally deferred to phase 7 and recorded in the design document. See `docs/superpowers/specs/2026-08-10-phases-10-11-quality-gate-ci-design.md` for the accepted design.
+**Architecture:** The Playwright configuration, browser-error detection, and representative browser tests already exist and are verified unchanged. The only deliverable is `.github/workflows/ci.yml`, a GitHub Actions workflow that runs the shared `npm run check` baseline (ADR 021: CI does not reimplement checks), installs the Chromium browser, runs the e2e suite, and uploads failure artifacts (traces, screenshots, videos) for agent debugging. Consent-flow browser tests are intentionally deferred to phase 7 and recorded in the design document. See `docs/template/superpowers/specs/2026-08-10-phases-10-11-quality-gate-ci-design.md` for the accepted design.
 
 **Tech Stack:** GitHub Actions, Node.js 22 (`.nvmrc`), Playwright (Chromium only, headless), npm
 
@@ -108,7 +108,7 @@ Expected: the Playwright `webServer` starts `npm run build && npm run preview`, 
 
 - [ ] **Step 5: Confirm the deferred consent tests are recorded**
 
-Run: `grep -A 5 "Deferred: Consent-Flow Browser Tests" docs/superpowers/specs/2026-08-10-phases-10-11-quality-gate-ci-design.md`
+Run: `grep -A 5 "Deferred: Consent-Flow Browser Tests" docs/template/superpowers/specs/2026-08-10-phases-10-11-quality-gate-ci-design.md`
 
 Expected: the design document records that consent-flow browser tests are deferred to phase 7 because consent infrastructure does not exist yet. No consent tests are added in this phase.
 
@@ -128,7 +128,7 @@ Expected: the pre-commit hook runs `npm run check` automatically and the commit 
 
 - [ ] **Step 1: Verify all acceptance criteria from the design document**
 
-Run: `grep -A 10 "Phase 11 is complete when" docs/superpowers/specs/2026-08-10-phases-10-11-quality-gate-ci-design.md`
+Run: `grep -A 10 "Phase 11 is complete when" docs/template/superpowers/specs/2026-08-10-phases-10-11-quality-gate-ci-design.md`
 
 Expected:
 

@@ -2,7 +2,7 @@
 
 ## Scope
 
-Phase 0 establishes the minimum production-quality project and validation foundation described by `docs/PRD.md`, `docs/decisions_list.md`, and the accepted ADRs. It does not implement later-phase website architecture.
+Phase 0 establishes the minimum production-quality project and validation foundation described by `docs/template/PRD.md`, `docs/decisions_list.md`, and the accepted ADRs. It does not implement later-phase website architecture.
 
 CI wiring is explicitly deferred to a later phase. The complete static validator, localization architecture, theme system, SEO system, analytics, consent, integrations, and final site design are also outside this phase.
 

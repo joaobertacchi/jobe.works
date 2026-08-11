@@ -6,7 +6,7 @@
 
 ## Scope
 
-Implement Phase 6 (centralized analytics architecture) and Phase 7 (centralized consent handling, campaign attribution, privacy content) of `docs/PHASES.md`, following ADR 015 (Analytics Architecture) and ADR 016 (Privacy, Consent, and LGPD Architecture).
+Implement Phase 6 (centralized analytics architecture) and Phase 7 (centralized consent handling, campaign attribution, privacy content) of `docs/template/PHASES.md`, following ADR 015 (Analytics Architecture) and ADR 016 (Privacy, Consent, and LGPD Architecture).
 
 Future capabilities (third-party form/CRM integration, contact form, provider adapters) belong to later phases and are out of scope.
 

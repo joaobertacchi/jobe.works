@@ -2,7 +2,7 @@
 
 ## Scope
 
-Phase 3 implements the component and styling foundation defined by `docs/PRD.md`, ADR 011, ADR 012, ADR 013, and ADR 023. It turns the localized placeholder pages into a pleasant representative website slice that teaches the accepted component layers, Tailwind conventions, responsive composition, and theme behavior through working code.
+Phase 3 implements the component and styling foundation defined by `docs/template/PRD.md`, ADR 011, ADR 012, ADR 013, and ADR 023. It turns the localized placeholder pages into a pleasant representative website slice that teaches the accepted component layers, Tailwind conventions, responsive composition, and theme behavior through working code.
 
 The phase creates only components used by the representative pages. It does not provide a finished design system, introduce a component generator or variant library, add speculative form controls, create multi-brand themes, or add image infrastructure.
 
