@@ -3,7 +3,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { createMemoryRouter, MemoryRouter, RouterProvider } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 
-import App, { Document, ErrorBoundary, Layout } from "./root";
+import { ConsentProvider } from "./consent/consent-context";
+import { ConsentBanner } from "./components/site/consent-banner";
+import App, { Document, ErrorBoundary } from "./root";
 
 vi.mock("react-router", async (importOriginal) => {
   const actual = await importOriginal<typeof import("react-router")>();
@@ -60,9 +62,10 @@ describe("root document", () => {
     window.localStorage.clear();
     render(
       <MemoryRouter initialEntries={["/en/"]}>
-        <Layout>
+        <ConsentProvider>
           <p>Page content</p>
-        </Layout>
+          <ConsentBanner locale="en" />
+        </ConsentProvider>
       </MemoryRouter>,
     );
 
