@@ -5,7 +5,6 @@ import { submitExampleContact } from "../../integrations/example-contact/submit-
 import { useI18n } from "../../i18n/i18n";
 import { FormPrivacyNotice } from "./form-privacy-notice";
 import { Button } from "../ui/button";
-import { Heading } from "../ui/heading";
 import { Text } from "../ui/text";
 
 type ContactFields = {
@@ -57,8 +56,8 @@ export function ContactForm() {
     setStatus("idle");
 
     const validationErrors = validateFields(fields, {
-      required: translate("services.contact.validation.required"),
-      email: translate("services.contact.validation.email"),
+      required: translate("contact.validation.required"),
+      email: translate("contact.validation.email"),
     });
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) {
@@ -75,7 +74,7 @@ export function ContactForm() {
         marketingOptIn,
         attribution,
       });
-      capture({ eventName: "lead_submitted", formId: "services-contact" });
+      capture({ eventName: "lead_submitted", formId: "contact-form" });
       setFields(createInitialFields());
       setMarketingOptIn(false);
       setStatus("success");
@@ -85,116 +84,109 @@ export function ContactForm() {
   }
 
   const statusMessages: Partial<Record<ContactStatus, string>> = {
-    validation: translate("services.contact.validation.summary"),
-    success: translate("services.contact.success"),
-    error: translate("services.contact.error"),
+    validation: translate("contact.validation.summary"),
+    success: translate("contact.success"),
+    error: translate("contact.error"),
   };
   const statusMessage = statusMessages[status] ?? null;
 
   return (
-    <div className="flex flex-col gap-6">
-      <div>
-        <Heading as="h2">{translate("services.contact.title")}</Heading>
-        <Text className="mt-4" tone="muted">
-          {translate("services.contact.description")}
-        </Text>
-      </div>
-      <form className="flex flex-col gap-6" noValidate onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-2">
-          <label className="font-medium" htmlFor="contact-name">
-            {translate("services.contact.fields.name")}
-          </label>
-          <input
-            aria-describedby={errors.name ? "contact-name-error" : undefined}
-            aria-invalid={Boolean(errors.name)}
-            autoComplete="name"
-            className={fieldClassName}
-            id="contact-name"
-            name="name"
-            onChange={(event) =>
-              setFields((current) => ({ ...current, name: event.target.value }))
-            }
-            required
-            type="text"
-            value={fields.name}
-          />
-          {errors.name ? (
-            <Text className="text-sm" id="contact-name-error">
-              {errors.name}
-            </Text>
-          ) : null}
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <label className="font-medium" htmlFor="contact-email">
-            {translate("services.contact.fields.email")}
-          </label>
-          <input
-            aria-describedby={errors.email ? "contact-email-error" : undefined}
-            aria-invalid={Boolean(errors.email)}
-            autoComplete="email"
-            className={fieldClassName}
-            id="contact-email"
-            name="email"
-            onChange={(event) =>
-              setFields((current) => ({
-                ...current,
-                email: event.target.value,
-              }))
-            }
-            required
-            type="email"
-            value={fields.email}
-          />
-          {errors.email ? (
-            <Text className="text-sm" id="contact-email-error">
-              {errors.email}
-            </Text>
-          ) : null}
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <label className="font-medium" htmlFor="contact-message">
-            {translate("services.contact.fields.message")}
-          </label>
-          <textarea
-            aria-describedby={
-              errors.message ? "contact-message-error" : undefined
-            }
-            aria-invalid={Boolean(errors.message)}
-            className={fieldClassName}
-            id="contact-message"
-            name="message"
-            onChange={(event) =>
-              setFields((current) => ({
-                ...current,
-                message: event.target.value,
-              }))
-            }
-            required
-            rows={5}
-            value={fields.message}
-          />
-          {errors.message ? (
-            <Text className="text-sm" id="contact-message-error">
-              {errors.message}
-            </Text>
-          ) : null}
-        </div>
-
-        <FormPrivacyNotice
-          marketingOptIn={marketingOptIn}
-          onMarketingOptInChange={setMarketingOptIn}
+    <form className="flex flex-col gap-6" noValidate onSubmit={handleSubmit}>
+      <div className="flex flex-col gap-2">
+        <label className="font-medium" htmlFor="contact-name">
+          {translate("contact.fields.name")}
+        </label>
+        <input
+          aria-describedby={errors.name ? "contact-name-error" : undefined}
+          aria-invalid={Boolean(errors.name)}
+          autoComplete="name"
+          className={fieldClassName}
+          id="contact-name"
+          name="name"
+          onChange={(event) =>
+            setFields((current) => ({ ...current, name: event.target.value }))
+          }
+          required
+          type="text"
+          value={fields.name}
         />
-        <Button disabled={status === "submitting"} type="submit">
-          {status === "submitting"
-            ? translate("services.contact.submitting")
-            : translate("services.contact.submit")}
-        </Button>
-        <Text aria-live="polite" role="status">
-          {statusMessage}
-        </Text>
-      </form>
-    </div>
+        {errors.name ? (
+          <Text className="text-sm" id="contact-name-error">
+            {errors.name}
+          </Text>
+        ) : null}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label className="font-medium" htmlFor="contact-email">
+          {translate("contact.fields.email")}
+        </label>
+        <input
+          aria-describedby={errors.email ? "contact-email-error" : undefined}
+          aria-invalid={Boolean(errors.email)}
+          autoComplete="email"
+          className={fieldClassName}
+          id="contact-email"
+          name="email"
+          onChange={(event) =>
+            setFields((current) => ({
+              ...current,
+              email: event.target.value,
+            }))
+          }
+          required
+          type="email"
+          value={fields.email}
+        />
+        {errors.email ? (
+          <Text className="text-sm" id="contact-email-error">
+            {errors.email}
+          </Text>
+        ) : null}
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <label className="font-medium" htmlFor="contact-message">
+          {translate("contact.fields.message")}
+        </label>
+        <textarea
+          aria-describedby={
+            errors.message ? "contact-message-error" : undefined
+          }
+          aria-invalid={Boolean(errors.message)}
+          className={fieldClassName}
+          id="contact-message"
+          name="message"
+          onChange={(event) =>
+            setFields((current) => ({
+              ...current,
+              message: event.target.value,
+            }))
+          }
+          placeholder={translate("contact.messagePlaceholder")}
+          required
+          rows={5}
+          value={fields.message}
+        />
+        {errors.message ? (
+          <Text className="text-sm" id="contact-message-error">
+            {errors.message}
+          </Text>
+        ) : null}
+      </div>
+
+      <FormPrivacyNotice
+        marketingOptIn={marketingOptIn}
+        onMarketingOptInChange={setMarketingOptIn}
+      />
+      <Button disabled={status === "submitting"} type="submit">
+        {status === "submitting"
+          ? translate("contact.submitting")
+          : translate("contact.submit")}
+      </Button>
+      <Text aria-live="polite" role="status">
+        {statusMessage}
+      </Text>
+    </form>
   );
 }

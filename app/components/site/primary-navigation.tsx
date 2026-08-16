@@ -1,45 +1,38 @@
-import { NavLink } from "react-router";
-
 import { useI18n } from "../../i18n/i18n";
+import { TextLink } from "../ui/text-link";
 
 export function PrimaryNavigation() {
   const { locale, translate } = useI18n();
   const links = [
     {
-      label: translate("common.navigation.home"),
-      to: `/${locale}/`,
-      end: true,
-    },
-    {
-      label: translate("common.navigation.about"),
-      to: `/${locale}/about`,
-      end: true,
-    },
-    {
       label: translate("common.navigation.services"),
       to: `/${locale}/services`,
-      end: true,
+    },
+    {
+      label: translate("common.navigation.case"),
+      to: `/${locale}/case`,
+    },
+    {
+      label: translate("common.navigation.contact"),
+      to: `/${locale}/contact`,
     },
   ];
 
   return (
     <nav
       aria-label={translate("common.navigationLabel")}
-      className="flex flex-wrap gap-4"
+      className="flex flex-wrap items-center gap-5"
     >
-      {links.map(({ end, label, to }) => (
-        <NavLink
-          className={({ isActive }) =>
-            isActive
-              ? "text-brand font-semibold underline underline-offset-4"
-              : "hover:underline hover:underline-offset-4"
-          }
-          end={end}
+      {links.map(({ label, to }) => (
+        <TextLink
+          activeClassName="font-semibold text-brand"
+          end
           key={to}
           to={to}
+          variant="nav"
         >
           {label}
-        </NavLink>
+        </TextLink>
       ))}
     </nav>
   );

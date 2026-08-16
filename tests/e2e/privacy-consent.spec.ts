@@ -79,18 +79,6 @@ async function settleBrowserEffects(page: Page) {
   );
 }
 
-async function completeContactForm(page: Page) {
-  await page.getByLabel("Name", { exact: true }).fill("Ada Lovelace");
-  await page.getByLabel("Email", { exact: true }).fill("ada@example.com");
-  await page
-    .getByLabel("Message", { exact: true })
-    .fill("I would like to discuss a static website.");
-  await page.getByRole("button", { name: "Send inquiry", exact: true }).click();
-  await expect(
-    page.getByText("Thanks. We will be in touch soon."),
-  ).toBeVisible();
-}
-
 function storedConsent(page: Page) {
   return page.evaluate((key) => localStorage.getItem(key), CONSENT_STORAGE_KEY);
 }
@@ -116,8 +104,11 @@ test("shows the consent banner and keeps analytics idle before a choice", async 
   await page.goto("/en/");
   await expectBanner(page);
 
-  await page.getByRole("link", { name: "About", exact: true }).click();
-  await expect(page).toHaveURL("/en/about");
+  await page
+    .getByRole("link", { name: "Book a Product Readiness Call" })
+    .first()
+    .click();
+  await expect(page).toHaveURL("/en/contact");
   await settleBrowserEffects(page);
   await analytics.flush();
 
@@ -255,15 +246,18 @@ test("hero call to action emits cta_pressed after consent", async ({
 
   await page.goto("/en/");
   await page.getByRole("button", { name: "Accept all" }).click();
-  await page.getByRole("link", { name: "Explore the examples" }).click();
+  await page
+    .getByRole("link", { name: "Book a Product Readiness Call" })
+    .first()
+    .click();
 
-  await expect(page).toHaveURL("/en/services");
+  await expect(page).toHaveURL("/en/contact");
   await expect
     .poll(() =>
       analytics.events.some(
         (event) =>
           event.eventName === "cta_pressed" &&
-          event.ctaId === "hero-cta" &&
+          event.ctaId === "hero-book-call" &&
           event.context === "homepage",
       ),
     )
@@ -271,7 +265,7 @@ test("hero call to action emits cta_pressed after consent", async ({
   await analytics.flush();
 });
 
-test("contact submission works without analytics consent and emits no lead event", async ({
+test("contact page offers the mailto booking path without emitting a lead event", async ({
   page,
 }) => {
   await setStoredConsent(page, {
@@ -282,46 +276,20 @@ test("contact submission works without analytics consent and emits no lead event
   });
   const analytics = collectAnalyticsEvents(page);
 
-  await page.goto("/en/services?utm_source=newsletter&unknown=ignored");
-  await completeContactForm(page);
+  await page.goto("/en/contact?utm_source=newsletter&unknown=ignored");
+
+  const mailto = page.getByRole("link", {
+    name: "joao@jobe.works",
+    exact: true,
+  });
+  await expect(mailto).toBeVisible();
+  await expect
+    .poll(() => mailto.getAttribute("href"))
+    .toContain("mailto:joao@jobe.works");
   await settleBrowserEffects(page);
   await analytics.flush();
 
   expect(
     analytics.events.some((event) => event.eventName === "lead_submitted"),
   ).toBe(false);
-});
-
-test("contact submission emits lead_submitted after analytics consent", async ({
-  page,
-}) => {
-  await setStoredConsent(page, {
-    version: CONSENT_VERSION,
-    analytics: true,
-    marketing: false,
-    updatedAt: "2026-01-01T00:00:00.000Z",
-  });
-  const analytics = collectAnalyticsEvents(page);
-
-  await page.goto("/en/services?utm_source=newsletter");
-  await completeContactForm(page);
-  await expect
-    .poll(() =>
-      analytics.events.some(
-        (event) =>
-          event.eventName === "lead_submitted" &&
-          event.formId === "services-contact",
-      ),
-    )
-    .toBe(true);
-  await analytics.flush();
-  const leadEvent = analytics.events.find(
-    (event) =>
-      event.eventName === "lead_submitted" &&
-      event.formId === "services-contact",
-  );
-  expect(leadEvent).toEqual({
-    eventName: "lead_submitted",
-    formId: "services-contact",
-  });
 });

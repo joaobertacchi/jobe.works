@@ -1,6 +1,8 @@
 import type { AboutTranslation } from "./translations/about";
+import type { CaseTranslation } from "./translations/case";
 import type { CommonTranslation } from "./translations/common";
 import type { ConsentTranslation } from "./translations/consent";
+import type { ContactTranslation } from "./translations/contact";
 import type { HomeTranslation } from "./translations/home";
 import type { NotFoundTranslation } from "./translations/not-found";
 import type { PrivacyTranslation } from "./translations/privacy";
@@ -12,6 +14,8 @@ export type Translation = {
   home: HomeTranslation;
   about: AboutTranslation;
   services: ServicesTranslation;
+  case: CaseTranslation;
+  contact: ContactTranslation;
   notFound: NotFoundTranslation;
   privacy: PrivacyTranslation;
 };

@@ -7,60 +7,96 @@ export type AboutTranslation = {
   };
   title: string;
   description: string;
-  workflowImageAlt: string;
   sections: {
-    boundaries: { title: string; description: string };
-    examples: { title: string; description: string };
+    name: { title: string; description: string };
+    positioning: { title: string; description: string };
+    principles: { title: string; description: string };
+    principlesList: {
+      diagnostic: string;
+      evidence: string;
+      production: string;
+      recurring: string;
+    };
   };
+  emailLabel: string;
+  emailAddress: string;
 };
 
 export const aboutTranslations = {
   en: {
     seo: {
-      title: "About the Static Website Template",
+      title: "About JOBE | Engineering that Works",
       description:
-        "Learn how this agent-ready template keeps architecture, localization, components, and quality checks explicit and easy to evolve.",
+        "JOBE is the engineering practice of João Bertacchi: senior engineering for AI products that need to work in production and for the business.",
     },
-    title: "About",
+    title: "About JOBE",
     description:
-      "A focused starting point that keeps structure, content, and quality checks clear so people and AI agents can build together.",
-    workflowImageAlt:
-      "Workflow connecting requirements, implementation, and validation.",
+      "JOBE is the engineering practice of João Bertacchi — senior, pragmatic, execution-oriented. It exists for products that gained traction and now need engineering that works in production and for the business.",
     sections: {
-      boundaries: {
-        title: "Clear boundaries",
+      name: {
+        title: "The name",
         description:
-          "Static output, locale-prefixed routes, typed content, and explicit integrations keep architectural choices visible instead of hiding them behind framework magic.",
+          "JOBE joins JOão and BErtacchi — with a secondary reading of the word job: the work itself. The tagline carries the same ambiguity: engineering that works, Jobe Works, jobe.works.",
       },
-      examples: {
-        title: "Working examples",
+      positioning: {
+        title: "Engineering that Works",
         description:
-          "Representative routes and components serve as local training material, showing future agents where content belongs and how each layer composes.",
+          "Not proofs of concept, technology choices, or code alone: engineering that functions in production and delivers for the business. Every engagement starts with evaluation and evidence, never with a catalog.",
+      },
+      principles: {
+        title: "How JOBE works",
+        description: "Four principles shape every engagement:",
+      },
+      principlesList: {
+        diagnostic:
+          "Diagnostic first — prospects enter through a conversation or diagnosis, and the solution is directed, never chosen from a menu.",
+        evidence:
+          "Evidence over claims — the paid diagnosis is grounded in evidence; the initial evaluation is grounded in your reports.",
+        production:
+          "Production and business outcomes — engineering must work in production and for the business, not stop at proofs of concept.",
+        recurring:
+          "Recurring relationships — diagnosis and implementation flow into fractional CTO, team enablement, and secure AI and governance.",
       },
     },
+    emailLabel: "Work with JOBE",
+    emailAddress: "joao@jobe.works",
   },
   "pt-BR": {
     seo: {
-      title: "Sobre o Modelo de Site Estático",
+      title: "Sobre a JOBE | Engenharia que Funciona",
       description:
-        "Conheça como este modelo preparado para agentes mantém arquitetura, localização, componentes e qualidade explícitos e fáceis de evoluir.",
+        "A JOBE é a prática de engenharia de João Bertacchi: engenharia sênior para produtos de IA que precisam funcionar em produção e para o negócio.",
     },
-    title: "Sobre",
+    title: "Sobre a JOBE",
     description:
-      "Um ponto de partida objetivo que mantém estrutura, conteúdo e verificações de qualidade claros para pessoas e agentes de IA criarem juntos.",
-    workflowImageAlt:
-      "Fluxo de trabalho entre requisitos, implementação e validação.",
+      "A JOBE é a prática de engenharia de João Bertacchi — sênior, pragmática e orientada à execução. Existe para produtos que ganharam tração e agora precisam de engenharia que funcione em produção e para o negócio.",
     sections: {
-      boundaries: {
-        title: "Limites claros",
+      name: {
+        title: "O nome",
         description:
-          "Saída estática, rotas com idioma, conteúdo tipado e integrações explícitas mantêm as decisões arquiteturais visíveis em vez de escondê-las na mágica do framework.",
+          "JOBE une JOão e BErtacchi — com uma leitura secundária da palavra job: o trabalho em si. O slogan carrega a mesma ambiguidade: engenharia que funciona, Jobe Works, jobe.works.",
       },
-      examples: {
-        title: "Exemplos funcionais",
+      positioning: {
+        title: "Engenharia que Funciona",
         description:
-          "Rotas e componentes representativos servem como material local de treinamento, mostrando a futuros agentes onde o conteúdo pertence e como cada camada se compõe.",
+          "Não apenas provas de conceito, escolhas de tecnologia ou código: engenharia que funciona em produção e entrega para o negócio. Todo engajamento começa com avaliação e evidência, nunca com um catálogo.",
+      },
+      principles: {
+        title: "Como a JOBE trabalha",
+        description: "Quatro princípios moldam todo engajamento:",
+      },
+      principlesList: {
+        diagnostic:
+          "Diagnóstico primeiro — prospects entram por uma conversa ou diagnóstico, e a solução é direcionada, nunca escolhida de um menu.",
+        evidence:
+          "Evidência acima de promessas — o diagnóstico pago é baseado em evidências; a avaliação inicial é baseada nos seus relatos.",
+        production:
+          "Resultados de produção e de negócio — a engenharia precisa funcionar em produção e para o negócio, não parar em provas de conceito.",
+        recurring:
+          "Relacionamentos recorrentes — diagnóstico e implementação fluem para fractional CTO, enablement do time e Secure AI e governança.",
       },
     },
+    emailLabel: "Trabalhe com a JOBE",
+    emailAddress: "joao@jobe.works",
   },
 } satisfies Record<SupportedLocale, AboutTranslation>;

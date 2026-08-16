@@ -8,16 +8,12 @@ describe("application styles", () => {
     const fontSans = css.match(/--font-sans:\s*([^;]+);/)?.[1];
 
     expect(fontSans?.replace(/\s+/g, " ").trim()).toBe(
-      'ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+      'ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
     );
   });
 
-  it("defines the exact serif system font stack", () => {
+  it("defines the JOBE brand color token", () => {
     const css = readFileSync("app/app.css", "utf8");
-    const fontSerif = css.match(/--font-serif:\s*([^;]+);/)?.[1];
-
-    expect(fontSerif?.replace(/\s+/g, " ").trim()).toBe(
-      'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif',
-    );
+    expect(css).toContain("--brand: oklch(0.36 0.13 262);");
   });
 });

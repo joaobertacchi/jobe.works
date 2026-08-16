@@ -24,7 +24,7 @@ describe("FormPrivacyNotice", () => {
 
     expect(
       screen.getByText(
-        "We use the information provided to respond to your inquiry. See our Privacy Notice for more information.",
+        "We use the information provided to respond to your inquiry. See the Privacy Notice for more information.",
       ),
     ).toBeVisible();
   });

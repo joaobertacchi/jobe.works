@@ -1,9 +1,10 @@
-import { ContactForm } from "../components/domain/contact-form";
+import { useAnalytics } from "../analytics/analytics";
 import { ServiceCard } from "../components/domain/service-card";
+import { FunnelSection } from "../components/sections/funnel-section";
 import { Container } from "../components/ui/container";
-import { DividedSection } from "../components/ui/divided-section";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
+import { TextLink } from "../components/ui/text-link";
 import { isSupportedLocale } from "../i18n/config";
 import { useI18n } from "../i18n/i18n";
 import { servicesTranslations } from "../i18n/translations/services";
@@ -19,44 +20,99 @@ export function meta({ matches, params }: Route.MetaArgs) {
 }
 
 export default function Services() {
-  const { translate } = useI18n();
+  const { locale, translate } = useI18n();
+  const { capture } = useAnalytics();
+
   return (
     <main className="py-16 sm:py-24">
       <Container>
-        <Heading as="h1" level="display">
-          {translate("services.title")}
-        </Heading>
-        <Text className="mt-6 max-w-3xl" tone="muted">
-          {translate("services.description")}
-        </Text>
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          <ServiceCard
-            title={translate("services.items.foundation.title")}
-            description={translate("services.items.foundation.description")}
-          />
-          <ServiceCard
-            title={translate("services.items.localization.title")}
-            description={translate("services.items.localization.description")}
-          />
-          <ServiceCard
-            title={translate("services.items.delivery.title")}
-            description={translate("services.items.delivery.description")}
-          />
-        </div>
-      </Container>
-      <DividedSection className="mt-16">
         <div className="max-w-3xl">
-          <Heading as="h2" level="section">
-            {translate("services.closing.title")}
+          <Heading as="h1" level="display">
+            {translate("services.title")}
           </Heading>
-          <Text className="mt-4" tone="muted">
-            {translate("services.closing.description")}
+          <Text className="mt-6" tone="muted">
+            {translate("services.description")}
           </Text>
         </div>
-      </DividedSection>
-      <DividedSection className="mt-16">
-        <ContactForm />
-      </DividedSection>
+
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <ServiceCard
+            description={translate("services.items.sprint.description")}
+            title={translate("services.items.sprint.title")}
+          />
+          <ServiceCard
+            description={translate("services.items.fractional.description")}
+            title={translate("services.items.fractional.title")}
+          />
+          <ServiceCard
+            description={translate("services.items.enablement.description")}
+            title={translate("services.items.enablement.title")}
+          />
+        </div>
+
+        <div className="mt-6 border-l border-brand pl-6">
+          <Text
+            as="span"
+            className="text-sm font-semibold uppercase tracking-widest text-brand"
+          >
+            {translate("services.crossSell.label")}
+          </Text>
+          <Heading as="h2" level="card" className="mt-2">
+            {translate("services.crossSell.title")}
+          </Heading>
+          <Text className="mt-2 max-w-2xl" tone="muted">
+            {translate("services.crossSell.description")}
+          </Text>
+        </div>
+      </Container>
+
+      <FunnelSection
+        description={translate("services.funnel.description")}
+        steps={[
+          {
+            description: translate("services.funnel.steps.call.description"),
+            title: translate("services.funnel.steps.call.title"),
+          },
+          {
+            description: translate(
+              "services.funnel.steps.diagnosis.description",
+            ),
+            title: translate("services.funnel.steps.diagnosis.title"),
+          },
+          {
+            description: translate(
+              "services.funnel.steps.engagement.description",
+            ),
+            title: translate("services.funnel.steps.engagement.title"),
+          },
+        ]}
+        title={translate("services.funnel.title")}
+      />
+
+      <section className="border-t border-border bg-surface py-16 sm:py-20">
+        <Container>
+          <div className="flex max-w-3xl flex-col gap-6">
+            <Heading>{translate("services.closing.title")}</Heading>
+            <Text tone="muted">
+              {translate("services.closing.description")}
+            </Text>
+            <div>
+              <TextLink
+                to={`/${locale}/contact`}
+                onClick={() =>
+                  capture({
+                    eventName: "cta_pressed",
+                    ctaId: "services-book-call",
+                    context: "services",
+                  })
+                }
+              >
+                {translate("services.closing.cta")}
+              </TextLink>
+            </div>
+          </div>
+        </Container>
+      </section>
     </main>
   );
 }

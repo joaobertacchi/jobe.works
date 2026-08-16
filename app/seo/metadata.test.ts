@@ -6,8 +6,8 @@ import type { SeoLoaderData } from "./metadata";
 const loaderData = {
   urls: { en: "/en/about", "pt-BR": "/pt-BR/about" },
   site: {
-    origin: "https://example.com",
-    siteName: "Agent-ready sites",
+    origin: "https://jobe.works",
+    siteName: "JOBE",
     defaultSocialImage: "/social-card.svg",
     xDefault: true,
   },
@@ -29,19 +29,19 @@ describe("createPageMeta", () => {
     expect(meta).toContainEqual({
       tagName: "link",
       rel: "canonical",
-      href: "https://example.com/en/about",
+      href: "https://jobe.works/en/about",
     });
     expect(meta).toContainEqual({
       tagName: "link",
       rel: "alternate",
       hrefLang: "pt-BR",
-      href: "https://example.com/pt-BR/about",
+      href: "https://jobe.works/pt-BR/about",
     });
     expect(meta).toContainEqual({
       tagName: "link",
       rel: "alternate",
       hrefLang: "x-default",
-      href: "https://example.com/pt-BR/about",
+      href: "https://jobe.works/pt-BR/about",
     });
     expect(meta).toContainEqual({
       name: "robots",
@@ -49,12 +49,12 @@ describe("createPageMeta", () => {
     });
     expect(meta).toContainEqual({
       property: "og:url",
-      content: "https://example.com/en/about",
+      content: "https://jobe.works/en/about",
     });
     expect(meta).toContainEqual({ property: "og:locale", content: "en_US" });
     expect(meta).toContainEqual({
       property: "og:image",
-      content: "https://example.com/social-card.svg",
+      content: "https://jobe.works/social-card.svg",
     });
     expect(meta).toContainEqual({
       name: "twitter:card",
@@ -78,7 +78,7 @@ describe("createPageMeta", () => {
     });
     expect(meta).toContainEqual({
       property: "og:image",
-      content: "https://example.com/about-card.svg",
+      content: "https://jobe.works/about-card.svg",
     });
     expect(meta).toContainEqual({ "script:ld+json": jsonLd });
   });

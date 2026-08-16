@@ -37,12 +37,12 @@ describe("PrimaryNavigation", () => {
   it.each([
     [
       "en",
-      "/en/about",
+      "/en/services",
       "Primary navigation",
       [
-        ["Home", "/en/"],
-        ["About", "/en/about"],
         ["Services", "/en/services"],
+        ["Case study", "/en/case"],
+        ["Contact", "/en/contact"],
       ],
     ],
     [
@@ -50,9 +50,9 @@ describe("PrimaryNavigation", () => {
       "/pt-BR/services",
       "Navegação principal",
       [
-        ["Início", "/pt-BR/"],
-        ["Sobre", "/pt-BR/about"],
         ["Serviços", "/pt-BR/services"],
+        ["Estudo de caso", "/pt-BR/case"],
+        ["Contato", "/pt-BR/contact"],
       ],
     ],
   ] as const)(
@@ -72,12 +72,12 @@ describe("PrimaryNavigation", () => {
   );
 
   it("marks only the active destination with aria-current", () => {
-    renderWithRouter(<PrimaryNavigation />, "en", "/en/about");
+    renderWithRouter(<PrimaryNavigation />, "en", "/en/case");
 
-    const activeLink = screen.getByRole("link", { name: "About" });
+    const activeLink = screen.getByRole("link", { name: "Case study" });
     const inactiveLinks = [
-      screen.getByRole("link", { name: "Home" }),
       screen.getByRole("link", { name: "Services" }),
+      screen.getByRole("link", { name: "Contact" }),
     ];
 
     expect(activeLink).toHaveAttribute("aria-current", "page");
@@ -87,9 +87,9 @@ describe("PrimaryNavigation", () => {
   });
 
   it("does not mark a destination active on a nested URL", () => {
-    renderWithRouter(<PrimaryNavigation />, "en", "/en/about/missing");
+    renderWithRouter(<PrimaryNavigation />, "en", "/en/case/extra");
 
-    for (const name of ["Home", "About", "Services"]) {
+    for (const name of ["Services", "Case study", "Contact"]) {
       expect(screen.getByRole("link", { name })).not.toHaveAttribute(
         "aria-current",
       );
@@ -127,7 +127,7 @@ describe("SiteHeader", () => {
     renderWithRouter(<SiteHeader urls={urls} />, "en", "/en/about");
 
     const header = screen.getByRole("banner");
-    expect(header).toHaveTextContent("Agent-ready sites");
+    expect(header).toHaveTextContent("JOBE");
     expect(
       screen.getByRole("navigation", { name: "Primary navigation" }),
     ).toBeVisible();
@@ -142,7 +142,7 @@ describe("SiteHeader", () => {
     renderWithRouter(<SiteHeader urls={null} />, "pt-BR", "/pt-BR/missing");
 
     const header = screen.getByRole("banner");
-    expect(header).toHaveTextContent("Sites prontos para agentes");
+    expect(header).toHaveTextContent("JOBE");
     expect(
       screen.getByRole("navigation", { name: "Navegação principal" }),
     ).toBeVisible();

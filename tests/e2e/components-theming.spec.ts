@@ -131,13 +131,13 @@ test("explicit preference survives internal navigation and a full reload", async
   await page.goto("/en/");
   await page.getByRole("button", { name: "Dark" }).click();
 
-  await page.getByRole("link", { name: "About", exact: true }).click();
-  await expect(page).toHaveURL("/en/about");
+  await page.getByRole("link", { name: "Services", exact: true }).click();
+  await expect(page).toHaveURL("/en/services");
   expect(await storedTheme(page)).toBe("dark");
   await expectTheme(page, "dark", "Dark");
 
   await page.reload();
-  await expect(page).toHaveURL("/en/about");
+  await expect(page).toHaveURL("/en/services");
   expect(await storedTheme(page)).toBe("dark");
   await expectTheme(page, "dark", "Dark");
 });
@@ -189,10 +189,12 @@ test("keyboard traversal reaches navigation and visibly focused theme controls",
   const primaryNavigation = page.getByRole("navigation", {
     name: "Primary navigation",
   });
-  const homeLink = primaryNavigation.getByRole("link", { name: "Home" });
-  await tabTo(page, homeLink);
-  await expect(homeLink).toBeFocused();
-  const navigationFocusOutline = await computedOutline(homeLink);
+  const servicesLink = primaryNavigation.getByRole("link", {
+    name: "Services",
+  });
+  await tabTo(page, servicesLink);
+  await expect(servicesLink).toBeFocused();
+  const navigationFocusOutline = await computedOutline(servicesLink);
   expect(navigationFocusOutline.style).not.toBe("none");
   expect(navigationFocusOutline.width).toBeGreaterThan(0);
 
@@ -209,7 +211,9 @@ test("keyboard traversal reaches navigation and visibly focused theme controls",
 
 test("CTA link exposes visible keyboard focus", async ({ page }) => {
   await page.goto("/en/");
-  const link = page.getByRole("link", { name: "Explore the examples" });
+  const link = page
+    .getByRole("link", { name: "Book a Product Readiness Call" })
+    .first();
   await tabTo(page, link);
   await expect(link).toBeFocused();
   const outline = await computedOutline(link);
@@ -341,7 +345,7 @@ test("services remain usable and stack on a mobile viewport", async ({
   await page.goto("/en/services");
 
   await expect(
-    page.getByRole("banner").getByText("Agent-ready sites", { exact: true }),
+    page.getByRole("banner").getByText("JOBE", { exact: true }),
   ).toBeVisible();
   await expect(
     page.getByRole("navigation", { name: "Primary navigation" }),

@@ -39,7 +39,7 @@ function fillEnglishFields() {
     target: { value: " ada@example.com " },
   });
   fireEvent.change(screen.getByLabelText("Message"), {
-    target: { value: " Please help with a static website. " },
+    target: { value: " Please help with a production issue. " },
   });
 }
 
@@ -60,7 +60,7 @@ describe("ContactForm", () => {
     expect(screen.getByLabelText("Email")).toBeRequired();
     expect(screen.getByLabelText("Message")).toBeRequired();
 
-    fireEvent.click(screen.getByRole("button", { name: "Send inquiry" }));
+    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
 
     expect(screen.getAllByText("This field is required.")).toHaveLength(3);
     expect(screen.getByRole("status")).toHaveTextContent(
@@ -71,7 +71,7 @@ describe("ContactForm", () => {
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: "invalid" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Send inquiry" }));
+    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
 
     expect(screen.getByText("Enter a valid email address.")).toBeVisible();
     expect(mocks.submitExampleContact).not.toHaveBeenCalled();
@@ -83,7 +83,7 @@ describe("ContactForm", () => {
     expect(liveRegion).toBeEmptyDOMElement();
     fillEnglishFields();
 
-    fireEvent.click(screen.getByRole("button", { name: "Send inquiry" }));
+    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
 
     await waitFor(() =>
       expect(mocks.submitExampleContact).toHaveBeenCalledTimes(1),
@@ -91,14 +91,16 @@ describe("ContactForm", () => {
     expect(mocks.submitExampleContact).toHaveBeenCalledWith({
       name: "Ada Lovelace",
       email: "ada@example.com",
-      message: "Please help with a static website.",
+      message: "Please help with a production issue.",
       marketingOptIn: false,
       attribution,
     });
     expect(mocks.capture.mock.calls).toEqual([
-      [{ eventName: "lead_submitted", formId: "services-contact" }],
+      [{ eventName: "lead_submitted", formId: "contact-form" }],
     ]);
-    expect(liveRegion).toHaveTextContent("Thanks. We will be in touch soon.");
+    expect(liveRegion).toHaveTextContent(
+      "Thanks. We will reply by email to schedule your call.",
+    );
     expect(screen.getByLabelText("Name")).toHaveValue("");
     expect(screen.getByLabelText("Email")).toHaveValue("");
     expect(screen.getByLabelText("Message")).toHaveValue("");
@@ -119,7 +121,7 @@ describe("ContactForm", () => {
     renderForm();
     fillEnglishFields();
 
-    fireEvent.click(screen.getByRole("button", { name: "Send inquiry" }));
+    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
     fireEvent.click(screen.getByRole("button", { name: "Sending..." }));
 
     const button = screen.getByRole("button", { name: "Sending..." });
@@ -129,7 +131,9 @@ describe("ContactForm", () => {
     resolveSubmission();
     await waitFor(() =>
       expect(
-        screen.getByText("Thanks. We will be in touch soon."),
+        screen.getByText(
+          "Thanks. We will reply by email to schedule your call.",
+        ),
       ).toBeVisible(),
     );
   });
@@ -138,14 +142,16 @@ describe("ContactForm", () => {
     renderForm();
     fillEnglishFields();
 
-    fireEvent.click(screen.getByRole("button", { name: "Send inquiry" }));
+    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
 
     const liveRegion = screen.getByRole("status");
     await waitFor(() =>
-      expect(liveRegion).toHaveTextContent("Thanks. We will be in touch soon."),
+      expect(liveRegion).toHaveTextContent(
+        "Thanks. We will reply by email to schedule your call.",
+      ),
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Send inquiry" }));
+    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
 
     expect(liveRegion).toHaveTextContent("Check the highlighted fields.");
     expect(screen.getAllByText("This field is required.")).toHaveLength(3);
@@ -161,41 +167,30 @@ describe("ContactForm", () => {
     expect(liveRegion).toBeEmptyDOMElement();
     fillEnglishFields();
 
-    fireEvent.click(screen.getByRole("button", { name: "Send inquiry" }));
+    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
 
     await waitFor(() =>
       expect(liveRegion).toHaveTextContent(
-        "We could not send your inquiry. Keep your details and try again.",
+        "We could not send your message. Keep your details and try again.",
       ),
     );
     expect(screen.getByLabelText("Name")).toHaveValue(" Ada Lovelace ");
     expect(screen.getByLabelText("Email")).toHaveValue("ada@example.com");
     expect(screen.getByLabelText("Message")).toHaveValue(
-      " Please help with a static website. ",
+      " Please help with a production issue. ",
     );
     expect(mocks.capture).not.toHaveBeenCalled();
   });
 
-  it("renders the Portuguese heading, labels, and submit action", () => {
+  it("renders the Portuguese labels and submit action", () => {
     renderForm("pt-BR");
 
-    expect(
-      screen.getByRole("heading", { name: "Fale sobre seu projeto" }),
-    ).toBeVisible();
     expect(screen.getByLabelText("Nome")).toBeVisible();
     expect(screen.getByLabelText("E-mail")).toBeVisible();
     expect(screen.getByLabelText("Mensagem")).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "Enviar solicitação" }),
+      screen.getByRole("button", { name: "Agendar a conversa" }),
     ).toBeVisible();
-  });
-
-  it("uses a presentational root wrapper", () => {
-    renderForm();
-
-    expect(screen.getByRole("heading", { level: 2 }).closest("section")).toBe(
-      null,
-    );
   });
 
   it("starts with the existing marketing opt-in unchecked", () => {

@@ -1,6 +1,6 @@
 import type { PublicSiteConfig } from "./types";
 
-const defaultOrigin = "https://example.com";
+const defaultOrigin = "https://jobe.works";
 
 export function createSiteConfig(
   configuredOrigin = process.env.SITE_ORIGIN ?? defaultOrigin,
@@ -25,7 +25,7 @@ export function createSiteConfig(
 
   return {
     origin: url.origin,
-    siteName: "Agent-ready sites",
+    siteName: "JOBE",
     defaultSocialImage: "/social-card.svg",
     xDefault: true,
   };

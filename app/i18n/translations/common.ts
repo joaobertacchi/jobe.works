@@ -2,12 +2,14 @@ import type { SupportedLocale } from "../config";
 
 export type CommonTranslation = {
   siteName: string;
+  tagline: string;
   navigationLabel: string;
   languageSwitcherLabel: string;
   selectingLanguage: string;
   footer: {
     navigationLabel: string;
     description: string;
+    email: string;
   };
   errors: {
     title: string;
@@ -18,6 +20,8 @@ export type CommonTranslation = {
     home: string;
     about: string;
     services: string;
+    case: string;
+    contact: string;
     privacy: string;
   };
   theme: {
@@ -30,14 +34,16 @@ export type CommonTranslation = {
 
 export const commonTranslations = {
   en: {
-    siteName: "Agent-ready sites",
+    siteName: "JOBE",
+    tagline: "Engineering that Works",
     navigationLabel: "Primary navigation",
     languageSwitcherLabel: "Choose language",
     selectingLanguage: "Selecting language",
     footer: {
       navigationLabel: "Footer navigation",
       description:
-        "A static foundation designed to be understood and replaced.",
+        "Engineering that works — in production, and for the business.",
+      email: "joao@jobe.works",
     },
     errors: {
       title: "Error",
@@ -48,19 +54,22 @@ export const commonTranslations = {
       home: "Home",
       about: "About",
       services: "Services",
+      case: "Case study",
+      contact: "Contact",
       privacy: "Privacy",
     },
     theme: { label: "Theme", light: "Light", dark: "Dark", system: "System" },
   },
   "pt-BR": {
-    siteName: "Sites prontos para agentes",
+    siteName: "JOBE",
+    tagline: "Engenharia que Funciona",
     navigationLabel: "Navegação principal",
     languageSwitcherLabel: "Escolher idioma",
     selectingLanguage: "Selecionando idioma",
     footer: {
       navigationLabel: "Navegação do rodapé",
-      description:
-        "Uma base estática criada para ser compreendida e substituída.",
+      description: "Engenharia que funciona — em produção, e para o negócio.",
+      email: "joao@jobe.works",
     },
     errors: {
       title: "Erro",
@@ -71,6 +80,8 @@ export const commonTranslations = {
       home: "Início",
       about: "Sobre",
       services: "Serviços",
+      case: "Estudo de caso",
+      contact: "Contato",
       privacy: "Privacidade",
     },
     theme: { label: "Tema", light: "Claro", dark: "Escuro", system: "Sistema" },

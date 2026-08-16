@@ -35,10 +35,10 @@ function html(lang: string, href = "/en/about", pathname?: string) {
   }
   const logicalPath = pathname.replace(/^\/(en|pt-BR)/, "") || "/";
   const suffix = logicalPath === "/" ? "/" : logicalPath;
-  const canonical = `https://example.com${pathname}`;
+  const canonical = `https://jobe.works${pathname}`;
   const ogLocale = lang === "en" ? "en_US" : "pt_BR";
   const alternateOgLocale = lang === "en" ? "pt_BR" : "en_US";
-  return `<!doctype html><html lang="${lang}"><head><title>Page</title><meta name="description" content="Description"><meta name="robots" content="index,follow"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="en" href="https://example.com/en${suffix}"><link rel="alternate" hreflang="pt-BR" href="https://example.com/pt-BR${suffix}"><link rel="alternate" hreflang="x-default" href="https://example.com/pt-BR${suffix}"><meta property="og:type" content="website"><meta property="og:site_name" content="Agent-ready sites"><meta property="og:url" content="${canonical}"><meta property="og:title" content="Page"><meta property="og:description" content="Description"><meta property="og:image" content="https://example.com/social-card.svg"><meta property="og:locale" content="${ogLocale}"><meta property="og:locale:alternate" content="${alternateOgLocale}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Page"><meta name="twitter:description" content="Description"><meta name="twitter:image" content="https://example.com/social-card.svg"></head><body><a href="${href}">Link</a></body></html>`;
+  return `<!doctype html><html lang="${lang}"><head><title>Page</title><meta name="description" content="Description"><meta name="robots" content="index,follow"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="en" href="https://jobe.works/en${suffix}"><link rel="alternate" hreflang="pt-BR" href="https://jobe.works/pt-BR${suffix}"><link rel="alternate" hreflang="x-default" href="https://jobe.works/pt-BR${suffix}"><meta property="og:type" content="website"><meta property="og:site_name" content="JOBE"><meta property="og:url" content="${canonical}"><meta property="og:title" content="Page"><meta property="og:description" content="Description"><meta property="og:image" content="https://jobe.works/social-card.svg"><meta property="og:locale" content="${ogLocale}"><meta property="og:locale:alternate" content="${alternateOgLocale}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Page"><meta name="twitter:description" content="Description"><meta name="twitter:image" content="https://jobe.works/social-card.svg"></head><body><a href="${href}">Link</a></body></html>`;
 }
 
 function withImage(content: string, src: string) {
@@ -81,10 +81,10 @@ describe("finalizeStaticBuild", () => {
     expect(existsSync(join(root, "server"))).toBe(false);
     expect(existsSync(join(client, "__spa-fallback.html"))).toBe(false);
     expect(readFileSync(join(client, "sitemap.xml"), "utf8")).toContain(
-      "https://example.com/en/about",
+      "https://jobe.works/en/about",
     );
     expect(readFileSync(join(client, "robots.txt"), "utf8")).toContain(
-      "Sitemap: https://example.com/sitemap.xml",
+      "Sitemap: https://jobe.works/sitemap.xml",
     );
   });
 
@@ -162,7 +162,7 @@ describe("finalizeStaticBuild", () => {
     );
   });
 
-  it.each(["services", "https://example.com/en/missing"])(
+  it.each(["services", "https://jobe.works/en/missing"])(
     "rejects invalid internal link %s",
     (href) => {
       const { client } = createCompleteBuild();

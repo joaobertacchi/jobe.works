@@ -8,145 +8,161 @@ export type ServicesTranslation = {
   title: string;
   description: string;
   items: {
-    foundation: {
+    sprint: {
       title: string;
       description: string;
     };
-    localization: {
+    fractional: {
       title: string;
       description: string;
     };
-    delivery: {
+    enablement: {
       title: string;
       description: string;
+    };
+  };
+  crossSell: {
+    label: string;
+    title: string;
+    description: string;
+  };
+  funnel: {
+    title: string;
+    description: string;
+    steps: {
+      call: { title: string; description: string };
+      diagnosis: { title: string; description: string };
+      engagement: { title: string; description: string };
     };
   };
   closing: {
     title: string;
     description: string;
-  };
-  contact: {
-    title: string;
-    description: string;
-    fields: {
-      name: string;
-      email: string;
-      message: string;
-    };
-    submit: string;
-    submitting: string;
-    success: string;
-    error: string;
-    validation: {
-      required: string;
-      email: string;
-      summary: string;
-    };
+    cta: string;
   };
 };
 
 export const servicesTranslations = {
   en: {
     seo: {
-      title: "Static Website Foundation Services",
+      title: "Services | JOBE — Engineering that Works",
       description:
-        "Explore the reusable foundation, typed localization, and deterministic delivery patterns demonstrated by this static website template.",
+        "AI Productization Sprint, Fractional CTO & Architecture, and AI-Native SDLC & Engineering Enablement — entered through a Product Readiness Call and a paid diagnosis.",
     },
     title: "Services",
     description:
-      "Everything needed to turn a clear idea into a fast, durable website.",
+      "JOBE's work is a progression: content or referral, an initial technical evaluation, a paid diagnosis, then a directed offer. The dominant problem decides the engagement — you never choose among eight services.",
     items: {
-      foundation: {
-        title: "Foundation",
+      sprint: {
+        title: "AI Productization Sprint",
         description:
-          "Composable React patterns and a static-first architecture keep each page easy to understand and evolve.",
+          "Resolves the most urgent, highest-perceived-value problem: turning a product that gained traction into something safe, scalable, and sustainable. A security lens is embedded, with a mobile-specific variant when applicable — including React Native rescue and modernization.",
       },
-      localization: {
-        title: "Localization",
+      fractional: {
+        title: "Fractional CTO & Architecture",
         description:
-          "Typed dictionaries keep every supported language complete, consistent, and ready to publish.",
+          "Recurring senior technology direction: architecture decisions, roadmaps, and engineering judgment without a full-time hire. Typically generates the implementation projects that follow.",
       },
-      delivery: {
-        title: "Delivery",
+      enablement: {
+        title: "AI-Native SDLC & Engineering Enablement",
         description:
-          "Built-in quality checks and prerendering make confident releases routine.",
+          "Consulting, training, and practice adoption so teams use AI tools across the development lifecycle safely and productively — with Secure AI and governance as part of the practice.",
+      },
+    },
+    crossSell: {
+      label: "Cross-sell",
+      title: "AI Engineering Economics",
+      description:
+        "For clients with relevant LLM spend: engineering and economic control of AI costs. Offered as a natural cross-sell, never a fourth entry door — the message stays focused.",
+    },
+    funnel: {
+      title: "How the engagement starts",
+      description:
+        "Every engagement follows the same sequence. The diagnosis is paid and evidence-based; the structured call is the first step.",
+      steps: {
+        call: {
+          title: "Product Readiness Call",
+          description:
+            "A structured 30–45 minute conversation based on your reports. You receive a summary of perceived risks, a preliminary problem classification, next steps, and a mini-scorecard.",
+        },
+        diagnosis: {
+          title: "Paid diagnosis",
+          description:
+            "Interviews, repository access, architecture review, integration analysis, CI/CD and environment inspection, security analysis, observability evaluation, cloud and AI cost analysis, and risk identification. You receive a detailed scorecard, an architecture diagram, prioritized risks, quick wins, a backlog, a 30/60/90-day plan, preliminary estimates, and an executive presentation.",
+        },
+        engagement: {
+          title: "Directed offer",
+          description:
+            "The dominant problem picks the offer, and implementation follows — with fractional CTO, team enablement, and secure AI and governance as the recurring layer.",
+        },
       },
     },
     closing: {
-      title: "A foundation, not a platform",
+      title: "Start with a conversation",
       description:
-        "These examples stay intentionally small so each fork can establish its own content and visual system.",
-    },
-    contact: {
-      title: "Tell us about your project",
-      description:
-        "This example keeps form state, privacy, attribution, analytics, and the provider boundary visible in one small flow.",
-      fields: {
-        name: "Name",
-        email: "Email",
-        message: "Message",
-      },
-      submit: "Send inquiry",
-      submitting: "Sending...",
-      success: "Thanks. We will be in touch soon.",
-      error: "We could not send your inquiry. Keep your details and try again.",
-      validation: {
-        required: "This field is required.",
-        email: "Enter a valid email address.",
-        summary: "Check the highlighted fields.",
-      },
+        "Book a Product Readiness Call and leave with a clear, honest read on your risks and next steps — no catalog, no pressure.",
+      cta: "Book a Product Readiness Call",
     },
   },
   "pt-BR": {
     seo: {
-      title: "Serviços de Base para Sites Estáticos",
+      title: "Serviços | JOBE — Engenharia que Funciona",
       description:
-        "Explore a base reutilizável, a localização tipada e os padrões de entrega determinística demonstrados por este modelo de site estático.",
+        "AI Productization Sprint, Fractional CTO & Arquitetura e SDLC Nativo em IA & Enablement de Engenharia — acessados por uma Product Readiness Call e um diagnóstico pago.",
     },
     title: "Serviços",
     description:
-      "Tudo o que é necessário para transformar uma ideia clara em um site rápido e duradouro.",
+      "O trabalho da JOBE é uma progressão: conteúdo ou indicação, avaliação técnica inicial, diagnóstico pago e, então, uma oferta direcionada. O problema dominante decide o engajamento — você nunca escolhe entre oito serviços.",
     items: {
-      foundation: {
-        title: "Base",
+      sprint: {
+        title: "AI Productization Sprint",
         description:
-          "Rotas pré-renderizadas, contratos tipados e validações objetivas mantêm cada página simples de evoluir.",
+          "Resolve o problema mais urgente e de maior valor percebido: transformar um produto que ganhou tração em algo seguro, escalável e sustentável. Uma lente de segurança vem embutida, com variante mobile quando aplicável — incluindo resgate e modernização de React Native.",
       },
-      localization: {
-        title: "Localização",
+      fractional: {
+        title: "Fractional CTO & Arquitetura",
         description:
-          "Dicionários completos e URLs explícitas mantêm o conteúdo consistente em todos os idiomas.",
+          "Direção sênior recorrente de tecnologia: decisões de arquitetura, roadmaps e julgamento de engenharia sem uma contratação integral. Normalmente origina os projetos de implementação que vêm depois.",
       },
-      delivery: {
-        title: "Entrega",
+      enablement: {
+        title: "SDLC Nativo em IA & Enablement de Engenharia",
         description:
-          "Verificações de qualidade e pré-renderização tornam as entregas confiáveis e previsíveis.",
+          "Consultoria, treinamento e adoção de práticas para que times usem ferramentas de IA em todo o ciclo de desenvolvimento com segurança e produtividade — com Secure AI e governança como parte da prática.",
+      },
+    },
+    crossSell: {
+      label: "Venda cruzada",
+      title: "AI Engineering Economics",
+      description:
+        "Para clientes com gasto relevante de LLM: controle de engenharia e econômico dos custos de IA. Oferecida como venda cruzada natural, nunca como quarta porta de entrada — a mensagem permanece focada.",
+    },
+    funnel: {
+      title: "Como o engajamento começa",
+      description:
+        "Todo engajamento segue a mesma sequência. O diagnóstico é pago e baseado em evidências; a conversa estruturada é o primeiro passo.",
+      steps: {
+        call: {
+          title: "Product Readiness Call",
+          description:
+            "Uma conversa estruturada de 30–45 minutos baseada nos seus relatos. Você recebe um resumo dos riscos percebidos, uma classificação preliminar do problema, próximos passos e um mini-scorecard.",
+        },
+        diagnosis: {
+          title: "Diagnóstico pago",
+          description:
+            "Entrevistas, acesso ao repositório, revisão de arquitetura, análise de integrações, inspeção de CI/CD e ambientes, análise de segurança, avaliação de observabilidade, análise de custos de cloud e IA e identificação de riscos. Você recebe um scorecard detalhado, um diagrama da arquitetura, riscos priorizados, quick wins, um backlog, um plano de 30/60/90 dias, estimativas preliminares e uma apresentação executiva.",
+        },
+        engagement: {
+          title: "Oferta direcionada",
+          description:
+            "O problema dominante escolhe a oferta, e a implementação vem em seguida — com fractional CTO, enablement do time e Secure AI e governança como a camada recorrente.",
+        },
       },
     },
     closing: {
-      title: "Uma base, não uma plataforma",
+      title: "Comece por uma conversa",
       description:
-        "Estes exemplos permanecem intencionalmente pequenos para que cada fork estabeleça seu próprio conteúdo e sistema visual.",
-    },
-    contact: {
-      title: "Fale sobre seu projeto",
-      description:
-        "Este exemplo mantém estado do formulário, privacidade, atribuição, analytics e o limite do provedor visíveis em um fluxo pequeno.",
-      fields: {
-        name: "Nome",
-        email: "E-mail",
-        message: "Mensagem",
-      },
-      submit: "Enviar solicitação",
-      submitting: "Enviando...",
-      success: "Obrigado. Entraremos em contato em breve.",
-      error:
-        "Não foi possível enviar sua solicitação. Mantenha seus dados e tente novamente.",
-      validation: {
-        required: "Este campo é obrigatório.",
-        email: "Informe um endereço de e-mail válido.",
-        summary: "Verifique os campos destacados.",
-      },
+        "Agende uma Product Readiness Call e saia com uma leitura clara e honesta dos seus riscos e próximos passos — sem catálogo, sem pressão.",
+      cta: "Agendar uma Product Readiness Call",
     },
   },
 } satisfies Record<SupportedLocale, ServicesTranslation>;

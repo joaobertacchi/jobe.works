@@ -17,6 +17,8 @@ import NotFound from "./$locale.404";
 import About from "./$locale.about";
 import Home from "./$locale._index";
 import Services from "./$locale.services";
+import CaseStudy from "./$locale.case";
+import Contact from "./$locale.contact";
 import Privacy from "./$locale.privacy";
 import LocalizedCatchAll from "./$locale.$";
 import LocaleLayout, {
@@ -46,6 +48,18 @@ const canonicalManifest = [
     urls: { en: "/en/services", "pt-BR": "/pt-BR/services" },
   },
   {
+    id: "case",
+    kind: "page",
+    pattern: "/:locale/case",
+    urls: { en: "/en/case", "pt-BR": "/pt-BR/case" },
+  },
+  {
+    id: "contact",
+    kind: "page",
+    pattern: "/:locale/contact",
+    urls: { en: "/en/contact", "pt-BR": "/pt-BR/contact" },
+  },
+  {
     id: "404",
     kind: "utility",
     pattern: "/:locale/404",
@@ -60,8 +74,8 @@ const canonicalManifest = [
 ] satisfies CanonicalUrlManifest;
 
 const site = {
-  origin: "https://example.com",
-  siteName: "Agent-ready sites",
+  origin: "https://jobe.works",
+  siteName: "JOBE",
   defaultSocialImage: "/social-card.svg",
   xDefault: true,
 };
@@ -121,6 +135,8 @@ function renderLocalizedRoute(
               { index: true, Component: Home },
               { path: "about", Component: About },
               { path: "services", Component: Services },
+              { path: "case", Component: CaseStudy },
+              { path: "contact", Component: Contact },
               { path: "privacy", Component: Privacy },
               { path: "404", Component: NotFound },
               {
@@ -172,14 +188,17 @@ describe("localized route layout", () => {
       { tracker, consentCategory: "analytics" },
     ]);
 
-    fireEvent.click(
-      await screen.findByRole("link", { name: "Explore the examples" }),
-    );
+    const heroCta = (
+      await screen.findAllByRole("link", {
+        name: "Book a Product Readiness Call",
+      })
+    )[0];
+    fireEvent.click(heroCta);
 
     await vi.waitFor(() => {
       expect(tracker).toHaveBeenCalledWith({
         eventName: "cta_pressed",
-        ctaId: "hero-cta",
+        ctaId: "hero-book-call",
         context: "homepage",
       });
     });
@@ -197,37 +216,49 @@ describe("localized route layout", () => {
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: "Dados tratados pelo modelo",
+        name: "Dados tratados por este site",
       }),
     ).toBeVisible();
   });
 
-  it("renders the localized About workflow image", async () => {
+  it("renders the localized About page", async () => {
     renderLocalizedRoute("/pt-BR/about");
 
-    const image = await screen.findByRole("img", {
-      name: "Fluxo de trabalho entre requisitos, implementação e validação.",
-    });
-
-    expect(image.tagName).toBe("IMG");
-    expect(image).toHaveAttribute(
-      "src",
-      expect.stringContaining("about-workflow"),
-    );
+    expect(
+      await screen.findByRole("heading", { name: "Sobre a JOBE" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText(
+        "JOBE une JOão e BErtacchi — com uma leitura secundária da palavra job: o trabalho em si. O slogan carrega a mesma ambiguidade: engenharia que funciona, Jobe Works, jobe.works.",
+      ),
+    ).toBeVisible();
   });
 
-  it("renders the localized services contact form", async () => {
-    renderLocalizedRoute("/pt-BR/services");
+  it("renders the localized case study page", async () => {
+    renderLocalizedRoute("/en/case");
+
+    expect(
+      await screen.findByRole("heading", { name: "StockCast" }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { name: "The method behind the case" }),
+    ).toBeVisible();
+  });
+
+  it("renders the localized contact page with the mailto booking path", async () => {
+    renderLocalizedRoute("/pt-BR/contact");
 
     expect(
       await screen.findByRole("heading", {
-        name: "Fale sobre seu projeto",
+        name: "Agendar uma Product Readiness Call",
       }),
     ).toBeVisible();
-    expect(screen.getByLabelText("Nome")).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "Enviar solicitação" }),
-    ).toBeVisible();
+      screen.getByRole("link", { name: "joao@jobe.works" }),
+    ).toHaveAttribute(
+      "href",
+      expect.stringContaining("mailto:joao@jobe.works"),
+    );
   });
 
   it.each([
@@ -312,7 +343,9 @@ describe("localized route layout", () => {
 
   it("renders localized not-found behavior after client navigation", async () => {
     const router = renderLocalizedRoute("/en/about", true);
-    expect(await screen.findByRole("heading", { name: "About" })).toBeVisible();
+    expect(
+      await screen.findByRole("heading", { name: "About JOBE" }),
+    ).toBeVisible();
 
     await router.navigate("/en/not-published");
 
@@ -326,10 +359,10 @@ describe("localized route layout", () => {
   });
 
   it.each([
-    ["/en/about/", "/en/about", "Page not found", "About"],
-    ["/en/About", "/en/about", "Page not found", "About"],
-    ["/pt-BR/about/", "/pt-BR/about", "Página não encontrada", "Sobre"],
-    ["/pt-BR/About", "/pt-BR/about", "Página não encontrada", "Sobre"],
+    ["/en/about/", "/en/about", "Page not found", "About JOBE"],
+    ["/en/About", "/en/about", "Page not found", "About JOBE"],
+    ["/pt-BR/about/", "/pt-BR/about", "Página não encontrada", "Sobre a JOBE"],
+    ["/pt-BR/About", "/pt-BR/about", "Página não encontrada", "Sobre a JOBE"],
   ] as const)(
     "rejects noncanonical alias navigation to %s",
     async (alias, canonicalPath, notFoundHeading, canonicalHeading) => {

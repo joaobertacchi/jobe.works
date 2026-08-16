@@ -3,10 +3,10 @@ import { describe, expect, it } from "vitest";
 import { createSiteConfig } from "./site-config.server";
 
 describe("createSiteConfig", () => {
-  it("uses and normalizes the template origin", () => {
+  it("uses and normalizes the jobe.works origin", () => {
     expect(createSiteConfig()).toEqual({
-      origin: "https://example.com",
-      siteName: "Agent-ready sites",
+      origin: "https://jobe.works",
+      siteName: "JOBE",
       defaultSocialImage: "/social-card.svg",
       xDefault: true,
     });

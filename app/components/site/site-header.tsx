@@ -1,7 +1,7 @@
 import type { SupportedLocale } from "../../i18n/config";
 import { useI18n } from "../../i18n/i18n";
 import { Container } from "../ui/container";
-import { Text } from "../ui/text";
+import { TextLink } from "../ui/text-link";
 import { LanguageSwitcher } from "./language-switcher";
 import { PrimaryNavigation } from "./primary-navigation";
 import { ThemeSwitcher } from "./theme-switcher";
@@ -11,12 +11,14 @@ export function SiteHeader({
 }: {
   urls: Record<SupportedLocale, string> | null;
 }) {
-  const { translate } = useI18n();
+  const { locale, translate } = useI18n();
 
   return (
-    <header>
+    <header className="border-b border-border">
       <Container className="flex flex-wrap items-center justify-between gap-4 py-4">
-        <Text as="span">{translate("common.siteName")}</Text>
+        <TextLink to={`/${locale}/`} variant="wordmark">
+          {translate("common.siteName")}
+        </TextLink>
         <PrimaryNavigation />
         <div className="flex flex-wrap items-center gap-4">
           {urls === null ? null : <LanguageSwitcher urls={urls} />}

@@ -6,9 +6,9 @@ export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
 };
 
 const levelClasses = {
-  display: "font-serif text-4xl font-semibold leading-tight sm:text-6xl",
-  section: "font-serif text-3xl font-semibold leading-tight sm:text-4xl",
-  card: "font-serif text-xl font-semibold leading-snug",
+  display: "text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl",
+  section: "text-3xl font-bold leading-tight tracking-tight sm:text-4xl",
+  card: "text-xl font-semibold leading-snug tracking-tight",
 };
 
 export function Heading({

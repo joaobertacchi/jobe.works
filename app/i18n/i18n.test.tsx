@@ -8,15 +8,15 @@ function TranslationProbe() {
   const { locale, translate } = useI18n();
   return (
     <p>
-      {locale}: {translate("home.title")}
+      {locale}: {translate("home.hero.title")}
     </p>
   );
 }
 
 describe("i18n context", () => {
   it.each([
-    ["en", "en: Static website template"],
-    ["pt-BR", "pt-BR: Modelo de site estático"],
+    ["en", "en: Engineering that Works"],
+    ["pt-BR", "pt-BR: Engenharia que Funciona"],
   ] as const)("binds translations to %s", (locale, expected) => {
     render(
       <I18nProvider locale={locale}>
@@ -26,26 +26,6 @@ describe("i18n context", () => {
 
     expect(screen.getByText(expected)).toBeVisible();
   });
-
-  it.each([
-    ["en", ["No examples", "One example", "2 examples"]],
-    ["pt-BR", ["Nenhum exemplo", "Um exemplo", "2 exemplos"]],
-  ] as const)(
-    "pluralizes and interpolates translations in %s",
-    (locale, expected) => {
-      const { result } = renderHook(() => useI18n(), {
-        wrapper: ({ children }) => (
-          <I18nProvider locale={locale}>{children}</I18nProvider>
-        ),
-      });
-
-      expect(
-        [0, 1, 2].map((count) =>
-          result.current.translate("home.exampleCount", { count }),
-        ),
-      ).toEqual(expected);
-    },
-  );
 
   it("keeps simultaneously rendered providers bound to their locales", () => {
     render(
@@ -59,8 +39,8 @@ describe("i18n context", () => {
       </>,
     );
 
-    expect(screen.getByText("en: Static website template")).toBeVisible();
-    expect(screen.getByText("pt-BR: Modelo de site estático")).toBeVisible();
+    expect(screen.getByText("en: Engineering that Works")).toBeVisible();
+    expect(screen.getByText("pt-BR: Engenharia que Funciona")).toBeVisible();
   });
 
   it("throws for a runtime missing translation", () => {
@@ -80,7 +60,7 @@ describe("i18n context", () => {
   });
 
   it("keeps provider policy authoritative over runtime options", () => {
-    const greetingScope = "home.greeting" as TranslationScope;
+    const titleScope = "home.hero.title" as TranslationScope;
     const missingScope = "home.missing" as TranslationScope;
     const { result } = renderHook(() => useI18n(), {
       wrapper: ({ children }) => (
@@ -93,7 +73,7 @@ describe("i18n context", () => {
     ) => string;
 
     expect(
-      translate(greetingScope, {
+      translate(titleScope, {
         locale: "pt-BR",
         missingBehavior: "guess",
         values: {
@@ -106,7 +86,7 @@ describe("i18n context", () => {
           scope: "home",
         },
       }),
-    ).toBe("Hello, Agent");
+    ).toBe("Engineering that Works");
     expect(() =>
       translate(missingScope, {
         locale: "pt-BR",

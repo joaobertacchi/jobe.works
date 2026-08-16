@@ -27,25 +27,25 @@ export type PrivacyTranslation = {
 export const privacyTranslations = {
   en: {
     seo: {
-      title: "Privacy Notice | Agent-ready Static Sites",
+      title: "Privacy Notice | JOBE — Engineering that Works",
       description:
-        "Read the generic privacy posture demonstrated by this static website template and learn what each fork must document for its own integrations.",
+        "How jobe.works handles personal data: local preferences, consent choices, campaign attribution, and the information you send by email.",
     },
     title: "Privacy notice",
     introduction:
-      "This example explains the privacy posture of the base static template. Adapt it to the services and processing activities used by your site.",
+      "This notice explains how jobe.works handles personal data. It is kept explicit and minimal: no project-owned backend, no arbitrary tracking, and consent before any non-essential technology.",
     formNotice: {
-      body: "We use the information provided to respond to your inquiry. See our Privacy Notice for more information.",
+      body: "We use the information provided to respond to your inquiry. See the Privacy Notice for more information.",
       marketingOptIn: "I would like to receive occasional updates and offers.",
     },
     sections: {
       data: {
-        title: "Data handled by the template",
-        body: "The base template does not send personal data to a project-owned backend. Browser and hosting infrastructure may still process technical request data according to their own configuration.",
+        title: "Data handled by this site",
+        body: "This site does not send personal data to a project-owned backend. Browser and hosting infrastructure may still process technical request data according to their own configuration.",
       },
       purpose: {
-        title: "Added integrations",
-        body: "A fork that adds analytics, forms, marketing tools, or other providers must document what data is collected, why it is needed, and who receives it.",
+        title: "Email contact",
+        body: "The site invites inquiries by email at joao@jobe.works, used to respond to your inquiry and, when relevant, to schedule a Product Readiness Call. No form on this site collects your name, email address, or message into a site-owned system.",
       },
       storage: {
         title: "Local preferences",
@@ -53,7 +53,7 @@ export const privacyTranslations = {
       },
       consent: {
         title: "Consent choices",
-        body: "The site stores your consent choice for analytics and marketing technologies in this browser, versioned so a change in practices can request a new choice. Replace this text with your fork-specific explanation.",
+        body: "The site stores your consent choice for analytics and marketing technologies in this browser, versioned so a change in practices can request a new choice.",
       },
       cookies: {
         title: "Cookies and similar technologies",
@@ -61,47 +61,47 @@ export const privacyTranslations = {
       },
       analytics: {
         title: "Analytics",
-        body: "When analytics consent is given, the site may measure how pages are used. Document the analytics providers and what they receive in your fork.",
+        body: "When analytics consent is given, the site may measure how pages are used. The analytics providers and what they receive are documented here when an integration is configured.",
       },
       marketing: {
         title: "Advertising and marketing technologies",
-        body: "Marketing consent is separate from analytics. Accepting analytics does not enable advertising technologies. Document marketing providers and purposes in your fork.",
+        body: "Marketing consent is separate from analytics. Accepting analytics does not enable advertising technologies.",
       },
       attribution: {
         title: "Campaign attribution",
         body: "Only explicitly allowlisted campaign parameters (utm_source, utm_medium, utm_campaign, utm_id, utm_term, utm_content) may be used, kept in memory for the current visit and never persisted. No arbitrary URL parameters are collected.",
       },
       contactForms: {
-        title: "Contact forms",
-        body: "Forms collect only what is needed to respond to your request. Consent to optional promotional communication is always separate from submitting the form and never preselected.",
+        title: "Contact by email",
+        body: "Emailing JOBE is voluntary; only the information you include is used, to respond to your inquiry. The site offers no promotional consent checkbox and maintains no marketing list.",
       },
       rights: {
         title: "Your choices",
-        body: "Site owners must replace this example with contact details and procedures that match their actual legal obligations and data practices.",
+        body: "You can change or withdraw your consent choices at any time using the Cookie settings control in the footer. To exercise your data rights, write to joao@jobe.works.",
       },
     },
   },
   "pt-BR": {
     seo: {
-      title: "Aviso de Privacidade | Sites Estáticos para Agentes",
+      title: "Aviso de Privacidade | JOBE — Engenharia que Funciona",
       description:
-        "Conheça a postura genérica de privacidade demonstrada por este modelo de site estático e o que cada fork deve documentar sobre suas integrações.",
+        "Como o jobe.works trata dados pessoais: preferências locais, escolhas de consentimento, atribuição de campanhas e as informações que você envia por e-mail.",
     },
     title: "Aviso de privacidade",
     introduction:
-      "Este exemplo explica a postura de privacidade do modelo estático base. Adapte-o aos serviços e às atividades de tratamento usados pelo seu site.",
+      "Este aviso explica como o jobe.works trata dados pessoais. Ele é mantido explícito e mínimo: sem backend próprio, sem rastreamento arbitrário e com consentimento antes de qualquer tecnologia não essencial.",
     formNotice: {
       body: "Usamos as informações fornecidas para responder à sua solicitação. Consulte o Aviso de Privacidade para mais informações.",
       marketingOptIn: "Gostaria de receber atualizações e ofertas ocasionais.",
     },
     sections: {
       data: {
-        title: "Dados tratados pelo modelo",
-        body: "O modelo base não envia dados pessoais para um backend próprio do projeto. O navegador e a infraestrutura de hospedagem ainda podem tratar dados técnicos de requisição conforme suas configurações.",
+        title: "Dados tratados por este site",
+        body: "Este site não envia dados pessoais a um backend próprio do projeto. O navegador e a infraestrutura de hospedagem ainda podem tratar dados técnicos de requisição conforme suas configurações.",
       },
       purpose: {
-        title: "Integrações adicionadas",
-        body: "Um fork que adicione analytics, formulários, ferramentas de marketing ou outros provedores deve informar quais dados são coletados, por que são necessários e quem os recebe.",
+        title: "Contato por e-mail",
+        body: "O site convida a contatos por e-mail em joao@jobe.works, usados para responder à sua solicitação e, quando relevante, agendar uma Product Readiness Call. Nenhum formulário deste site coleta seu nome, e-mail ou mensagem em um sistema próprio.",
       },
       storage: {
         title: "Preferências locais",
@@ -109,7 +109,7 @@ export const privacyTranslations = {
       },
       consent: {
         title: "Escolhas de consentimento",
-        body: "O site armazena neste navegador sua escolha de consentimento para tecnologias de analytics e marketing, com versão, para que uma mudança de práticas possa solicitar nova escolha. Substitua este texto pela explicação específica do seu fork.",
+        body: "O site armazena neste navegador sua escolha de consentimento para tecnologias de analytics e marketing, com versão, para que uma mudança de práticas possa solicitar nova escolha.",
       },
       cookies: {
         title: "Cookies e tecnologias semelhantes",
@@ -117,23 +117,23 @@ export const privacyTranslations = {
       },
       analytics: {
         title: "Analytics",
-        body: "Com o consentimento de analytics, o site pode medir como as páginas são usadas. Documente no seu fork os provedores de analytics e o que eles recebem.",
+        body: "Com o consentimento de analytics, o site pode medir como as páginas são usadas. Os provedores de analytics e o que recebem serão documentados aqui quando uma integração for configurada.",
       },
       marketing: {
         title: "Tecnologias de publicidade e marketing",
-        body: "O consentimento de marketing é separado do de analytics. Aceitar analytics não habilita tecnologias de publicidade. Documente no seu fork os provedores de marketing e suas finalidades.",
+        body: "O consentimento de marketing é separado do de analytics. Aceitar analytics não habilita tecnologias de publicidade.",
       },
       attribution: {
         title: "Atribuição de campanhas",
         body: "Apenas parâmetros de campanha explicitamente permitidos (utm_source, utm_medium, utm_campaign, utm_id, utm_term, utm_content) podem ser usados, mantidos em memória na visita atual e nunca persistidos. Nenhum parâmetro arbitrário de URL é coletado.",
       },
       contactForms: {
-        title: "Formulários de contato",
-        body: "Formulários coletam apenas o necessário para responder à sua solicitação. O consentimento para comunicação promocional opcional é sempre separado do envio do formulário e nunca pré-selecionado.",
+        title: "Contato por e-mail",
+        body: "Enviar e-mail à JOBE é voluntário; apenas as informações que você incluir são usadas, para responder à sua solicitação. O site não oferece caixa de consentimento promocional e não mantém lista de marketing.",
       },
       rights: {
         title: "Suas escolhas",
-        body: "Os responsáveis pelo site devem substituir este exemplo por contatos e procedimentos compatíveis com suas obrigações legais e práticas reais de tratamento de dados.",
+        body: "Você pode alterar ou retirar suas escolhas de consentimento a qualquer momento pelo controle de Configurações de cookies no rodapé. Para exercer seus direitos sobre dados, escreva para joao@jobe.works.",
       },
     },
   },

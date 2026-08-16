@@ -7,18 +7,36 @@ describe("ServiceCard", () => {
   it("renders service content in a semantic article", () => {
     render(
       <ServiceCard
-        title="Strategy"
-        description="A practical plan for sustainable growth."
+        title="AI Productization Sprint"
+        description="Turn traction into production safety."
       />,
     );
 
-    const heading = screen.getByRole("heading", { level: 2, name: "Strategy" });
+    const heading = screen.getByRole("heading", {
+      level: 3,
+      name: "AI Productization Sprint",
+    });
     const article = heading.closest("article");
 
     expect(article).toBeInTheDocument();
     expect(heading).toBeVisible();
     expect(
-      within(article!).getByText("A practical plan for sustainable growth."),
+      within(article!).getByText("Turn traction into production safety."),
     ).toBeVisible();
+  });
+
+  it("renders an optional action", () => {
+    render(
+      <ServiceCard
+        description="Description."
+        title="Offer"
+        action={<a href="/services">Explore</a>}
+      />,
+    );
+
+    expect(screen.getByRole("link", { name: "Explore" })).toHaveAttribute(
+      "href",
+      "/services",
+    );
   });
 });

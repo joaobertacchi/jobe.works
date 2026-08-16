@@ -6,8 +6,8 @@ import { meta as homeMeta } from "./$locale._index";
 import { meta as privacyMeta } from "./$locale.privacy";
 
 const site = {
-  origin: "https://example.com",
-  siteName: "Agent-ready sites",
+  origin: "https://jobe.works",
+  siteName: "JOBE",
   defaultSocialImage: "/social-card.svg",
   xDefault: true,
 };
@@ -38,12 +38,14 @@ describe("route SEO metadata", () => {
     const meta = homeMeta(args("/en/", "en"));
 
     expect(meta).toContainEqual({
-      title: "Static Website Template for AI-Assisted Teams",
+      title: "JOBE — Engineering that Works",
     });
     expect(meta).toContainEqual(
       expect.objectContaining({
         "script:ld+json": expect.objectContaining({
           "@type": "Organization",
+          name: "JOBE",
+          email: "joao@jobe.works",
         }),
       }),
     );
@@ -60,7 +62,7 @@ describe("route SEO metadata", () => {
   it("emits indexable localized Privacy metadata", () => {
     const meta = privacyMeta(args("/en/privacy", "en"));
     expect(meta).toContainEqual({
-      title: "Privacy Notice | Agent-ready Static Sites",
+      title: "Privacy Notice | JOBE — Engineering that Works",
     });
     expect(meta).toContainEqual({ name: "robots", content: "index,follow" });
     expect(meta).not.toContainEqual(

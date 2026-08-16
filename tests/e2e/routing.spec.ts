@@ -36,23 +36,20 @@ test("serves and hydrates a representative prerendered localized page", async ({
 
   await page.goto("/pt-BR/about");
   await expect(
-    page.getByRole("heading", { level: 1, name: "Sobre" }),
+    page.getByRole("heading", { level: 1, name: "Sobre a JOBE" }),
   ).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
 });
 
-test("serves the About workflow image as an emitted asset", async ({
-  page,
-}) => {
-  await page.goto("/pt-BR/about");
+test("serves the StockCast case study page", async ({ page }) => {
+  await page.goto("/en/case");
 
-  const image = page.getByRole("img", {
-    name: "Fluxo de trabalho entre requisitos, implementação e validação.",
-    exact: true,
-  });
-  const src = await image.getAttribute("src");
-
-  expect(src).toMatch(/^\/assets\/about-workflow-[A-Za-z0-9_-]{8}\.svg$/);
+  await expect(
+    page.getByRole("heading", { level: 1, name: "StockCast" }),
+  ).toBeVisible();
+  await expect(
+    page.getByText("Case material pending", { exact: true }),
+  ).toBeVisible();
 });
 
 test("canonical hydration reuses prerendered loader data", async ({ page }) => {
@@ -65,7 +62,7 @@ test("canonical hydration reuses prerendered loader data", async ({ page }) => {
 
   await page.goto("/en/about");
 
-  await expect(page.getByRole("heading", { name: "About" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "About JOBE" })).toBeVisible();
   expect(dataRequests).toEqual([]);
 });
 
@@ -90,10 +87,12 @@ test("keeps localized Home content after hydration", async ({ page }) => {
     await page.evaluate(() => Reflect.get(window, "routingSentinel")),
   ).toBe(sentinel);
   await expect(
-    page.getByRole("heading", { name: "Static website template" }),
+    page.getByRole("heading", { name: "Engineering that Works" }),
   ).toBeVisible();
   await expect(
-    page.getByText("Built for agents, ready for people", { exact: true }),
+    page.getByText("Three offers, one method: evaluate first, then direct.", {
+      exact: true,
+    }),
   ).toBeVisible();
 });
 
@@ -108,7 +107,9 @@ test("language switching preserves nested page identity", async ({ page }) => {
   await portuguese.click();
 
   await expect(page).toHaveURL("/pt-BR/about");
-  await expect(page.getByRole("heading", { name: "Sobre" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Sobre a JOBE" }),
+  ).toBeVisible();
   await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
 });
 
@@ -126,7 +127,9 @@ test("does not persist a language choice", async ({ page }) => {
   await page.getByRole("link", { name: "Português" }).click();
 
   await expect(page).toHaveURL("/pt-BR/about");
-  await expect(page.getByRole("heading", { name: "Sobre" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Sobre a JOBE" }),
+  ).toBeVisible();
   expect(await snapshotPersistence()).toEqual(persistenceBeforeSwitch);
 });
 
@@ -135,7 +138,9 @@ test("keeps navigation in the active locale", async ({ page }) => {
   await page.getByRole("link", { name: "Sobre" }).click();
 
   await expect(page).toHaveURL("/pt-BR/about");
-  await expect(page.getByRole("heading", { name: "Sobre" })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "Sobre a JOBE" }),
+  ).toBeVisible();
 });
 
 for (const [url, category] of [

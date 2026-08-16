@@ -25,6 +25,9 @@ import { themeInitializationScript } from "./theme";
 import type { Route } from "./+types/root";
 import "./app.css";
 
+const directionContractComment =
+  '<!-- THESIS: The JOBE site is the category-standard engineering-consultancy page, played straight at full craft: restraint, evidence, and one clear action; it refuses startup hype and gimmickry. OWN-WORLD: white and off-white ground, near-black workhorse sans-serif, one deep engineering-blue accent, hairline rules, subtle elevation, generous white space. STORY: A founder or technical leader sees engineering that works, recognizes the diagnostic-first method, and books a Product Readiness Call. FIRST VIEWPORT: nav with the JOBE wordmark; left-aligned display headline "Engineering that Works" with the primary CTA and the StockCast link; an isometric technical motif on the right; below, the three service cards, the StockCast case band, and the call-diagnosis-direction strip. FORM: canon (category standard, owner-chosen via the standing exit); approved composition comp-a on 2026-08-15; direction seed 7ecc6614. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md -->';
+
 export function Document({
   children,
   locale,
@@ -40,11 +43,16 @@ export function Document({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script>{themeInitializationScript}</script>
         <Meta />
         <Links />
       </head>
       <body>
+        <div
+          aria-hidden="true"
+          dangerouslySetInnerHTML={{ __html: directionContractComment }}
+        />
         {children}
         <ScrollRestoration />
         <Scripts />

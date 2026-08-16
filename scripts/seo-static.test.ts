@@ -10,21 +10,21 @@ import {
 } from "./seo-static";
 
 const site = {
-  origin: "https://example.com",
-  siteName: "Agent-ready sites",
+  origin: "https://jobe.works",
+  siteName: "JOBE",
   defaultSocialImage: "/social-card.svg",
   xDefault: true,
 };
 const siblings = { en: "/en/about", "pt-BR": "/pt-BR/about" };
 
 function html({
-  canonical = "https://example.com/en/about",
+  canonical = "https://jobe.works/en/about",
   description = "About the template",
   lang = "en",
   robots = "index,follow",
   title = "About",
 } = {}) {
-  return `<!doctype html><html lang="${lang}"><head><title>${title}</title><meta name="description" content="${description}"><meta name="robots" content="${robots}"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="en" href="https://example.com/en/about"><link rel="alternate" hreflang="pt-BR" href="https://example.com/pt-BR/about"><link rel="alternate" hreflang="x-default" href="https://example.com/pt-BR/about"><meta property="og:type" content="website"><meta property="og:site_name" content="Agent-ready sites"><meta property="og:url" content="${canonical}"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:image" content="https://example.com/social-card.svg"><meta property="og:locale" content="${lang === "en" ? "en_US" : "pt_BR"}"><meta property="og:locale:alternate" content="${lang === "en" ? "pt_BR" : "en_US"}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${title}"><meta name="twitter:description" content="${description}"><meta name="twitter:image" content="https://example.com/social-card.svg"></head><body></body></html>`;
+  return `<!doctype html><html lang="${lang}"><head><title>${title}</title><meta name="description" content="${description}"><meta name="robots" content="${robots}"><link rel="canonical" href="${canonical}"><link rel="alternate" hreflang="en" href="https://jobe.works/en/about"><link rel="alternate" hreflang="pt-BR" href="https://jobe.works/pt-BR/about"><link rel="alternate" hreflang="x-default" href="https://jobe.works/pt-BR/about"><meta property="og:type" content="website"><meta property="og:site_name" content="JOBE"><meta property="og:url" content="${canonical}"><meta property="og:title" content="${title}"><meta property="og:description" content="${description}"><meta property="og:image" content="https://jobe.works/social-card.svg"><meta property="og:locale" content="${lang === "en" ? "en_US" : "pt_BR"}"><meta property="og:locale:alternate" content="${lang === "en" ? "pt_BR" : "en_US"}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${title}"><meta name="twitter:description" content="${description}"><meta name="twitter:image" content="https://jobe.works/social-card.svg"></head><body></body></html>`;
 }
 
 function parse(
@@ -49,14 +49,14 @@ describe("parseAndValidateSeoPage", () => {
       lang: "en",
       title: "About",
       description: "About the template",
-      canonical: "https://example.com/en/about",
+      canonical: "https://jobe.works/en/about",
       indexable: true,
     });
     expect(page.alternates).toEqual(
       new Map([
-        ["en", "https://example.com/en/about"],
-        ["pt-BR", "https://example.com/pt-BR/about"],
-        ["x-default", "https://example.com/pt-BR/about"],
+        ["en", "https://jobe.works/en/about"],
+        ["pt-BR", "https://jobe.works/pt-BR/about"],
+        ["x-default", "https://jobe.works/pt-BR/about"],
       ]),
     );
   });
@@ -87,9 +87,9 @@ describe("parseAndValidateSeoPage", () => {
 
   it("rejects a canonical URL for another pathname", () => {
     expect(() =>
-      parse({ html: html({ canonical: "https://example.com/en/services" }) }),
+      parse({ html: html({ canonical: "https://jobe.works/en/services" }) }),
     ).toThrow(
-      "Invalid canonical in en/about/index.html: https://example.com/en/services",
+      "Invalid canonical in en/about/index.html: https://jobe.works/en/services",
     );
   });
 
@@ -104,7 +104,7 @@ describe("parseAndValidateSeoPage", () => {
       parse({
         html: html().replace(
           "</head>",
-          '<link rel="canonical" href="https://example.com/en/about"></head>',
+          '<link rel="canonical" href="https://jobe.works/en/about"></head>',
         ),
       }),
     ).toThrow("Expected exactly one canonical in en/about/index.html");
@@ -114,12 +114,12 @@ describe("parseAndValidateSeoPage", () => {
     expect(() =>
       parse({
         html: html().replace(
-          "https://example.com/pt-BR/about",
-          "https://example.com/pt-BR/services",
+          "https://jobe.works/pt-BR/about",
+          "https://jobe.works/pt-BR/services",
         ),
       }),
     ).toThrow(
-      "Invalid hreflang pt-BR in en/about/index.html: https://example.com/pt-BR/services",
+      "Invalid hreflang pt-BR in en/about/index.html: https://jobe.works/pt-BR/services",
     );
   });
 
@@ -146,12 +146,12 @@ describe("parseAndValidateSeoPage", () => {
     expect(() =>
       parse({
         html: html().replace(
-          'hreflang="x-default" href="https://example.com/pt-BR/about"',
-          'hreflang="x-default" href="https://example.com/pt-BR/services"',
+          'hreflang="x-default" href="https://jobe.works/pt-BR/about"',
+          'hreflang="x-default" href="https://jobe.works/pt-BR/services"',
         ),
       }),
     ).toThrow(
-      "Invalid hreflang x-default in en/about/index.html: https://example.com/pt-BR/services",
+      "Invalid hreflang x-default in en/about/index.html: https://jobe.works/pt-BR/services",
     );
   });
 
@@ -160,7 +160,7 @@ describe("parseAndValidateSeoPage", () => {
       parse({
         html: html().replace(
           "</head>",
-          '<link rel="alternate" hreflang="en" href="https://example.com/en/about"></head>',
+          '<link rel="alternate" hreflang="en" href="https://jobe.works/en/about"></head>',
         ),
       }),
     ).toThrow("Invalid hreflang in en/about/index.html");
@@ -171,7 +171,7 @@ describe("parseAndValidateSeoPage", () => {
       parse({
         html: html().replace(
           "</head>",
-          '<link rel="alternate" hreflang="fr" href="https://example.com/fr/about"></head>',
+          '<link rel="alternate" hreflang="fr" href="https://jobe.works/fr/about"></head>',
         ),
       }),
     ).toThrow("Unexpected hreflang in en/about/index.html");
@@ -209,11 +209,11 @@ describe("parseAndValidateSeoPage", () => {
       parse({
         html: html()
           .replace(
-            '<meta property="og:image" content="https://example.com/social-card.svg">',
+            '<meta property="og:image" content="https://jobe.works/social-card.svg">',
             '<meta property="og:image" content="https://">',
           )
           .replace(
-            '<meta name="twitter:image" content="https://example.com/social-card.svg">',
+            '<meta name="twitter:image" content="https://jobe.works/social-card.svg">',
             '<meta name="twitter:image" content="https://">',
           ),
       }),
@@ -225,7 +225,7 @@ describe("SEO static artifacts", () => {
   const english = parse();
   const portuguese = parseAndValidateSeoPage({
     html: html({
-      canonical: "https://example.com/pt-BR/about",
+      canonical: "https://jobe.works/pt-BR/about",
       lang: "pt-BR",
       title: "Sobre",
     }),
@@ -266,7 +266,7 @@ describe("SEO static artifacts", () => {
   it("excludes noindex pages and rejects their inclusion", () => {
     const noindex = {
       ...english,
-      canonical: "https://example.com/en/404",
+      canonical: "https://jobe.works/en/404",
       indexable: false,
     };
     const xml = createSitemap([english, noindex]);
@@ -275,7 +275,7 @@ describe("SEO static artifacts", () => {
       validateSitemap(
         xml.replace(
           "</urlset>",
-          "  <url><loc>https://example.com/en/404</loc></url>\n</urlset>",
+          "  <url><loc>https://jobe.works/en/404</loc></url>\n</urlset>",
         ),
         [english, noindex],
       ),
@@ -284,10 +284,10 @@ describe("SEO static artifacts", () => {
 
   it("serializes and validates robots", () => {
     const robots = createRobots(site);
-    expect(robots).toContain("Sitemap: https://example.com/sitemap.xml");
+    expect(robots).toContain("Sitemap: https://jobe.works/sitemap.xml");
     expect(() => validateRobots(robots, site)).not.toThrow();
     expect(() =>
-      validateRobots(robots.replace("example.com", "invalid.example"), site),
+      validateRobots(robots.replace("jobe.works", "invalid.example"), site),
     ).toThrow("Invalid robots sitemap URL");
     expect(() =>
       validateRobots(robots.replace("Allow: /", "Disallow: /"), site),
