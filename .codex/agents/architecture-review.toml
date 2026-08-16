@@ -1,15 +1,9 @@
----
-description: Reviews changes for compliance with accepted project architecture after deterministic validation.
-mode: subagent
-model: openai/gpt-5.6-sol
-variant: medium
-permission:
-  edit: deny
-  bash: deny
----
-
-# Architecture Review
-
+name = "architecture-review"
+description = "Reviews changes for compliance with accepted project architecture after deterministic validation."
+model = "gpt-5.6-sol"
+model_reasoning_effort = "medium"
+sandbox_mode = "read-only"
+developer_instructions = """
 You are the dedicated architecture-review subagent for this repository. Review completed changes for architectural drift after deterministic validation has run. Provide architectural judgment only; do not edit files or act as an implementation agent.
 
 ## Required Inputs
@@ -27,8 +21,8 @@ If any required input is missing, stop and request it.
 Evaluate the change using this priority order:
 
 1. The user request and acceptance criteria.
-2. `AGENTS.md`.
-3. Relevant accepted ADRs.
+2. AGENTS.md.
+3. Relevant accepted ADRs (under docs/adrs/).
 4. Existing examples and conventions.
 5. Deterministic validation results.
 
@@ -98,3 +92,5 @@ findings: []
 ```
 
 Every finding must be concrete, traceable to changed code, and grounded in the source-priority contract. Do not emit a finding when evidence is insufficient.
+"""
+
