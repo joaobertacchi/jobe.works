@@ -1,0 +1,37 @@
+{
+  "title": "Choose the visual world",
+  "question": "The roll assigned Drawing Board. Keep it, take the canon, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Drawing Board",
+      "kicker": "THE ROLL",
+      "lineage": "engineering drawings, blueprints, and revision-controlled shop documentation",
+      "thesis": "The site as the machine drawing of itself: dimensioned, toleranced, stamped — proof over promise.",
+      "palette": [
+        "#f4efe3",
+        "#1d3f8f",
+        "#2a2a28",
+        "#d9481c"
+      ],
+      "materials": [
+        "drafting paper",
+        "blueprint ink",
+        "graphite notes",
+        "stamped revisions"
+      ],
+      "viewport": "A drawing sheet fills the first viewport: JOBE sits in the title block, the headline is dimensioned with arrows and callouts, the CTA is a stamped plate, and the revision block reads REV 02 — PRODUCTION READY.",
+      "risk": "Can read cold or gimmicky if the linework and type are given no warmth; the drawing must stay a working document, never decoration.",
+      "sketch": ".impeccable/sketches/assigned.webp"
+    }
+  ],
+  "reroll": true,
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "The polished engineering-consultancy landing page this category ships: hero, services grid, case study, contact.",
+    "viewport": "The arrangement a visitor expects, at full craft.",
+    "sketch": ".impeccable/sketches/canon.webp"
+  },
+  "steer": true
+}

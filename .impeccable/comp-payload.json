@@ -1,0 +1,72 @@
+{
+  "title": "Choose the composition",
+  "question": "Which composition should carry the canon build? Approve one, or add a steer note to combine or revise.",
+  "options": [
+    {
+      "id": "comp-a",
+      "label": "Structured Standard",
+      "kicker": "COMPOSITION A",
+      "lineage": "the category's classic arrangement, at Linear-level craft",
+      "thesis": "Balanced hero, three service cards, case band, funnel strip — the canon at its most legible.",
+      "palette": [
+        "#ffffff",
+        "#0b0b0d",
+        "#1d3f8f",
+        "#ececea"
+      ],
+      "materials": [
+        "white space",
+        "hairline rules",
+        "neo-grotesque type"
+      ],
+      "viewport": "Nav; left-aligned hero with CTA and case link; technical isometric right; services row; StockCast band; steps strip; footer.",
+      "risk": "Most familiar shape; the isometric motif must read as a signature, not decoration.",
+      "hero": ".impeccable/mocks/comp-a.webp"
+    },
+    {
+      "id": "comp-b",
+      "label": "Case-Led Editorial",
+      "kicker": "COMPOSITION B",
+      "lineage": "project-led consultancy editorials with generous white space",
+      "thesis": "The StockCast proof owns the hero; quiet editorial rhythm walks the visitor through call, diagnosis, direction.",
+      "palette": [
+        "#ffffff",
+        "#0b0b0d",
+        "#1d3f8f",
+        "#ececea"
+      ],
+      "materials": [
+        "white space",
+        "hairline rules",
+        "chart evidence"
+      ],
+      "viewport": "Minimal nav; asymmetric hero with StockCast chart panel right; numbered how-it-works sequence; services index; footer.",
+      "risk": "Hero is quieter about the offer and depends on real case material being strong.",
+      "hero": ".impeccable/mocks/comp-b.webp"
+    },
+    {
+      "id": "comp-c",
+      "label": "Instrument Console",
+      "kicker": "COMPOSITION C",
+      "lineage": "instrument panels and technical scorecards",
+      "thesis": "The diagnosis scorecard is the hero: evidence and risk made visible before the first click.",
+      "palette": [
+        "#ffffff",
+        "#0b0b0d",
+        "#1d3f8f",
+        "#ececea"
+      ],
+      "materials": [
+        "hairline grid",
+        "tabular type",
+        "risk chips"
+      ],
+      "viewport": "Nav with call CTA right; two-column hero with diagnosis scorecard widget; ledger-style services rows; StockCast band; footer.",
+      "risk": "Densest of the three; needs disciplined tabular type to stay calm, and the scorecard must feel like real method, not decoration.",
+      "hero": ".impeccable/mocks/comp-c.webp"
+    }
+  ],
+  "reroll": false,
+  "canon": false,
+  "steer": true
+}

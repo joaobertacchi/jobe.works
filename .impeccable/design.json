@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-16T01:08:34.050Z",
+  "title": "Design System: JOBE — Engineering that Works",
+  "extensions": {
+    "colorMeta": {
+      "brand": {
+        "role": "primary",
+        "displayName": "Engineering Blue",
+        "canonical": "oklch(0.36 0.13 262)",
+        "tonalRamp": [
+          "oklch(0.14 0.07 262)",
+          "oklch(0.24 0.1 262)",
+          "oklch(0.36 0.13 262)",
+          "oklch(0.46 0.13 262)",
+          "oklch(0.56 0.13 260)",
+          "oklch(0.66 0.12 258)",
+          "oklch(0.77 0.08 258)",
+          "oklch(0.89 0.04 258)"
+        ]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "oklch(0.17 0.012 262)",
+        "tonalRamp": [
+          "oklch(0.12 0.01 262)",
+          "oklch(0.17 0.012 262)",
+          "oklch(0.28 0.013 262)",
+          "oklch(0.4 0.015 262)",
+          "oklch(0.52 0.016 262)",
+          "oklch(0.64 0.016 262)",
+          "oklch(0.77 0.012 262)",
+          "oklch(0.9 0.006 262)"
+        ]
+      },
+      "background": {
+        "role": "neutral",
+        "displayName": "Paper White",
+        "canonical": "oklch(1 0 0)",
+        "tonalRamp": [
+          "oklch(0.88 0.004 90)",
+          "oklch(0.92 0.003 90)",
+          "oklch(0.95 0.003 90)",
+          "oklch(0.97 0.002 90)",
+          "oklch(0.985 0.002 90)",
+          "oklch(0.993 0.001 90)",
+          "oklch(0.998 0.001 90)",
+          "oklch(1 0 0)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Page-level promises; exactly once per page."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section titles."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Card and sub-section titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Paragraphs at 65-75ch measure."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Factual category markers only."
+      }
+    },
+    "shadows": [
+      {
+        "name": "card-whisper",
+        "value": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
+        "purpose": "The only shadow in the system; cards and the contact panel."
+      }
+    ],
+    "motion": [
+      {
+        "name": "hero-rise",
+        "value": "opacity 0->1, translateY(12px)->0, 0.7s cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "The single authored entrance on the hero; disabled under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "1024px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one conversion action: book a Product Readiness Call.",
+      "html": "<button class=\"ds-btn-primary\" type=\"button\">Book a Product Readiness Call</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 12px 20px; border: none; border-radius: 8px; background: oklch(0.36 0.13 262); color: oklch(0.99 0.002 90); font: 600 1rem/1.5 ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: opacity 0.15s ease; } .ds-btn-primary:hover { opacity: 0.9; } .ds-btn-primary:focus-visible { outline: 2px solid oklch(0.36 0.13 262); outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Footer and settings actions; quiet next to the primary.",
+      "html": "<button class=\"ds-btn-secondary\" type=\"button\">Cookie settings</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 8px 12px; border: 1px solid oklch(0.9 0.006 90); border-radius: 8px; background: oklch(0.985 0.002 90); color: oklch(0.17 0.012 262); font: 500 0.875rem/1.25 ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; } .ds-btn-secondary:hover { background: oklch(1 0 0); } .ds-btn-secondary:focus-visible { outline: 2px solid oklch(0.36 0.13 262); outline-offset: 2px; }"
+    },
+    {
+      "name": "Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Service cards and the contact panel: surface on white, hairline, whisper shadow.",
+      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">AI Productization Sprint</h3><p class=\"ds-card-body\">Turn traction into production safety.</p></div>",
+      "css": ".ds-card { display: flex; flex-direction: column; gap: 12px; padding: 24px; border: 1px solid oklch(0.9 0.006 90); border-radius: 16px; background: oklch(0.985 0.002 90); box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); } .ds-card-title { margin: 0; font: 600 1.25rem/1.375 ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.025em; color: oklch(0.17 0.012 262); } .ds-card-body { margin: 0; font: 400 1rem/1.625 ui-sans-serif, system-ui, sans-serif; color: oklch(0.44 0.018 262); }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Contact form fields: surface, hairline, 8px radius, brand focus ring.",
+      "html": "<label class=\"ds-field-label\" for=\"ds-name\">Name</label><input class=\"ds-input\" id=\"ds-name\" type=\"text\" placeholder=\"Ada Lovelace\">",
+      "css": ".ds-field-label { display: block; margin-bottom: 8px; font: 500 1rem/1.5 ui-sans-serif, system-ui, sans-serif; color: oklch(0.17 0.012 262); } .ds-input { width: 100%; min-height: 40px; padding: 8px 12px; border: 1px solid oklch(0.9 0.006 90); border-radius: 8px; background: oklch(0.985 0.002 90); color: oklch(0.17 0.012 262); font: 400 1rem/1.5 ui-sans-serif, system-ui, sans-serif; transition: border-color 0.15s ease; } .ds-input:focus-visible { outline: 2px solid oklch(0.36 0.13 262); outline-offset: 2px; }"
+    },
+    {
+      "name": "Navigation Link",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "Header nav: 14px medium links; active state is brand and semibold.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link\" href=\"#\">Services</a><a class=\"ds-nav-link ds-nav-link-active\" href=\"#\">Case study</a><a class=\"ds-nav-link\" href=\"#\">Contact</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 20px; } .ds-nav-link { font: 500 0.875rem/1.25 ui-sans-serif, system-ui, sans-serif; color: oklch(0.17 0.012 262); text-decoration: none; transition: color 0.15s ease; } .ds-nav-link:hover { color: oklch(0.36 0.13 262); } .ds-nav-link-active { font-weight: 600; color: oklch(0.36 0.13 262); }"
+    },
+    {
+      "name": "Funnel Step",
+      "kind": "custom",
+      "refersTo": "funnel-step",
+      "description": "The numbered engagement sequence: 01/02/03 cells separated by hairline rules.",
+      "html": "<ol class=\"ds-funnel\"><li class=\"ds-funnel-step\"><span class=\"ds-funnel-num\">01</span><h3 class=\"ds-funnel-title\">Product Readiness Call</h3><p class=\"ds-funnel-body\">A structured 30-45 minute conversation.</p></li></ol>",
+      "css": ".ds-funnel { display: grid; gap: 1px; padding: 0; margin: 0; list-style: none; border: 1px solid oklch(0.9 0.006 90); border-radius: 12px; background: oklch(0.9 0.006 90); overflow: hidden; } .ds-funnel-step { display: flex; flex-direction: column; gap: 12px; padding: 24px 32px; background: oklch(1 0 0); } .ds-funnel-num { font: 600 0.875rem/1.25 ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; color: oklch(0.36 0.13 262); } .ds-funnel-title { margin: 0; font: 600 1.25rem/1.375 ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.025em; color: oklch(0.17 0.012 262); } .ds-funnel-body { margin: 0; font: 400 1rem/1.625 ui-sans-serif, system-ui, sans-serif; color: oklch(0.44 0.018 262); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Category Standard, Played Straight",
+    "overview": "JOBE's site is the engineering-consultancy category standard executed at full craft, without irony and without gimmick: a white ground, near-black workhorse sans-serif, one deep engineering blue, hairline rules, and generous white space. The system exists to make the company's diagnostic-first method legible — a structured call, an evidence-based diagnosis, a directed offer — in the register of a serious engineering firm, never a hype page. Density is moderate and consistent: tight groups, generous section separation, more space above a heading than below it. Depth comes from tonal layering and hairlines, not shadows; the only elevation is a whisper on cards. Motion is a single authored moment (the hero rise) plus restrained hover transitions.",
+    "keyCharacteristics": [
+      "One deep engineering-blue accent (brand) on a white/off-white ground",
+      "Workhorse system sans for everything; no display face, no mono costume",
+      "Hairline borders and tonal layering instead of shadows",
+      "Section rhythm of 64-96px with 24px internal card padding",
+      "A single authored motion moment, reduced-motion safe"
+    ],
+    "rules": [
+      {
+        "name": "The Single Accent Rule",
+        "body": "There is exactly one accent in the system. Any second hue on a screen is a defect; emphasis comes from weight, size, and the blue.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tint, Never Gray Rule",
+        "body": "Secondary text is a desaturated blue-tinted ink, never a cold gray.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Page-One Display Rule",
+        "body": "The display level appears once per page; everything below it steps down through headline and title.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Kicker Rule",
+        "body": "No decorative eyebrow sits above a heading. A small uppercase label is allowed only where it names a category (case, cross-sell) or where the approved composition shows it.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat-by-Default Rule",
+        "body": "Surfaces are flat at rest. If an element needs separation, use the surface tone or a hairline; a shadow is the last resort, and only the whisper is allowed.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do let the white ground and hairline rules carry the layout; density comes from content, not boxes.",
+      "Do use the brand blue for fields and actions at page scale — buttons, active nav, motif, numbering — not as scattered accents.",
+      "Do keep body measure near 65-75ch and one display headline per page.",
+      "Do mark placeholders honestly (dashed border, explicit 'pending' copy) rather than inventing evidence."
+    ],
+    "donts": [
+      "Don't introduce a second accent, a gradient, or glass; there is one blue.",
+      "Don't put an eyebrow or kicker above a heading outside the approved annotations.",
+      "Don't use hard offset shadows, emoji or glyph icons, or monospace as a 'technical' costume.",
+      "Don't render illustration where the system draws geometry — the motif is SVG linework, never a shaded scene."
+    ]
+  }
+}
