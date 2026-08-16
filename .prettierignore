@@ -1,5 +1,8 @@
 .agents/
 .opencode/
+.impeccable/
+.claude/
+.codex/
 .react-router/
 build/
 coverage/
