@@ -14,11 +14,12 @@ const baseClasses =
 
 const variantClasses: Record<TextLinkVariant, string> = {
   primary:
-    "min-h-11 rounded-lg px-5 py-3 font-medium bg-brand text-brand-foreground hover:opacity-90",
+    "min-h-11 px-5 py-3 font-medium bg-brand text-brand-foreground hover:opacity-90",
   secondary:
-    "min-h-11 rounded-lg px-5 py-3 font-medium text-foreground underline decoration-border underline-offset-4 hover:text-brand",
+    "min-h-11 px-5 py-3 font-medium text-foreground underline decoration-border underline-offset-4 hover:text-brand",
   nav: "text-sm font-medium text-foreground hover:text-brand",
-  wordmark: "text-lg font-bold tracking-tight text-foreground hover:text-brand",
+  wordmark:
+    "font-display text-2xl font-bold uppercase tracking-tight text-foreground hover:text-brand",
 };
 
 export function TextLink({

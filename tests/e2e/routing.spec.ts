@@ -90,9 +90,11 @@ test("keeps localized Home content after hydration", async ({ page }) => {
     page.getByRole("heading", { name: "Engineering that Works" }),
   ).toBeVisible();
   await expect(
-    page.getByText("Three offers, one method: evaluate first, then direct.", {
-      exact: true,
-    }),
+    page
+      .getByRole("region", { name: "Services" })
+      .getByText("Three offers, one method: evaluate first, then direct.", {
+        exact: true,
+      }),
   ).toBeVisible();
 });
 

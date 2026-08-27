@@ -65,10 +65,15 @@ export function ThemeSwitcher() {
   }
 
   return (
-    <div role="group" aria-label={translate("common.theme.label")}>
+    <div
+      role="group"
+      aria-label={translate("common.theme.label")}
+      className="theme-switcher"
+    >
       {themes.map((option) => (
         <Button
           aria-pressed={theme === option}
+          className="theme-switcher__choice"
           key={option}
           onClick={() => selectTheme(option)}
           size="sm"

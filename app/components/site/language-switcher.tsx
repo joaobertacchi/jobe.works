@@ -15,11 +15,18 @@ export function LanguageSwitcher({
   const { locale, translate } = useI18n();
 
   return (
-    <nav aria-label={translate("common.languageSwitcherLabel")}>
+    <nav
+      aria-label={translate("common.languageSwitcherLabel")}
+      className="language-switcher"
+    >
       {supportedLocales
         .filter((targetLocale) => targetLocale !== locale)
         .map((targetLocale) => (
-          <Link key={targetLocale} to={urls[targetLocale]}>
+          <Link
+            className="utility-link"
+            key={targetLocale}
+            to={urls[targetLocale]}
+          >
             {locales[targetLocale].label}
           </Link>
         ))}

@@ -382,6 +382,50 @@ test("services remain usable and stack on a mobile viewport", async ({
   expect(cards[2].top).toBeGreaterThan(cards[1].top);
 });
 
+test("the Folded Atlas preserves its systems route on mobile", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "consent",
+      JSON.stringify({
+        version: 1,
+        analytics: false,
+        marketing: false,
+        updatedAt: "2026-08-27T00:00:00.000Z",
+      }),
+    );
+  });
+  await page.goto("/en/");
+
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Engineering that Works" }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("img", {
+      name: "A product system routed through diagnosis",
+    }),
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Book a Product Readiness Call" }).first(),
+  ).toBeVisible();
+
+  const planeTops = await page
+    .locator(".atlas-proposition, .atlas-topology-panel, .atlas-decision-rail")
+    .evaluateAll((planes) =>
+      planes.map((plane) => Math.round(plane.getBoundingClientRect().top)),
+    );
+
+  expect(planeTops[1]).toBeGreaterThan(planeTops[0]);
+  expect(planeTops[2]).toBeGreaterThan(planeTops[1]);
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= window.innerWidth,
+    ),
+  ).toBe(true);
+});
+
 test("service cards use multiple columns on a desktop viewport", async ({
   page,
 }) => {

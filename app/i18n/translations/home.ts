@@ -11,6 +11,23 @@ export type HomeTranslation = {
     ctaPrimary: string;
     ctaSecondary: string;
   };
+  atlas: {
+    founderName: string;
+    founderStatement: string;
+    topologyTitle: string;
+    topologyDescription: string;
+    diagnosis: string;
+    evidenceStatus: string;
+    labels: {
+      context: string;
+      product: string;
+      architecture: string;
+      integrations: string;
+      security: string;
+      observability: string;
+      production: string;
+    };
+  };
   services: {
     title: string;
     description: string;
@@ -51,6 +68,24 @@ export const homeTranslations = {
         "JOBE is a senior engineering consultancy for AI products that gained traction and need to hold up in production. You start with a conversation, not a catalog: a structured evaluation that directs you to the right engagement.",
       ctaPrimary: "Book a Product Readiness Call",
       ctaSecondary: "See the StockCast case",
+    },
+    atlas: {
+      founderName: "João Bertacchi",
+      founderStatement: "Evaluate first. Direct the right engagement second.",
+      topologyTitle: "A product system routed through diagnosis",
+      topologyDescription:
+        "A systems map connects product context, architecture, integrations, security, and observability to a diagnosis and a production outcome.",
+      diagnosis: "Diagnosis",
+      evidenceStatus: "Evidence preview pending real case material",
+      labels: {
+        context: "Context",
+        product: "Product",
+        architecture: "Architecture",
+        integrations: "Integrations",
+        security: "Security",
+        observability: "Observability",
+        production: "Production",
+      },
     },
     services: {
       title: "Services",
@@ -116,6 +151,25 @@ export const homeTranslations = {
         "A JOBE é uma consultoria de engenharia sênior para produtos de IA que ganharam tração e precisam se sustentar em produção. Você começa por uma conversa, não por um catálogo: uma avaliação estruturada que direciona o engajamento certo.",
       ctaPrimary: "Agendar uma Product Readiness Call",
       ctaSecondary: "Conhecer o caso StockCast",
+    },
+    atlas: {
+      founderName: "João Bertacchi",
+      founderStatement:
+        "Avaliar primeiro. Direcionar o engajamento certo depois.",
+      topologyTitle: "Um sistema de produto direcionado pelo diagnóstico",
+      topologyDescription:
+        "Um mapa de sistemas conecta contexto, produto, arquitetura, integrações, segurança e observabilidade a um diagnóstico e a um resultado em produção.",
+      diagnosis: "Diagnóstico",
+      evidenceStatus: "Prévia de evidências pendente de material real do caso",
+      labels: {
+        context: "Contexto",
+        product: "Produto",
+        architecture: "Arquitetura",
+        integrations: "Integrações",
+        security: "Segurança",
+        observability: "Observabilidade",
+        production: "Produção",
+      },
     },
     services: {
       title: "Serviços",

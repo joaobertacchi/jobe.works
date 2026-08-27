@@ -1,6 +1,6 @@
 ---
 name: JOBE — Engineering that Works
-description: The category-standard engineering-consultancy site, played straight at Linear/Stripe-level craft.
+description: Systems Wayfinding — a folded engineering atlas where one route crosses every fold and resolves at a directed decision. Deep engineering blue, compressed signage type, precise topology.
 colors:
   background: "oklch(1 0 0)"
   surface: "oklch(0.985 0.002 90)"
@@ -10,6 +10,11 @@ colors:
   hairline: "oklch(0.92 0.006 90)"
   brand: "oklch(0.36 0.13 262)"
   brand-foreground: "oklch(0.99 0.002 90)"
+  atlas-blue: "oklch(0.36 0.14 262)"
+  atlas-blue-soft: "oklch(0.74 0.07 258)"
+  atlas-paper: "oklch(0.985 0.004 255)"
+  atlas-ink: "oklch(0.16 0.016 262)"
+  atlas-fold: "oklch(0.9 0.012 258)"
   dark-background: "oklch(0.17 0.014 262)"
   dark-surface: "oklch(0.21 0.016 262)"
   dark-foreground: "oklch(0.93 0.008 90)"
@@ -18,35 +23,43 @@ colors:
   dark-hairline: "oklch(0.27 0.014 262)"
   dark-brand: "oklch(0.62 0.12 258)"
   dark-brand-foreground: "oklch(0.15 0.02 262)"
+  dark-atlas-blue: "oklch(0.31 0.12 262)"
+  dark-atlas-blue-soft: "oklch(0.71 0.08 258)"
+  dark-atlas-paper: "oklch(0.2 0.016 262)"
+  dark-atlas-ink: "oklch(0.94 0.008 90)"
+  dark-atlas-fold: "oklch(0.31 0.02 262)"
 typography:
   display:
-    fontFamily: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif"
-    fontSize: "clamp(2.25rem, 5vw, 3.75rem)"
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "clamp(4rem, 7vw, 6rem)"
     fontWeight: 700
-    lineHeight: 1.05
+    lineHeight: 0.84
     letterSpacing: "-0.03em"
+    textTransform: "uppercase"
   headline:
-    fontFamily: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif"
-    fontSize: "clamp(1.875rem, 3vw, 2.25rem)"
-    fontWeight: 700
-    lineHeight: 1.2
-    letterSpacing: "-0.025em"
-  title:
-    fontFamily: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif"
-    fontSize: "1.25rem"
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "clamp(2.75rem, 5vw, 5rem)"
     fontWeight: 600
-    lineHeight: 1.375
-    letterSpacing: "-0.025em"
+    lineHeight: 0.95
+    letterSpacing: "-0.02em"
+    textTransform: "uppercase"
+  title:
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "clamp(1.4rem, 2.2vw, 2rem)"
+    fontWeight: 600
+    lineHeight: 1.05
+    letterSpacing: "-0.02em"
+    textTransform: "uppercase"
   body:
     fontFamily: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif"
-    fontSize: "1rem"
+    fontSize: "clamp(1rem, 1.2vw, 1.125rem)"
     fontWeight: 400
-    lineHeight: 1.625
+    lineHeight: 1.65
   label:
-    fontFamily: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif"
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
     fontSize: "0.875rem"
     fontWeight: 600
-    letterSpacing: "0.1em"
+    letterSpacing: "0.09em"
     textTransform: "uppercase"
 rounded:
   md: "8px"
@@ -58,160 +71,139 @@ spacing:
   md: "16px"
   lg: "24px"
   section: "64px"
-  section-lg: "96px"
-components:
-  button-primary:
-    backgroundColor: "{colors.brand}"
-    textColor: "{colors.brand-foreground}"
-    rounded: "{rounded.md}"
-    padding: "12px 20px"
-    height: "44px"
-  button-primary-hover:
-    backgroundColor: "{colors.brand}"
-    textColor: "{colors.brand-foreground}"
-    rounded: "{rounded.md}"
-    padding: "12px 20px"
-    height: "44px"
-  button-secondary:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.foreground}"
-    rounded: "{rounded.md}"
-    padding: "8px 12px"
-    height: "36px"
-  card:
-    backgroundColor: "{colors.surface}"
-    rounded: "{rounded.xl}"
-    padding: "24px"
-  input:
-    backgroundColor: "{colors.surface}"
-    textColor: "{colors.foreground}"
-    rounded: "{rounded.md}"
-    padding: "8px 12px"
 ---
 
 # Design System: JOBE — Engineering that Works
 
 ## Overview
 
-**Creative North Star: "The Category Standard, Played Straight"**
+**Creative North Star: "The Folded Atlas."**
 
-JOBE's site is the engineering-consultancy category standard executed at full craft, without irony and without gimmick: a white ground, near-black workhorse sans-serif, one deep engineering blue, hairline rules, and generous white space. The system exists to make the company's diagnostic-first method legible — a structured call, an evidence-based diagnosis, a directed offer — in the register of a serious engineering firm, never a hype page.
+JOBE's homepage reads like a folded engineering atlas: it turns a complex product system into one legible route that crosses every fold and resolves at a directed decision. The system refuses the generic split hero, technical cube, and service-card catalog that every AI-generated consultancy page defaults to. Instead the surface is built from three unequal planes — proposition on the left, a dominant deep engineering-blue topology panel in the center, and a decision rail on the right — stitched together by a single route that runs from context through diagnosis to production and settles at the primary action.
 
-Density is moderate and consistent: tight groups, generous section separation, more space above a heading than below it. Depth comes from tonal layering and hairlines, not shadows; the only elevation is a whisper on cards. Motion is a single authored moment (the hero rise) plus restrained hover transitions. The visual voice matches the product promise: engineering that works in production.
+The material is paper-and-precision, never glass. Surfaces fold and clip with the angular corners of a technical blueprint; the brand reads as signage rather than marketing gloss. The one accent, a committed deep engineering blue, does the structural work — it carries the topology, the case plate, and the primary action — while near-white paper and ink carry the reading. Everything is legible in both light and dark, in English and Brazilian Portuguese, with no fabricated score, metric, customer, or credential.
 
 **Key Characteristics:**
 
-- One deep engineering-blue accent (brand) on a white/off-white ground
-- Workhorse system sans for everything; no display face, no mono costume
-- Hairline borders and tonal layering instead of shadows
-- Section rhythm of 64–96px with 24px internal card padding
-- A single authored motion moment, reduced-motion safe
+- Three-plane hero (proposition / topology / decision rail) with one route crossing every fold.
+- Compressed Barlow Condensed signage typography, all uppercase, tight leading.
+- A single deep engineering blue as the structural accent on white/ink paper.
+- Clipped, angled plates (blueprint corners) and hairline fold lines — no shadows, no glass, no gradients.
+- Precision SVG topology: dashed secondary routes, a resolving primary route, station nodes, and a diagnosis junction.
+- Explicit, empty scorecard tracks — evidence is never fabricated.
 
 ## Colors
 
-The palette is a restrained neutral ground with one committed blue accent. The accent appears as fields and actions — buttons, active nav, the isometric motif, the funnel numbering — never as scattered decoration.
+Tight two-tone engineering palette: deep blue on neutral paper/ink. The blue is the structural and accent voice; paper and ink carry text. Both themes are supported, with the blue deepening in dark mode to preserve contrast against near-white labels.
 
 ### Primary
 
-- **Engineering Blue** (oklch(0.36 0.13 262), light; oklch(0.62 0.12 258), dark): the single accent. Used for primary buttons, active navigation, small labels, the hero motif stroke, and the funnel step numbers. White text on it holds ~8.8:1 contrast in light mode.
+- **Engineering Blue** (`--atlas-blue`, `oklch(0.36 0.14 262)`; dark `oklch(0.31 0.12 262)`): The single accent. Fills the topology panel, StockCast case plate, primary action, and the mobile CTA. Never a second hue.
+- **Engineering Blue Soft** (`--atlas-blue-soft`, `oklch(0.74 0.07 258)`; dark `oklch(0.71 0.08 258)`): The route and wire color on the blue panel — the track that crosses the fold, the cross-route stroke, and secondary topology strokes. Reads as lightened blue, never a new hue.
 
 ### Neutral
 
-- **Paper White** (oklch(1 0 0)): page background.
-- **Sheet** (oklch(0.985 0.002 90)): surface behind cards, the case band, and form fields — one step off the page.
-- **Ink** (oklch(0.17 0.012 262)): body and heading text.
-- **Ink Muted** (oklch(0.44 0.018 262)): secondary text (≈7:1 on white).
-- **Hairline** (oklch(0.92 0.006 90)): 1px dividers; **Border** (oklch(0.9 0.006 90)): card and field borders.
-- Dark mode inverts the ground: deep navy-black background (oklch(0.17 0.014 262)), lifted surfaces (oklch(0.21 0.016 262)), light ink, and a lighter brand blue (oklch(0.62 0.12 258)) that keeps white-adjacent contrast.
+- **Atlas Paper** (`--atlas-paper`, `oklch(0.985 0.004 255)`; dark `oklch(0.2 0.016 262)`): The reading surface. Background of the proposition plane, decision rail, action cards, and the fold highlight. In dark mode it's the ink-dark panel.
+- **Atlas Ink** (`--atlas-ink`, `oklch(0.16 0.016 262)`; dark `oklch(0.94 0.008 90)`): Primary text and the diagnosis-junction label fill on the blue panel. Dark mode flips it to near-white for contrast.
+- **Atlas Fold** (`--atlas-fold`, `oklch(0.9 0.012 258)`; dark `oklch(0.31 0.02 262)`): Hairline fold lines that divide planes, border the atlas, and separate service/method stops.
+- **Brand** (`--brand`, `oklch(0.36 0.13 262)`; dark `oklch(0.62 0.12 258)`): The earlier brand token, retained for the selection pill, inline links, footer node, and site-header underline. Same blue family.
+- **Background / Foreground / Border / Hairline**: the neutral canvas values that back the whole site and the consent banner.
 
 ### Named Rules
 
-**The Single Accent Rule.** There is exactly one accent in the system. Any second hue on a screen is a defect; emphasis comes from weight, size, and the blue.
+**The One Blue Rule.** Exactly one accent hue. `--atlas-blue` and `--atlas-blue-soft` are lightness variants of the same hue; `--brand` stays in the same family. Never introduce a second accent, gradient, glass, or neon.
 
-**The Tint, Never Gray Rule.** Secondary text is a desaturated blue-tinted ink, never a cold gray.
+**The Empty Evidence Rule.** The ScoreCard shows empty tracks and a pending status. No score, metric, customer, credential, or outcome claim is ever rendered. `--atlas-blue-soft` fills a track only when real measurement exists.
 
 ## Typography
 
-**Display Font:** system-ui stack (ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial)
-**Body Font:** the same stack.
+**Display Font:** Barlow Condensed (with Arial Narrow / sans-serif fallback), installed locally via `@fontsource/barlow-condensed` — no remote CDN.
+**Body Font:** system sans stack (`ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial`).
+**Label/Mono Font:** Barlow Condensed, used for every label, index, stop title, and navigation item.
 
-**Character:** a workhorse grotesque spoken without affectation — the canon register. The hierarchy carries the page: heavy tight-tracked display for the promise, clean body at 65–75ch measure, small tracked uppercase labels used only as information markers (case label, cross-sell tag), never as decorative kickers.
+**Character:** Condensed, compressed, signage-like. Uppercase everywhere in display, headline, title, label, and nav. Tight leading and slightly negative tracking make it read like a technical wayfinding board rather than a marketing brochure. The contrast between this compressed display face and the open system body face is the voice of the system.
 
 ### Hierarchy
 
-- **Display** (700, clamp(2.25rem, 5vw, 3.75rem), 1.05, -0.03em): page-level promises — the hero headline and page titles. One per page.
-- **Headline** (700, clamp(1.875rem, 3vw, 2.25rem), 1.2, -0.025em): section titles.
-- **Title** (600, 1.25rem, 1.375): card and sub-section titles.
-- **Body** (400, 1rem, 1.625): paragraphs; max measure ≈65–75ch.
-- **Label** (600, 0.875rem, +0.1em, uppercase): factual markers only — "Case study", "Cross-sell".
+- **Display** (700, `clamp(4rem, 7vw, 6rem)`, 0.84, uppercase, -0.03em): The hero proposition. Max width 7ch; it dominates the first viewport.
+- **Headline** (600, `clamp(2.75rem, 5vw, 5rem)`, 0.95, uppercase, -0.02em): Section titles (Services, Como Funciona).
+- **Title** (600, `clamp(1.4rem, 2.2vw, 2rem)`, 1.05, uppercase, -0.02em): Service stop and method stop headings.
+- **Body** (400, `clamp(1rem, 1.2vw, 1.125rem)`, 1.65): Descriptions, max ~68ch, `--muted-foreground`.
+- **Label** (600, `0.875rem`, 0.09em, uppercase): Index names (JOÃO BERTACCHI, ESTUDO DE CASO), and small utility text.
 
 ### Named Rules
 
-**The One Page-One Display Rule.** The display level appears once per page; everything below it steps down through headline and title.
-
-**The No-Kicker Rule.** No decorative eyebrow sits above a heading. A small uppercase label is allowed only where it names a category (case, cross-sell) or where the approved composition shows it.
+**The Signage Rule.** Display/headline/title/label/nav are Barlow Condensed uppercase. Body is the open system stack, lowercase sentence case. The blend of compressed signage and open reading text is the system's voice; never make body copy condensed.
 
 ## Layout
 
-A single centered container (max-width 72rem / max-w-6xl) with 16–32px side padding. Sections breathe on a 64px rhythm (96px on large screens): hero py-16 sm:py-24 lg:py-28, standard sections py-16 sm:py-24. Section separation is marked by hairlines (border-t/border-y) or by the tonal surface band of the case section.
+The system uses a 96rem (max) atlas width, hairline-bordered on the sides, that reads as a folded sheet. The hero is a three-column grid — `minmax(0,38fr) minmax(0,44fr) minmax(13rem,18fr)` — proposition left, topology center, decision rail right. Each plane is a `.atlas-plane` separated by a 1px `--atlas-fold` rule and given a fold-shaped clip on its shared edge.
 
-Grids: three-up cards at md+ (grid gap 24px, md:grid-cols-3), the hero splits 1.15fr/0.85fr at lg with the motif hidden below lg, the contact page splits 0.9fr/1.1fr at lg, and the funnel is a gap-px grid on a hairline background (three cells separated by 1px rules) at md+ that stacks on mobile. The funnel's numbered steps (01/02/03) carry the sequence of the method, so their numerals are information, not decoration.
+Sections below the hero (Services, StockCast Case, How It Works) share the atlas border and a `clamp(4.5rem,8vw,8rem)` vertical rhythm, with `clamp(1.25rem,4vw,4rem)` inline padding. Each section has a three-column heading row (title / description / inline link).
+
+Responsive behavior:
+
+- **≤72rem:** Hero collapses to two columns, the decision rail becomes a full-width two-column band, and the actions wrap to two columns.
+- **≤48rem:** Hero stacks into a single column, a vertical route rail runs down the left, a compact CTA appears immediately after the h1, the desktop topology is exchanged for a dedicated vertical mobile topology, and the cross-route SVG is hidden. Services and method routes become vertical steps along a left rail.
 
 ## Elevation & Depth
 
-The system is flat by philosophy: depth is conveyed by tonal layering (surface one step off the page background) and 1px hairlines, not by shadows.
+This system is flat and paper-based. Depth is conveyed by tonal layering and folding, never by shadows, blur, glass, or gradients. A plane overlaps another via `clip-path` fold angles and hairline borders, and the topology route resolves via a `stroke-dasharray` draw-on animation for those who allow motion. There is no `box-shadow` anywhere in the atlas.
 
-### Shadow Vocabulary
-
-- **Card whisper** (Tailwind shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05)): the only shadow in the system, on cards and the contact panel. Everything else is flat.
-
-### Named Rules
-
-**The Flat-by-Default Rule.** Surfaces are flat at rest. If an element needs separation, use the surface tone or a hairline; a shadow is the last resort, and only the whisper is allowed.
+**The Flat-By-Fold Rule.** No shadows, no glassmorphism, no gradients. The fold is the depth cue: hairline `--atlas-fold` separators and angular clip-path corners make adjacent planes read as stacked sheets.
 
 ## Shapes
 
-Corners are gently rounded and consistent: 8px for buttons, inputs, and links; 12px for the funnel container; 16px for cards and the contact panel. Borders are 1px hairlines in the border tone; the only colored rule is a 1px brand left rule on the cross-sell note. The pending case material is marked with a 1px dashed hairline border — a deliberate placeholder signal, not a system style. Dots (8px brand circles) mark lists; the hero motif is an SVG geometry: a brand-stroked isometric cube on a faint hairline grid, never a rendered illustration.
+Angular, blueprint-like geometry. The signature is the clipped corner: the primary/secondary actions and the ScoreCard use a `clip-path` with a notched corner (`polygon(0 0, calc(100% - 0.8rem) 0, 100% 0.8rem, ...)`), and the diagnosis method stop uses an eight-point clipped octagon. Station nodes are small stroked circles, and route lines use square caps and miter joins. No rounded pill buttons, no soft blobs.
+
+**The Notched-Corner Rule.** Corners are cut, not rounded. The default radius stays small (8px) for incidental chrome; the distinctive actions, case plate, and ScoreCard use a notched clip-angle to read as punched blueprint plates.
 
 ## Components
 
-### Buttons
+### Buttons / Actions
 
-- **Shape:** rounded rectangle (8px radius), min-height 44px for primary/links, 36px for small secondary.
-- **Primary:** brand background (oklch(0.36 0.13 262)), near-white text, padding 12px 20px. Hover darkens by opacity to 90%; focus shows a 2px brand outline offset 2px.
-- **Secondary:** surface background, hairline border, ink text; hover shifts text to brand.
+- **Shape:** Notched-corner clip-path (`calc(100% - 0.8rem)` chamfer on opposite corners), 1px `--atlas-blue` border.
+- **Primary action** (`.atlas-action--primary`): `--atlas-blue` fill, white text, min-height 7rem, an index number (01/02) above the label, and a right arrow. Hover/focus fills `--atlas-ink`.
+- **Secondary action** (`.atlas-action--secondary`): `--atlas-paper` fill, `--atlas-blue` text, 1px blue border.
+- **Mobile primary** (`.atlas-mobile-primary`): compact `--atlas-blue` CTA shown only at ≤48rem, placed right after the h1.
+- **Focus:** `outline: 2px solid var(--brand); outline-offset: 3px`.
 
-### Cards
+### Topology (Signature Component)
 
-- **Corner Style:** 16px radius.
-- **Background:** surface tone; **Border:** 1px hairline; **Padding:** 24px.
-- **Shadow:** the card whisper only.
+An accessible SVG frame (`.systems-topology`) rendering the engineering system as a route: Context → Product → Diagnosis → Architecture → Production, with Integrations, Security, and Observability as secondary stations. Dashed secondary routes, a resolving primary route, stroked station nodes, and a diagnosis junction (a filled paper plaque on a small octagon) that carries an ink label. Desktop and dedicated mobile variants sit in the same component, with the mobile shown only at ≤48rem. All text is `stroke: none` and filled, and the diagnosis junction label uses `--atlas-ink` for contrast on the blue panel. There is no fabricated data — it is a topology, not a measured diagram.
 
-### Inputs / Fields
+### ScoreCard
 
-- **Style:** surface background, 1px hairline border, 8px radius, 8px 12px padding.
-- **Focus:** 2px brand outline offset 2px; **Error:** inline message text naming the problem and the fix.
+`.atlas-scorecard` on the blue case plate: a clipped panel with a heading row, five named tracks (Context, Product, Architecture, Integrations, Security), each with an empty track bar and a pending marker. Rows are separated by a translucent white hairline. This is intentionally empty — evidence is never invented.
+
+### Case (StockCast)
+
+`.atlas-case` is a full-bleed deep-blue plate: left copy (index name, headline, description) and right the ScoreCard. It claims no fabricated metrics; it points to the real case via a white "Ver estudo de caso" action.
 
 ### Navigation
 
-- Wordmark left ("JOBE", bold, tight tracking), links in a row (14px, medium weight). Active state is brand-colored and semibold; hover shifts to brand. The header carries a bottom hairline; the footer repeats the wordmark with the tagline and email.
+Site header uses a `.site-header__inner` grid (wordmark / primary nav / utilities), a 2px brand underline accent, and compressed uppercase nav items. The theme switcher is a two-option segmented control (`.theme-switcher`) with an `aria-pressed` state, and the language switcher is a `.language-switcher`. On mobile the nav wraps to a full-width row and utilities right-align.
 
-### Signature: the Isometric Motif
+### Footer & Consent
 
-A pure SVG geometry — a brand-blue isometric cube on a faint hairline grid with wireframe callouts — sits beside the hero headline at lg+. It is the one recurring signature: drawn geometry, flat, aria-hidden, presentational.
+Footer has a brand-stroked node dot on the top border, the wordmark, a nav row, and a contact email. Consent is a fixed bottom banner (`.consent-banner`) that adds body padding via `:has([data-consent-banner])`, and its controls stack on mobile.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- **Do** let the white ground and hairline rules carry the layout; density comes from content, not boxes.
-- **Do** use the brand blue for fields and actions at page scale — buttons, active nav, motif, numbering — not as scattered accents.
-- **Do** keep body measure near 65–75ch and one display headline per page.
-- **Do** mark placeholders honestly (dashed border, explicit "pending" copy) rather than inventing evidence.
+- **Do** use the one engineering blue as the structural accent; keep `--atlas-blue` / `--atlas-blue-soft` / `--brand` in the same hue family.
+- **Do** keep the three-plane hero with one route crossing every fold and resolving at the primary action.
+- **Do** use Barlow Condensed uppercase for display, headline, title, label, and nav.
+- **Do** keep ScoreCard tracks empty and the status pending — never render an invented metric, score, customer, or credential.
+- **Do** support both light and dark themes and both en and pt-BR, with a working switch.
+- **Do** use notched/clipped or hairline-fold geometry for depth instead of shadows.
 
 ### Don't:
 
-- **Don't** introduce a second accent, a gradient, or glass; there is one blue.
-- **Don't** put an eyebrow or kicker above a heading outside the approved annotations.
-- **Don't** use hard offset shadows, emoji or glyph icons, or monospace as a "technical" costume.
-- **Don't** render illustration where the system draws geometry — the motif is SVG linework, never a shaded scene.
+- **Don't** introduce a second accent color, gradient, glass, or neon.
+- **Don't** use box-shadows or blur to convey depth — the fold is the depth cue.
+- **Don't** render fabricated evidence, scores, or outcomes on the ScoreCard or anywhere else.
+- **Don't** use a generic split hero, technical cube, or a plain service-card catalog.
+- **Don't** use rounded-pill buttons or soft blobs; cut corners with notches.
+- **Don't** add a backend, server, route action, or runtime server; keep the site static and prerendered.

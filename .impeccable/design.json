@@ -1,204 +1,146 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-16T01:08:34.050Z",
+  "generatedAt": "2026-08-27T15:46:00.000Z",
   "title": "Design System: JOBE — Engineering that Works",
   "extensions": {
     "colorMeta": {
-      "brand": {
+      "atlas-blue": {
         "role": "primary",
         "displayName": "Engineering Blue",
+        "canonical": "oklch(0.36 0.14 262)",
+        "tonalRamp": ["oklch(0.14 0.06 262)", "oklch(0.21 0.09 262)", "oklch(0.28 0.11 262)", "oklch(0.36 0.14 262)", "oklch(0.44 0.14 260)", "oklch(0.54 0.12 258)", "oklch(0.64 0.1 258)", "oklch(0.8 0.05 258)"]
+      },
+      "atlas-blue-soft": {
+        "role": "primary",
+        "displayName": "Engineering Blue Soft",
+        "canonical": "oklch(0.74 0.07 258)",
+        "tonalRamp": ["oklch(0.3 0.07 262)", "oklch(0.4 0.07 260)", "oklch(0.52 0.07 258)", "oklch(0.62 0.07 258)", "oklch(0.74 0.07 258)", "oklch(0.82 0.05 258)", "oklch(0.9 0.03 258)", "oklch(0.96 0.01 258)"]
+      },
+      "atlas-paper": {
+        "role": "neutral",
+        "displayName": "Atlas Paper",
+        "canonical": "oklch(0.985 0.004 255)",
+        "tonalRamp": ["oklch(0.16 0.006 262)", "oklch(0.3 0.006 262)", "oklch(0.47 0.005 255)", "oklch(0.62 0.005 255)", "oklch(0.78 0.004 255)", "oklch(0.9 0.003 255)", "oklch(0.96 0.002 255)", "oklch(0.985 0.004 255)"]
+      },
+      "atlas-ink": {
+        "role": "neutral",
+        "displayName": "Atlas Ink",
+        "canonical": "oklch(0.16 0.016 262)",
+        "tonalRamp": ["oklch(0.12 0.012 262)", "oklch(0.16 0.016 262)", "oklch(0.26 0.015 262)", "oklch(0.38 0.014 262)", "oklch(0.5 0.014 262)", "oklch(0.62 0.012 262)", "oklch(0.78 0.01 262)", "oklch(0.94 0.008 90)"]
+      },
+      "atlas-fold": {
+        "role": "neutral",
+        "displayName": "Atlas Fold",
+        "canonical": "oklch(0.9 0.012 258)",
+        "tonalRamp": ["oklch(0.2 0.012 258)", "oklch(0.3 0.012 258)", "oklch(0.44 0.012 258)", "oklch(0.58 0.012 258)", "oklch(0.72 0.012 258)", "oklch(0.84 0.009 258)", "oklch(0.9 0.012 258)", "oklch(0.96 0.004 258)"]
+      },
+      "brand": {
+        "role": "primary",
+        "displayName": "Brand Blue",
         "canonical": "oklch(0.36 0.13 262)",
-        "tonalRamp": [
-          "oklch(0.14 0.07 262)",
-          "oklch(0.24 0.1 262)",
-          "oklch(0.36 0.13 262)",
-          "oklch(0.46 0.13 262)",
-          "oklch(0.56 0.13 260)",
-          "oklch(0.66 0.12 258)",
-          "oklch(0.77 0.08 258)",
-          "oklch(0.89 0.04 258)"
-        ]
-      },
-      "foreground": {
-        "role": "neutral",
-        "displayName": "Ink",
-        "canonical": "oklch(0.17 0.012 262)",
-        "tonalRamp": [
-          "oklch(0.12 0.01 262)",
-          "oklch(0.17 0.012 262)",
-          "oklch(0.28 0.013 262)",
-          "oklch(0.4 0.015 262)",
-          "oklch(0.52 0.016 262)",
-          "oklch(0.64 0.016 262)",
-          "oklch(0.77 0.012 262)",
-          "oklch(0.9 0.006 262)"
-        ]
-      },
-      "background": {
-        "role": "neutral",
-        "displayName": "Paper White",
-        "canonical": "oklch(1 0 0)",
-        "tonalRamp": [
-          "oklch(0.88 0.004 90)",
-          "oklch(0.92 0.003 90)",
-          "oklch(0.95 0.003 90)",
-          "oklch(0.97 0.002 90)",
-          "oklch(0.985 0.002 90)",
-          "oklch(0.993 0.001 90)",
-          "oklch(0.998 0.001 90)",
-          "oklch(1 0 0)"
-        ]
+        "tonalRamp": ["oklch(0.14 0.07 262)", "oklch(0.24 0.1 262)", "oklch(0.36 0.13 262)", "oklch(0.46 0.13 262)", "oklch(0.56 0.13 260)", "oklch(0.66 0.12 258)", "oklch(0.77 0.08 258)", "oklch(0.89 0.04 258)"]
       }
     },
     "typographyMeta": {
-      "display": {
-        "displayName": "Display",
-        "purpose": "Page-level promises; exactly once per page."
-      },
-      "headline": {
-        "displayName": "Headline",
-        "purpose": "Section titles."
-      },
-      "title": {
-        "displayName": "Title",
-        "purpose": "Card and sub-section titles."
-      },
-      "body": {
-        "displayName": "Body",
-        "purpose": "Paragraphs at 65-75ch measure."
-      },
-      "label": {
-        "displayName": "Label",
-        "purpose": "Factual category markers only."
-      }
+      "display": { "displayName": "Display", "purpose": "The hero proposition; exactly once per page, compressed uppercase signage." },
+      "headline": { "displayName": "Headline", "purpose": "Section titles; Barlow Condensed uppercase." },
+      "title": { "displayName": "Title", "purpose": "Service and method stop headings; Barlow Condensed uppercase." },
+      "body": { "displayName": "Body", "purpose": "Descriptions at ~68ch measure; open system stack, sentence case." },
+      "label": { "displayName": "Label", "purpose": "Index names and small utility text; Barlow Condensed uppercase." }
     },
-    "shadows": [
-      {
-        "name": "card-whisper",
-        "value": "0 1px 2px 0 rgb(0 0 0 / 0.05)",
-        "purpose": "The only shadow in the system; cards and the contact panel."
-      }
-    ],
+    "shadows": [],
     "motion": [
-      {
-        "name": "hero-rise",
-        "value": "opacity 0->1, translateY(12px)->0, 0.7s cubic-bezier(0.22, 1, 0.36, 1)",
-        "purpose": "The single authored entrance on the hero; disabled under prefers-reduced-motion."
-      }
+      { "name": "hero-rise", "value": "opacity 0->1, translateY(12px)->0, 0.7s cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "The single authored entrance on the hero; disabled under prefers-reduced-motion." },
+      { "name": "atlas-route-resolve", "value": "stroke-dasharray 0 1 -> 1 0, 1.1s cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "The topology route draws on; only under no-preference motion." }
     ],
     "breakpoints": [
-      {
-        "name": "sm",
-        "value": "640px"
-      },
-      {
-        "name": "md",
-        "value": "768px"
-      },
-      {
-        "name": "lg",
-        "value": "1024px"
-      }
+      { "name": "atlas-collapse", "value": "1152px (72rem)" },
+      { "name": "atlas-stack", "value": "768px (48rem)" }
     ]
   },
   "components": [
     {
-      "name": "Primary Button",
+      "name": "Primary Atlas Action",
       "kind": "button",
-      "refersTo": "button-primary",
-      "description": "The one conversion action: book a Product Readiness Call.",
-      "html": "<button class=\"ds-btn-primary\" type=\"button\">Book a Product Readiness Call</button>",
-      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px; padding: 12px 20px; border: none; border-radius: 8px; background: oklch(0.36 0.13 262); color: oklch(0.99 0.002 90); font: 600 1rem/1.5 ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: opacity 0.15s ease; } .ds-btn-primary:hover { opacity: 0.9; } .ds-btn-primary:focus-visible { outline: 2px solid oklch(0.36 0.13 262); outline-offset: 2px; }"
+      "refersTo": "atlas-action--primary",
+      "description": "The one conversion action: index number over label, deep-blue notched plate, right arrow.",
+      "html": "<a class=\"ds-atlas-primary\" href=\"#\"><span class=\"ds-idx\">01</span><span>Book a Product Readiness Call</span><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14m-5-5 5 5-5 5\"/></svg></a>",
+      "css": ".ds-atlas-primary { display: grid; grid-template-columns: 1fr; align-content: space-between; min-height: 7rem; padding: 1rem 1.125rem; border: 1px solid oklch(0.36 0.14 262); background: oklch(0.36 0.14 262); color: #fff; clip-path: polygon(0 0, calc(100% - 0.8rem) 0, 100% 0.8rem, 100% 100%, 0.8rem 100%, 0 calc(100% - 0.8rem)); font: 600 1.05rem/1.1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; text-transform: uppercase; letter-spacing: 0.025em; transition: background-color 180ms ease-out, color 180ms ease-out; } .ds-atlas-primary:hover, .ds-atlas-primary:focus-visible { background: oklch(0.16 0.016 262); } .ds-atlas-primary:focus-visible { outline: 2px solid oklch(0.36 0.13 262); outline-offset: 3px; } .ds-idx { font-size: 1.75rem; color: oklch(0.74 0.07 258); }"
     },
     {
-      "name": "Secondary Button",
+      "name": "Secondary Atlas Action",
       "kind": "button",
-      "refersTo": "button-secondary",
-      "description": "Footer and settings actions; quiet next to the primary.",
-      "html": "<button class=\"ds-btn-secondary\" type=\"button\">Cookie settings</button>",
-      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; min-height: 36px; padding: 8px 12px; border: 1px solid oklch(0.9 0.006 90); border-radius: 8px; background: oklch(0.985 0.002 90); color: oklch(0.17 0.012 262); font: 500 0.875rem/1.25 ui-sans-serif, system-ui, sans-serif; cursor: pointer; transition: background 0.15s ease, color 0.15s ease; } .ds-btn-secondary:hover { background: oklch(1 0 0); } .ds-btn-secondary:focus-visible { outline: 2px solid oklch(0.36 0.13 262); outline-offset: 2px; }"
+      "refersTo": "atlas-action--secondary",
+      "description": "The second decision on the rail: paper fill with blue border and ink label.",
+      "html": "<a class=\"ds-atlas-secondary\" href=\"#\"><span class=\"ds-idx\">02</span><span>See the StockCast case</span><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14m-5-5 5 5-5 5\"/></svg></a>",
+      "css": ".ds-atlas-secondary { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1rem; min-height: 4rem; padding: 1rem 1.125rem; border: 1px solid oklch(0.36 0.14 262); background: oklch(0.985 0.004 255); color: oklch(0.16 0.016 262); clip-path: polygon(0 0, calc(100% - 0.8rem) 0, 100% 0.8rem, 100% 100%, 0.8rem 100%, 0 calc(100% - 0.8rem)); font: 600 1.05rem/1.1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; text-transform: uppercase; letter-spacing: 0.025em; }"
     },
     {
-      "name": "Card",
+      "name": "ScoreCard Plate",
       "kind": "card",
-      "refersTo": "card",
-      "description": "Service cards and the contact panel: surface on white, hairline, whisper shadow.",
-      "html": "<div class=\"ds-card\"><h3 class=\"ds-card-title\">AI Productization Sprint</h3><p class=\"ds-card-body\">Turn traction into production safety.</p></div>",
-      "css": ".ds-card { display: flex; flex-direction: column; gap: 12px; padding: 24px; border: 1px solid oklch(0.9 0.006 90); border-radius: 16px; background: oklch(0.985 0.002 90); box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); } .ds-card-title { margin: 0; font: 600 1.25rem/1.375 ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.025em; color: oklch(0.17 0.012 262); } .ds-card-body { margin: 0; font: 400 1rem/1.625 ui-sans-serif, system-ui, sans-serif; color: oklch(0.44 0.018 262); }"
+      "refersTo": "atlas-scorecard",
+      "description": "The evidence plate: clipped blueprint panel, heading row, and five empty named tracks. Intentionally pending — no fabricated metrics.",
+      "html": "<div class=\"ds-scorecard\"><div class=\"ds-score-head\"><span>Evidence preview pending real case material</span><span>SC–00</span></div><div class=\"ds-score-row\"><span>Context</span><span class=\"ds-score-track\"></span><span>—</span></div><div class=\"ds-score-row\"><span>Product</span><span class=\"ds-score-track\"></span><span>—</span></div></div>",
+      "css": ".ds-scorecard { border: 1px solid oklch(1 0 0 / 0.72); background: oklch(0.31 0.12 262); clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 1rem, 100% 100%, 1rem 100%, 0 calc(100% - 1rem)); } .ds-score-head, .ds-score-row { display: grid; grid-template-columns: 1fr 1.4fr auto; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid oklch(1 0 0 / 0.28); font: 600 0.85rem/1.4 \"Barlow Condensed\", sans-serif; text-transform: uppercase; color: #fff; } .ds-score-head { grid-template-columns: 1fr auto; letter-spacing: 0.06em; } .ds-score-row:last-child { border-bottom: 0; } .ds-score-row > span:first-child { font-weight: 600; } .ds-score-track { height: 0.35rem; background: oklch(1 0 0 / 0.18); }"
     },
     {
-      "name": "Text Input",
-      "kind": "input",
-      "refersTo": "input",
-      "description": "Contact form fields: surface, hairline, 8px radius, brand focus ring.",
-      "html": "<label class=\"ds-field-label\" for=\"ds-name\">Name</label><input class=\"ds-input\" id=\"ds-name\" type=\"text\" placeholder=\"Ada Lovelace\">",
-      "css": ".ds-field-label { display: block; margin-bottom: 8px; font: 500 1rem/1.5 ui-sans-serif, system-ui, sans-serif; color: oklch(0.17 0.012 262); } .ds-input { width: 100%; min-height: 40px; padding: 8px 12px; border: 1px solid oklch(0.9 0.006 90); border-radius: 8px; background: oklch(0.985 0.002 90); color: oklch(0.17 0.012 262); font: 400 1rem/1.5 ui-sans-serif, system-ui, sans-serif; transition: border-color 0.15s ease; } .ds-input:focus-visible { outline: 2px solid oklch(0.36 0.13 262); outline-offset: 2px; }"
+      "name": "Systems Topology",
+      "kind": "custom",
+      "refersTo": "systems-topology",
+      "description": "The signature SVG route map: dashed secondary routes, a resolving primary route, station nodes, and a diagnosis junction. No fabricated data.",
+      "html": "<figure class=\"ds-topo\"><svg viewBox=\"0 0 760 620\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-dasharray=\"8 8\" opacity=\"0.48\"><path d=\"M132 132H220V208H330\"/></g><g fill=\"none\" stroke=\"oklch(0.74 0.07 258)\" stroke-width=\"8\"><path d=\"M70 294H180L232 342H318\"/></g><g transform=\"translate(66 98)\"><path d=\"M0 14 14 0h128l14 14v52l-14 14H14L0 66Z\" fill=\"oklch(0.31 0.12 262)\" stroke=\"oklch(0.74 0.07 258)\"/><text x=\"18\" y=\"34\" fill=\"#fff\" font-family=\"Barlow Condensed\" font-size=\"16\" font-weight=\"600\" text-transform=\"uppercase\">01</text></g></svg></figure>",
+      "css": ".ds-topo { display: block; width: 100%; overflow: visible; color: #fff; } .ds-topo svg text { fill: #fff; stroke: none; font-family: \"Barlow Condensed\", sans-serif; }"
     },
     {
       "name": "Navigation Link",
       "kind": "nav",
       "refersTo": "nav-link",
-      "description": "Header nav: 14px medium links; active state is brand and semibold.",
-      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link\" href=\"#\">Services</a><a class=\"ds-nav-link ds-nav-link-active\" href=\"#\">Case study</a><a class=\"ds-nav-link\" href=\"#\">Contact</a></nav>",
-      "css": ".ds-nav { display: flex; gap: 20px; } .ds-nav-link { font: 500 0.875rem/1.25 ui-sans-serif, system-ui, sans-serif; color: oklch(0.17 0.012 262); text-decoration: none; transition: color 0.15s ease; } .ds-nav-link:hover { color: oklch(0.36 0.13 262); } .ds-nav-link-active { font-weight: 600; color: oklch(0.36 0.13 262); }"
+      "description": "Header nav: compressed uppercase Barlow Condensed items, brand hover.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-link\" href=\"#\">Services</a><a class=\"ds-nav-link\" href=\"#\">Case study</a><a class=\"ds-nav-link\" href=\"#\">Contact</a></nav>",
+      "css": ".ds-nav { display: flex; gap: 20px; } .ds-nav-link { font: 600 0.875rem/1.25 \"Barlow Condensed\", sans-serif; letter-spacing: 0.04em; text-transform: uppercase; color: oklch(0.17 0.012 262); text-decoration: none; transition: color 0.15s ease; } .ds-nav-link:hover { color: oklch(0.36 0.13 262); }"
     },
     {
-      "name": "Funnel Step",
-      "kind": "custom",
-      "refersTo": "funnel-step",
-      "description": "The numbered engagement sequence: 01/02/03 cells separated by hairline rules.",
-      "html": "<ol class=\"ds-funnel\"><li class=\"ds-funnel-step\"><span class=\"ds-funnel-num\">01</span><h3 class=\"ds-funnel-title\">Product Readiness Call</h3><p class=\"ds-funnel-body\">A structured 30-45 minute conversation.</p></li></ol>",
-      "css": ".ds-funnel { display: grid; gap: 1px; padding: 0; margin: 0; list-style: none; border: 1px solid oklch(0.9 0.006 90); border-radius: 12px; background: oklch(0.9 0.006 90); overflow: hidden; } .ds-funnel-step { display: flex; flex-direction: column; gap: 12px; padding: 24px 32px; background: oklch(1 0 0); } .ds-funnel-num { font: 600 0.875rem/1.25 ui-sans-serif, system-ui, sans-serif; font-variant-numeric: tabular-nums; color: oklch(0.36 0.13 262); } .ds-funnel-title { margin: 0; font: 600 1.25rem/1.375 ui-sans-serif, system-ui, sans-serif; letter-spacing: -0.025em; color: oklch(0.17 0.012 262); } .ds-funnel-body { margin: 0; font: 400 1rem/1.625 ui-sans-serif, system-ui, sans-serif; color: oklch(0.44 0.018 262); }"
+      "name": "Theme Switcher",
+      "kind": "nav",
+      "refersTo": "theme-switcher",
+      "description": "Two-option segmented light/dark control with aria-pressed state.",
+      "html": "<div class=\"ds-theme\" role=\"group\" aria-label=\"Theme\"><button class=\"ds-theme-choice\" aria-pressed=\"true\">Light</button><button class=\"ds-theme-choice\" aria-pressed=\"false\">Dark</button></div>",
+      "css": ".ds-theme { display: flex; border: 1px solid oklch(0.9 0.006 90); } .ds-theme-choice { border: 0; border-inline-start: 1px solid oklch(0.9 0.006 90); padding: 0.35rem 0.55rem; background: transparent; font: 600 0.75rem/1.2 \"Barlow Condensed\", sans-serif; text-transform: uppercase; letter-spacing: 0.04em; color: oklch(0.17 0.012 262); cursor: pointer; } .ds-theme-choice:first-child { border-inline-start: 0; } .ds-theme-choice[aria-pressed=\"true\"] { background: oklch(0.36 0.13 262); color: oklch(0.99 0.002 90); }"
     }
   ],
   "narrative": {
-    "northStar": "The Category Standard, Played Straight",
-    "overview": "JOBE's site is the engineering-consultancy category standard executed at full craft, without irony and without gimmick: a white ground, near-black workhorse sans-serif, one deep engineering blue, hairline rules, and generous white space. The system exists to make the company's diagnostic-first method legible — a structured call, an evidence-based diagnosis, a directed offer — in the register of a serious engineering firm, never a hype page. Density is moderate and consistent: tight groups, generous section separation, more space above a heading than below it. Depth comes from tonal layering and hairlines, not shadows; the only elevation is a whisper on cards. Motion is a single authored moment (the hero rise) plus restrained hover transitions.",
+    "northStar": "The Folded Atlas",
+    "overview": "JOBE's homepage reads like a folded engineering atlas: it turns a complex product system into one legible route that crosses every fold and resolves at a directed decision. The system refuses the generic split hero, technical cube, and service-card catalog that every AI-generated consultancy page defaults to. Instead the surface is built from three unequal planes — proposition on the left, a dominant deep engineering-blue topology panel in the center, and a decision rail on the right — stitched together by a single route that runs from context through diagnosis to production and settles at the primary action. The material is paper-and-precision, never glass. Surfaces fold and clip with the angular corners of a technical blueprint; the brand reads as signage rather than marketing gloss. The one accent, a committed deep engineering blue, does the structural work — it carries the topology, the case plate, and the primary action — while near-white paper and ink carry the reading. Everything is legible in both light and dark, in English and Brazilian Portuguese, with no fabricated score, metric, customer, or credential.",
     "keyCharacteristics": [
-      "One deep engineering-blue accent (brand) on a white/off-white ground",
-      "Workhorse system sans for everything; no display face, no mono costume",
-      "Hairline borders and tonal layering instead of shadows",
-      "Section rhythm of 64-96px with 24px internal card padding",
-      "A single authored motion moment, reduced-motion safe"
+      "Three-plane hero (proposition / topology / decision rail) with one route crossing every fold.",
+      "Compressed Barlow Condensed signage typography, all uppercase, tight leading.",
+      "A single deep engineering blue as the structural accent on white/ink paper.",
+      "Clipped, angled plates (blueprint corners) and hairline fold lines — no shadows, no glass, no gradients.",
+      "Precision SVG topology: dashed secondary routes, a resolving primary route, station nodes, and a diagnosis junction.",
+      "Explicit, empty scorecard tracks — evidence is never fabricated."
     ],
     "rules": [
-      {
-        "name": "The Single Accent Rule",
-        "body": "There is exactly one accent in the system. Any second hue on a screen is a defect; emphasis comes from weight, size, and the blue.",
-        "section": "colors"
-      },
-      {
-        "name": "The Tint, Never Gray Rule",
-        "body": "Secondary text is a desaturated blue-tinted ink, never a cold gray.",
-        "section": "colors"
-      },
-      {
-        "name": "The One Page-One Display Rule",
-        "body": "The display level appears once per page; everything below it steps down through headline and title.",
-        "section": "typography"
-      },
-      {
-        "name": "The No-Kicker Rule",
-        "body": "No decorative eyebrow sits above a heading. A small uppercase label is allowed only where it names a category (case, cross-sell) or where the approved composition shows it.",
-        "section": "typography"
-      },
-      {
-        "name": "The Flat-by-Default Rule",
-        "body": "Surfaces are flat at rest. If an element needs separation, use the surface tone or a hairline; a shadow is the last resort, and only the whisper is allowed.",
-        "section": "elevation"
-      }
+      { "name": "The One Blue Rule", "body": "Exactly one accent hue. --atlas-blue and --atlas-blue-soft are lightness variants of the same hue; --brand stays in the same family. Never introduce a second accent, gradient, glass, or neon.", "section": "colors" },
+      { "name": "The Empty Evidence Rule", "body": "The ScoreCard shows empty tracks and a pending status. No score, metric, customer, credential, or outcome claim is ever rendered. --atlas-blue-soft fills a track only when real measurement exists.", "section": "colors" },
+      { "name": "The Signage Rule", "body": "Display/headline/title/label/nav are Barlow Condensed uppercase. Body is the open system stack, lowercase sentence case. The blend of compressed signage and open reading text is the system's voice; never make body copy condensed.", "section": "typography" },
+      { "name": "The Flat-By-Fold Rule", "body": "No shadows, no glassmorphism, no gradients. The fold is the depth cue: hairline --atlas-fold separators and angular clip-path corners make adjacent planes read as stacked sheets.", "section": "elevation" },
+      { "name": "The Notched-Corner Rule", "body": "Corners are cut, not rounded. The default radius stays small (8px) for incidental chrome; the distinctive actions, case plate, and ScoreCard use a notched clip-angle to read as punched blueprint plates.", "section": "shapes" }
     ],
     "dos": [
-      "Do let the white ground and hairline rules carry the layout; density comes from content, not boxes.",
-      "Do use the brand blue for fields and actions at page scale — buttons, active nav, motif, numbering — not as scattered accents.",
-      "Do keep body measure near 65-75ch and one display headline per page.",
-      "Do mark placeholders honestly (dashed border, explicit 'pending' copy) rather than inventing evidence."
+      "Do use the one engineering blue as the structural accent; keep --atlas-blue / --atlas-blue-soft / --brand in the same hue family.",
+      "Do keep the three-plane hero with one route crossing every fold and resolving at the primary action.",
+      "Do use Barlow Condensed uppercase for display, headline, title, label, and nav.",
+      "Do keep ScoreCard tracks empty and the status pending — never render an invented metric, score, customer, or credential.",
+      "Do support both light and dark themes and both en and pt-BR, with a working switch.",
+      "Do use notched/clipped or hairline-fold geometry for depth instead of shadows."
     ],
     "donts": [
-      "Don't introduce a second accent, a gradient, or glass; there is one blue.",
-      "Don't put an eyebrow or kicker above a heading outside the approved annotations.",
-      "Don't use hard offset shadows, emoji or glyph icons, or monospace as a 'technical' costume.",
-      "Don't render illustration where the system draws geometry — the motif is SVG linework, never a shaded scene."
+      "Don't introduce a second accent color, gradient, glass, or neon.",
+      "Don't use box-shadows or blur to convey depth — the fold is the depth cue.",
+      "Don't render fabricated evidence, scores, or outcomes on the ScoreCard or anywhere else.",
+      "Don't use a generic split hero, technical cube, or a plain service-card catalog.",
+      "Don't use rounded-pill buttons or soft blobs; cut corners with notches.",
+      "Don't add a backend, server, route action, or runtime server; keep the site static and prerendered."
     ]
   }
 }

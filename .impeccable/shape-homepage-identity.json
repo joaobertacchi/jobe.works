@@ -1,0 +1,72 @@
+{
+  "title": "Choose JOBE’s visual world",
+  "question": "Choose the world that should make founder-led technical judgment unmistakable while architecture diagrams and scorecards carry the proof.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Systems Wayfinding",
+      "kicker": "THE ROLL",
+      "lineage": "infrastructure control maps and international wayfinding systems",
+      "thesis": "João turns a complex system into one legible route from symptoms to a directed engineering decision.",
+      "palette": ["#173D8F", "#F5F7FA", "#111722", "#9FB5DF"],
+      "materials": ["enamel signage", "folded system maps", "technical route plates"],
+      "viewport": "An oversized JOBE proposition intersects a deep-blue systems map; João’s concise verdict sits on the decision path and the booking action anchors the route legend.",
+      "risk": "Can feel like public-transport branding if route lines become decorative instead of encoding the diagnostic method.",
+      "sketch": ".impeccable/sketches/home-systems-wayfinding.webp"
+    },
+    {
+      "id": "challenger-one-bit",
+      "label": "Principal’s Desktop",
+      "lineage": "early one-bit engineering workstations",
+      "thesis": "The homepage behaves like João’s analysis desktop, with each system concern opened, inspected, and resolved in crisp evidence windows.",
+      "case": "Strong audience identification and clear diagnostic behavior; loses some contemporary authority if the retro grammar becomes the subject.",
+      "palette": ["#173D8F", "#FFFFFF", "#0B0D12", "#CBD5E5"],
+      "materials": ["one-bit dithers", "one-pixel window chrome", "marching selections"],
+      "viewport": "A blue-and-white principal workstation layers an architecture map, scorecard, and terse founder note around the real headline and primary action.",
+      "risk": "Retro interface nostalgia can overshadow the offer and make a senior practice feel like a developer toy.",
+      "sketch": ".impeccable/sketches/home-principals-desktop.webp",
+      "hero": "https://impeccable.style/worlds/cards/medium-native-one-bit-desktop-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/medium-native-one-bit-desktop.webp"
+    },
+    {
+      "id": "challenger-cutting-bench",
+      "label": "Decision Cutting Bench",
+      "lineage": "film editing benches and marked work prints",
+      "thesis": "Senior judgment appears as editing: competing technical paths remain visible while João marks the one worth committing to.",
+      "case": "Excellent expression of judgment and direction; weaker audience identification because its native world is cinema rather than engineering.",
+      "palette": ["#173D8F", "#0A0C10", "#F4F1E8", "#D7DFEF"],
+      "materials": ["perforated work prints", "grease marks", "folded tape flags"],
+      "viewport": "A horizontal evidence rail crosses a dark field, showing system frames, rejected paths, and one blue committed route beneath the JOBE proposition.",
+      "risk": "The editing metaphor fuses poorly if visitors must decode film language before understanding the consultancy.",
+      "sketch": ".impeccable/sketches/home-decision-bench.webp",
+      "hero": "https://impeccable.style/worlds/cards/operate-a-cutting-bench-select-rail-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/operate-a-cutting-bench-select-rail.webp"
+    },
+    {
+      "id": "challenger-leather",
+      "label": "Founder’s Technical Folio",
+      "lineage": "bound engineering folios and tactile reading shelves",
+      "thesis": "Architecture reviews and scorecards become a founder-kept body of work, handled as durable objects rather than disposable slides.",
+      "case": "Strong founder-led craftsmanship; weaker product clarity because leather and paper imply heritage more readily than modern production engineering.",
+      "palette": ["#173D8F", "#E9E4D8", "#141821", "#A8B8D7"],
+      "materials": ["stitched technical folios", "linen boards", "annotated paper"],
+      "viewport": "A dark-blue technical folio opens onto an architecture plate and scorecard, with João’s judgment written as restrained marginal annotations.",
+      "risk": "Tactile skeuomorphism can feel expensive but backward-looking, especially for AI and mobile product work.",
+      "sketch": ".impeccable/sketches/home-technical-folio.webp",
+      "hero": "https://impeccable.style/worlds/cards/digital-design-canon-skeuomorph-leather-studio-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/digital-design-canon-skeuomorph-leather-studio.webp"
+    }
+  ],
+  "reroll": true,
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "A restrained engineering-consultancy site with a split hero, technical motif, service cards, and polished blue-on-white system.",
+    "viewport": "The current expected arrangement, rebuilt at exceptional craft but intentionally familiar.",
+    "palette": ["#173D8F", "#FFFFFF", "#111722", "#E6E9EF"],
+    "materials": ["hairline borders", "neutral cards", "wireframe geometry"],
+    "risk": "Trustworthy and clear, but it preserves the visual sameness this redesign is meant to solve.",
+    "sketch": ".impeccable/sketches/home-category-standard.webp"
+  },
+  "steer": true
+}

@@ -21,7 +21,7 @@ export function PrimaryNavigation() {
   return (
     <nav
       aria-label={translate("common.navigationLabel")}
-      className="flex flex-wrap items-center gap-5"
+      className="site-primary-navigation"
     >
       {links.map(({ label, to }) => (
         <TextLink

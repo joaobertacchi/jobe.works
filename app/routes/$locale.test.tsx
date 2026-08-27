@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import {
   createMemoryRouter,
   isRouteErrorResponse,
@@ -204,6 +204,30 @@ describe("localized route layout", () => {
     });
   });
 
+  it.each([
+    [
+      "/en/",
+      "A product system routed through diagnosis",
+      "Evaluate first. Direct the right engagement second.",
+    ],
+    [
+      "/pt-BR/",
+      "Um sistema de produto direcionado pelo diagnóstico",
+      "Avaliar primeiro. Direcionar o engajamento certo depois.",
+    ],
+  ])(
+    "renders the localized Systems Wayfinding evidence on %s",
+    async (pathname, topologyName, founderStatement) => {
+      renderLocalizedRoute(pathname);
+
+      expect(
+        await screen.findByRole("img", { name: topologyName }),
+      ).toBeVisible();
+      expect(screen.getByText(founderStatement)).toBeVisible();
+      expect(screen.getAllByText("João Bertacchi")).toHaveLength(1);
+    },
+  );
+
   it("renders representative localized privacy content", async () => {
     renderLocalizedRoute("/pt-BR/privacy");
 
@@ -254,7 +278,9 @@ describe("localized route layout", () => {
       }),
     ).toBeVisible();
     expect(
-      screen.getByRole("link", { name: "joao@jobe.works" }),
+      within(screen.getByRole("main")).getByRole("link", {
+        name: "joao@jobe.works",
+      }),
     ).toHaveAttribute(
       "href",
       expect.stringContaining("mailto:joao@jobe.works"),

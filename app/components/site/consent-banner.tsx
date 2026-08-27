@@ -137,16 +137,17 @@ function ConsentBannerContent() {
         <div
           role="region"
           aria-label={translate("consent.banner.label")}
-          className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-surface"
+          className="consent-banner"
+          data-consent-banner
         >
-          <Container className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex flex-col gap-1">
+          <Container className="consent-banner__inner">
+            <div className="consent-banner__copy">
               <Text>{translate("consent.banner.message")}</Text>
               <TextLink to={`/${locale}/privacy`} variant="secondary">
                 {translate("common.navigation.privacy")}
               </TextLink>
             </div>
-            <div className="flex flex-wrap gap-3">
+            <div className="consent-banner__actions">
               <Button size="sm" onClick={acceptAll}>
                 {translate("consent.banner.acceptAll")}
               </Button>

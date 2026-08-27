@@ -1,0 +1,45 @@
+{
+  "title": "Choose the homepage composition",
+  "question": "All three use Systems Wayfinding. Choose one, or steer a combination by naming what should carry forward.",
+  "options": [
+    {
+      "id": "route-spine",
+      "label": "Route Spine",
+      "kicker": "COMPOSITION A",
+      "lineage": "one diagnostic route governs the entire scroll",
+      "thesis": "The proposition and architecture map meet at one junction that branches directly into the three service outcomes.",
+      "palette": ["#173D8F", "#F5F7FA", "#111722", "#9FB5DF"],
+      "materials": ["enamel route field", "clipped evidence plates", "continuous route spine"],
+      "viewport": "Headline and founder note occupy the light half; a detailed blue architecture field occupies the other half; the route visibly branches into services below.",
+      "risk": "The dense architecture half needs careful semantic simplification so it feels authoritative rather than dashboard-like.",
+      "hero": ".impeccable/mocks/home-systems-route-spine.webp"
+    },
+    {
+      "id": "decision-field",
+      "label": "Decision Field",
+      "kicker": "COMPOSITION B",
+      "lineage": "the evidence field leads and content behaves like its legend",
+      "thesis": "A full-width architecture map is the homepage’s primary evidence, with copy, founder judgment, and actions attached to its perimeter.",
+      "palette": ["#173D8F", "#F5F7FA", "#111722", "#9FB5DF"],
+      "materials": ["folded map field", "overlapping legend plate", "diagnosis junction"],
+      "viewport": "The map dominates the fold; a white action legend overlaps the lower-left while João’s verdict attaches to the chosen path on the right.",
+      "risk": "The evidence field has the strongest impact but requires the most disciplined mobile reduction and accessible diagram labeling.",
+      "hero": ".impeccable/mocks/home-systems-decision-field.webp"
+    },
+    {
+      "id": "folded-atlas",
+      "label": "Folded Atlas",
+      "kicker": "COMPOSITION C",
+      "lineage": "one system map folded into proposition, architecture, and decision planes",
+      "thesis": "Three unequal planes give the headline, system evidence, and primary decision distinct roles while one route binds them together.",
+      "palette": ["#173D8F", "#F5F7FA", "#111722", "#9FB5DF"],
+      "materials": ["atlas folds", "decision rail", "hard-edged route plates"],
+      "viewport": "A light proposition plane, a dominant blue topology plane, and a narrow decision rail create the most editorial and architectural silhouette.",
+      "risk": "The right decision rail can become cramped in Portuguese and must transform decisively rather than merely shrink.",
+      "hero": ".impeccable/mocks/home-systems-folded-atlas.webp"
+    }
+  ],
+  "reroll": false,
+  "canon": false,
+  "steer": true
+}

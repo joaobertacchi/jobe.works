@@ -278,7 +278,7 @@ test("contact page offers the mailto booking path without emitting a lead event"
 
   await page.goto("/en/contact?utm_source=newsletter&unknown=ignored");
 
-  const mailto = page.getByRole("link", {
+  const mailto = page.getByRole("main").getByRole("link", {
     name: "joao@jobe.works",
     exact: true,
   });

@@ -14,13 +14,17 @@ export function SiteHeader({
   const { locale, translate } = useI18n();
 
   return (
-    <header className="border-b border-border">
-      <Container className="flex flex-wrap items-center justify-between gap-4 py-4">
-        <TextLink to={`/${locale}/`} variant="wordmark">
+    <header className="site-header">
+      <Container className="site-header__inner">
+        <TextLink
+          className="site-wordmark"
+          to={`/${locale}/`}
+          variant="wordmark"
+        >
           {translate("common.siteName")}
         </TextLink>
         <PrimaryNavigation />
-        <div className="flex flex-wrap items-center gap-4">
+        <div className="site-utilities">
           {urls === null ? null : <LanguageSwitcher urls={urls} />}
           <ThemeSwitcher />
         </div>

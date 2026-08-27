@@ -9,10 +9,10 @@ export function SiteFooter() {
   const { locale, translate } = useI18n();
   const { openSettings } = useConsent();
   return (
-    <footer className="border-t border-border py-10">
-      <Container className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
+    <footer className="site-footer">
+      <Container className="site-footer__inner">
         <div className="max-w-xl">
-          <Text as="span" className="text-lg font-bold tracking-tight">
+          <Text as="span" className="site-footer__wordmark">
             {translate("common.siteName")}
           </Text>
           <Text className="mt-1 text-sm font-semibold text-brand">
@@ -21,13 +21,16 @@ export function SiteFooter() {
           <Text className="mt-3" tone="muted">
             {translate("common.footer.description")}
           </Text>
-          <Text className="mt-2 text-sm" tone="muted">
+          <a
+            className="site-footer__email"
+            href={`mailto:${translate("common.footer.email")}`}
+          >
             {translate("common.footer.email")}
-          </Text>
+          </a>
         </div>
         <nav
           aria-label={translate("common.footer.navigationLabel")}
-          className="flex flex-wrap items-center gap-5"
+          className="site-footer__navigation"
         >
           <TextLink to={`/${locale}/`} variant="nav">
             {translate("common.navigation.home")}
