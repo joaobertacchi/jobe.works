@@ -182,23 +182,32 @@ describe("localized route layout", () => {
     },
   );
 
-  it("emits cta_pressed when the hero call to action is clicked", async () => {
+  it("emits cta_pressed with distinct ids for the mobile and rail hero calls to action", async () => {
     const tracker = vi.fn();
     renderLocalizedRoute("/en/", false, [
       { tracker, consentCategory: "analytics" },
     ]);
 
-    const heroCta = (
-      await screen.findAllByRole("link", {
-        name: "Book a Product Readiness Call",
-      })
-    )[0];
-    fireEvent.click(heroCta);
+    const heroCtas = await screen.findAllByRole("link", {
+      name: "Book a Product Readiness Call",
+    });
+
+    fireEvent.click(heroCtas[0]);
 
     await vi.waitFor(() => {
       expect(tracker).toHaveBeenCalledWith({
         eventName: "cta_pressed",
-        ctaId: "hero-book-call",
+        ctaId: "hero-mobile-book-call",
+        context: "homepage",
+      });
+    });
+
+    fireEvent.click(heroCtas[1]);
+
+    await vi.waitFor(() => {
+      expect(tracker).toHaveBeenCalledWith({
+        eventName: "cta_pressed",
+        ctaId: "hero-rail-book-call",
         context: "homepage",
       });
     });
@@ -225,6 +234,25 @@ describe("localized route layout", () => {
       ).toBeVisible();
       expect(screen.getByText(founderStatement)).toBeVisible();
       expect(screen.getAllByText("João Bertacchi")).toHaveLength(1);
+    },
+  );
+
+  it.each([
+    ["/en/", "Skip to content"],
+    ["/pt-BR/", "Pular para o conteúdo"],
+  ])(
+    "renders the skip link ahead of every other interactive element on %s",
+    async (pathname, skipLabel) => {
+      renderLocalizedRoute(pathname);
+
+      const skipLink = await screen.findByRole("link", { name: skipLabel });
+      const header = await screen.findByRole("banner");
+      expect(skipLink).toBeInTheDocument();
+      expect(skipLink).toHaveAttribute("href", "#main-content");
+      expect(
+        skipLink.compareDocumentPosition(header) &
+          Node.DOCUMENT_POSITION_FOLLOWING,
+      ).toBeTruthy();
     },
   );
 

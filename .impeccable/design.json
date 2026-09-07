@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-08-27T15:46:00.000Z",
+  "generatedAt": "2026-08-28T00:00:00Z",
   "title": "Design System: JOBE — Engineering that Works",
   "extensions": {
     "colorMeta": {
@@ -15,6 +15,48 @@
         "displayName": "Engineering Blue Soft",
         "canonical": "oklch(0.74 0.07 258)",
         "tonalRamp": ["oklch(0.3 0.07 262)", "oklch(0.4 0.07 260)", "oklch(0.52 0.07 258)", "oklch(0.62 0.07 258)", "oklch(0.74 0.07 258)", "oklch(0.82 0.05 258)", "oklch(0.9 0.03 258)", "oklch(0.96 0.01 258)"]
+      },
+      "atlas-blue-deep": {
+        "role": "primary",
+        "displayName": "Engineering Blue Deep",
+        "canonical": "oklch(0.29 0.12 262)",
+        "tonalRamp": ["oklch(0.18 0.075 262)", "oklch(0.22 0.09 262)", "oklch(0.29 0.12 262)", "oklch(0.36 0.14 262)", "oklch(0.46 0.13 260)", "oklch(0.58 0.11 258)", "oklch(0.72 0.075 258)", "oklch(0.86 0.035 258)"]
+      },
+      "atlas-route": {
+        "role": "primary",
+        "displayName": "Atlas Route",
+        "canonical": "oklch(0.36 0.14 262)",
+        "tonalRamp": ["oklch(0.22 0.09 262)", "oklch(0.29 0.12 262)", "oklch(0.36 0.14 262)", "oklch(0.48 0.13 260)", "oklch(0.58 0.12 258)", "oklch(0.68 0.12 258)", "oklch(0.8 0.07 258)", "oklch(0.92 0.025 258)"]
+      },
+      "atlas-canvas": {
+        "role": "neutral",
+        "displayName": "Atlas Canvas",
+        "canonical": "oklch(0.995 0.003 258)",
+        "tonalRamp": ["oklch(0.14 0.016 262)", "oklch(0.3 0.014 262)", "oklch(0.48 0.01 260)", "oklch(0.66 0.008 258)", "oklch(0.82 0.006 258)", "oklch(0.92 0.004 258)", "oklch(0.97 0.003 258)", "oklch(0.995 0.003 258)"]
+      },
+      "atlas-wash": {
+        "role": "neutral",
+        "displayName": "Atlas Wash",
+        "canonical": "oklch(0.965 0.016 258)",
+        "tonalRamp": ["oklch(0.29 0.026 262)", "oklch(0.34 0.025 262)", "oklch(0.5 0.023 260)", "oklch(0.66 0.021 258)", "oklch(0.8 0.019 258)", "oklch(0.9 0.017 258)", "oklch(0.965 0.016 258)", "oklch(0.99 0.006 258)"]
+      },
+      "atlas-diagnosis": {
+        "role": "neutral",
+        "displayName": "Diagnosis Surface",
+        "canonical": "oklch(0.95 0.025 258)",
+        "tonalRamp": ["oklch(0.33 0.04 260)", "oklch(0.4 0.038 260)", "oklch(0.5 0.034 258)", "oklch(0.64 0.031 258)", "oklch(0.77 0.028 258)", "oklch(0.87 0.026 258)", "oklch(0.95 0.025 258)", "oklch(0.985 0.01 258)"]
+      },
+      "atlas-action-secondary": {
+        "role": "neutral",
+        "displayName": "Secondary Action Surface",
+        "canonical": "oklch(0.975 0.012 258)",
+        "tonalRamp": ["oklch(0.25 0.025 262)", "oklch(0.34 0.023 262)", "oklch(0.5 0.02 260)", "oklch(0.66 0.018 258)", "oklch(0.8 0.015 258)", "oklch(0.9 0.013 258)", "oklch(0.975 0.012 258)", "oklch(0.995 0.004 258)"]
+      },
+      "atlas-on-blue-muted": {
+        "role": "neutral",
+        "displayName": "On-Blue Muted",
+        "canonical": "oklch(0.86 0.028 258)",
+        "tonalRamp": ["oklch(0.28 0.035 262)", "oklch(0.4 0.034 260)", "oklch(0.52 0.032 258)", "oklch(0.64 0.03 258)", "oklch(0.74 0.03 258)", "oklch(0.82 0.03 258)", "oklch(0.86 0.028 258)", "oklch(0.94 0.016 258)"]
       },
       "atlas-paper": {
         "role": "neutral",
@@ -42,9 +84,9 @@
       }
     },
     "typographyMeta": {
-      "display": { "displayName": "Display", "purpose": "The hero proposition; exactly once per page, compressed uppercase signage." },
+      "display": { "displayName": "Display", "purpose": "The hero proposition; exactly once per page, compressed uppercase signage at 12ch measure." },
       "headline": { "displayName": "Headline", "purpose": "Section titles; Barlow Condensed uppercase." },
-      "title": { "displayName": "Title", "purpose": "Service and method stop headings; Barlow Condensed uppercase." },
+      "title": { "displayName": "Title", "purpose": "Service and method stop headings; Barlow Condensed uppercase, 4.2rem min-height for two-line baseline alignment." },
       "body": { "displayName": "Body", "purpose": "Descriptions at ~68ch measure; open system stack, sentence case." },
       "label": { "displayName": "Label", "purpose": "Index names and small utility text; Barlow Condensed uppercase." }
     },
@@ -63,32 +105,48 @@
       "name": "Primary Atlas Action",
       "kind": "button",
       "refersTo": "atlas-action--primary",
-      "description": "The one conversion action: index number over label, deep-blue notched plate, right arrow.",
-      "html": "<a class=\"ds-atlas-primary\" href=\"#\"><span class=\"ds-idx\">01</span><span>Book a Product Readiness Call</span><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14m-5-5 5 5-5 5\"/></svg></a>",
-      "css": ".ds-atlas-primary { display: grid; grid-template-columns: 1fr; align-content: space-between; min-height: 7rem; padding: 1rem 1.125rem; border: 1px solid oklch(0.36 0.14 262); background: oklch(0.36 0.14 262); color: #fff; clip-path: polygon(0 0, calc(100% - 0.8rem) 0, 100% 0.8rem, 100% 100%, 0.8rem 100%, 0 calc(100% - 0.8rem)); font: 600 1.05rem/1.1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; text-transform: uppercase; letter-spacing: 0.025em; transition: background-color 180ms ease-out, color 180ms ease-out; } .ds-atlas-primary:hover, .ds-atlas-primary:focus-visible { background: oklch(0.16 0.016 262); } .ds-atlas-primary:focus-visible { outline: 2px solid oklch(0.36 0.13 262); outline-offset: 3px; } .ds-idx { font-size: 1.75rem; color: oklch(0.74 0.07 258); }"
+      "description": "The one conversion action: index number over label, deep-blue notched plate with a 1px rim that follows the chamfer, right arrow. Hover/focus is a true inversion in both themes.",
+      "html": "<a class=\"ds-action ds-action--primary\" href=\"#\"><span class=\"ds-action__index\">01</span><span class=\"ds-action__label\">Book a Product Readiness Call</span><svg class=\"ds-action__arrow\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14m-5-5 5 5-5 5\"/></svg></a>",
+      "css": ".ds-action { position: relative; isolation: isolate; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1rem; min-height: 4rem; padding: 1rem 1.125rem; color: oklch(0.36 0.14 262); clip-path: polygon(0 0, calc(100% - 0.8rem) 0, 100% 0.8rem, 100% 100%, 0.8rem 100%, 0 calc(100% - 0.8rem)); font: 600 1.05rem/1.1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; text-transform: uppercase; letter-spacing: 0.025em; text-decoration: none; transition: color 180ms ease-out; } .ds-action::before, .ds-action::after { content: \"\"; position: absolute; z-index: -1; inset: 0; background: oklch(0.36 0.14 262); transition: background-color 180ms ease-out; } .ds-action::after { inset: 1px; background: oklch(0.985 0.004 255); } .ds-action--primary { grid-template-columns: 1fr; align-content: space-between; min-height: 7rem; } .ds-action--primary::after { background: oklch(0.36 0.14 262); } .ds-action--primary { color: #fff; } .ds-action--primary:hover, .ds-action--primary:focus-visible { background: none; } .ds-action--primary:hover::after, .ds-action--primary:focus-visible::after, .ds-action--primary:hover::before, .ds-action--primary:focus-visible::before { background: oklch(0.16 0.016 262); } .ds-action:focus-visible { outline: 2px solid oklch(0.36 0.13 262); outline-offset: 3px; } .ds-action__index { font-size: 1.75rem; color: oklch(0.74 0.07 258); } .ds-action__arrow { width: 1.35rem; fill: none; stroke: currentcolor; stroke-width: 1.75; }"
     },
     {
       "name": "Secondary Atlas Action",
       "kind": "button",
       "refersTo": "atlas-action--secondary",
-      "description": "The second decision on the rail: paper fill with blue border and ink label.",
-      "html": "<a class=\"ds-atlas-secondary\" href=\"#\"><span class=\"ds-idx\">02</span><span>See the StockCast case</span><svg viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14m-5-5 5 5-5 5\"/></svg></a>",
-      "css": ".ds-atlas-secondary { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 1rem; min-height: 4rem; padding: 1rem 1.125rem; border: 1px solid oklch(0.36 0.14 262); background: oklch(0.985 0.004 255); color: oklch(0.16 0.016 262); clip-path: polygon(0 0, calc(100% - 0.8rem) 0, 100% 0.8rem, 100% 100%, 0.8rem 100%, 0 calc(100% - 0.8rem)); font: 600 1.05rem/1.1 \"Barlow Condensed\", \"Arial Narrow\", sans-serif; text-transform: uppercase; letter-spacing: 0.025em; }"
+      "description": "The second decision on the rail: a dedicated blue-tinted secondary-action surface, blue rim and blue label; dark mode uses the lighter Atlas Route role for the rim and label, and hover inverts to blue fill with white text.",
+      "html": "<a class=\"ds-action ds-action--secondary\" href=\"#\"><span class=\"ds-action__index\">02</span><span class=\"ds-action__label\">See the StockCast case</span><svg class=\"ds-action__arrow\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14m-5-5 5 5-5 5\"/></svg></a>",
+      "css": ".ds-action--secondary { --action-fill: oklch(0.975 0.012 258); color: oklch(0.36 0.14 262); } .ds-action--secondary:hover::after, .ds-action--secondary:focus-visible::after { background: oklch(0.36 0.14 262); } .ds-action--secondary:hover, .ds-action--secondary:focus-visible { color: #fff; } .ds-action--secondary .ds-action__index { color: oklch(0.74 0.07 258); }"
+    },
+    {
+      "name": "Light Atlas Action",
+      "kind": "button",
+      "refersTo": "atlas-action--light",
+      "description": "The action that lives on the deep-blue case plate: white plate, blue label; hover inverts to ink fill with paper text.",
+      "html": "<a class=\"ds-action ds-action--light\" href=\"#\"><span class=\"ds-action__label\">Read the case study</span><svg class=\"ds-action__arrow\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M5 12h14m-5-5 5 5-5 5\"/></svg></a>",
+      "css": ".ds-action--light { width: fit-content; } .ds-action--light::before, .ds-action--light::after { background: #fff; } .ds-action--light { color: oklch(0.36 0.14 262); } .ds-action--light:hover::after, .ds-action--light:focus-visible::after, .ds-action--light:hover::before, .ds-action--light:focus-visible::before { background: oklch(0.16 0.016 262); } .ds-action--light:hover, .ds-action--light:focus-visible { color: oklch(0.985 0.004 255); } .ds-action--light:focus-visible { outline-color: #fff; }"
+    },
+    {
+      "name": "Hero Cross-Route",
+      "kind": "custom",
+      "refersTo": "atlas-cross-route",
+      "description": "The signature route: measured at runtime to enter at the left edge, pass through the diagnosis junction center, and dock with a terminal node on the primary plate's left edge.",
+      "html": "<svg class=\"ds-cross-route\" viewBox=\"0 0 1440 705\" aria-hidden=\"true\"><path d=\"M0 374H855L1197 473\"></path><circle cx=\"1197\" cy=\"473\" r=\"7\"></circle></svg>",
+      "css": ".ds-cross-route { display: block; width: 100%; height: 100%; overflow: visible; pointer-events: none; } .ds-cross-route path { fill: none; stroke: oklch(0.74 0.07 258); stroke-width: 4; vector-effect: non-scaling-stroke; } .ds-cross-route circle { fill: oklch(0.985 0.004 255); stroke: oklch(0.74 0.07 258); stroke-width: 4; vector-effect: non-scaling-stroke; } @media (prefers-reduced-motion: no-preference) { .ds-cross-route path { stroke-dasharray: 1; animation: ds-route-resolve 1.1s cubic-bezier(0.16, 1, 0.3, 1) both; } } @keyframes ds-route-resolve { from { stroke-dasharray: 0 1; } to { stroke-dasharray: 1 0; } }"
     },
     {
       "name": "ScoreCard Plate",
       "kind": "card",
       "refersTo": "atlas-scorecard",
-      "description": "The evidence plate: clipped blueprint panel, heading row, and five empty named tracks. Intentionally pending — no fabricated metrics.",
-      "html": "<div class=\"ds-scorecard\"><div class=\"ds-score-head\"><span>Evidence preview pending real case material</span><span>SC–00</span></div><div class=\"ds-score-row\"><span>Context</span><span class=\"ds-score-track\"></span><span>—</span></div><div class=\"ds-score-row\"><span>Product</span><span class=\"ds-score-track\"></span><span>—</span></div></div>",
-      "css": ".ds-scorecard { border: 1px solid oklch(1 0 0 / 0.72); background: oklch(0.31 0.12 262); clip-path: polygon(0 0, calc(100% - 1rem) 0, 100% 1rem, 100% 100%, 1rem 100%, 0 calc(100% - 1rem)); } .ds-score-head, .ds-score-row { display: grid; grid-template-columns: 1fr 1.4fr auto; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid oklch(1 0 0 / 0.28); font: 600 0.85rem/1.4 \"Barlow Condensed\", sans-serif; text-transform: uppercase; color: #fff; } .ds-score-head { grid-template-columns: 1fr auto; letter-spacing: 0.06em; } .ds-score-row:last-child { border-bottom: 0; } .ds-score-row > span:first-child { font-weight: 600; } .ds-score-track { height: 0.35rem; background: oklch(1 0 0 / 0.18); }"
+      "description": "The evidence plate: chamfered blueprint panel with a white rim, heading row, and five empty named tracks at the shared 0.8rem chamfer. Intentionally pending — no fabricated metrics.",
+      "html": "<div class=\"ds-scorecard\"><div class=\"ds-score-head\"><span>Evidence preview pending real case material</span><span>SC-00</span></div><div class=\"ds-score-row\"><span>Context</span><span class=\"ds-score-track\"></span><span>—</span></div><div class=\"ds-score-row\"><span>Product</span><span class=\"ds-score-track\"></span><span>—</span></div><div class=\"ds-score-row\"><span>Architecture</span><span class=\"ds-score-track\"></span><span>—</span></div></div>",
+      "css": ".ds-scorecard { position: relative; isolation: isolate; clip-path: polygon(0 0, calc(100% - 0.8rem) 0, 100% 0.8rem, 100% 100%, 0.8rem 100%, 0 calc(100% - 0.8rem)); } .ds-scorecard::before, .ds-scorecard::after { content: \"\"; position: absolute; z-index: -1; inset: 0; background: oklch(1 0 0 / 0.72); } .ds-scorecard::after { inset: 1px; background: oklch(0.29 0.12 262); } .ds-score-head, .ds-score-row { display: grid; grid-template-columns: 1fr 1.4fr auto; align-items: center; gap: 1rem; padding: 1rem 1.25rem; border-bottom: 1px solid oklch(1 0 0 / 0.28); font: 600 0.85rem/1.4 \"Barlow Condensed\", sans-serif; text-transform: uppercase; color: #fff; } .ds-score-head { grid-template-columns: 1fr auto; letter-spacing: 0.06em; } .ds-score-row:last-child { border-bottom: 0; } .ds-score-row > span:first-child { font-weight: 600; } .ds-score-track { height: 0.35rem; background: oklch(1 0 0 / 0.18); }"
     },
     {
       "name": "Systems Topology",
       "kind": "custom",
       "refersTo": "systems-topology",
-      "description": "The signature SVG route map: dashed secondary routes, a resolving primary route, station nodes, and a diagnosis junction. No fabricated data.",
-      "html": "<figure class=\"ds-topo\"><svg viewBox=\"0 0 760 620\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-dasharray=\"8 8\" opacity=\"0.48\"><path d=\"M132 132H220V208H330\"/></g><g fill=\"none\" stroke=\"oklch(0.74 0.07 258)\" stroke-width=\"8\"><path d=\"M70 294H180L232 342H318\"/></g><g transform=\"translate(66 98)\"><path d=\"M0 14 14 0h128l14 14v52l-14 14H14L0 66Z\" fill=\"oklch(0.31 0.12 262)\" stroke=\"oklch(0.74 0.07 258)\"/><text x=\"18\" y=\"34\" fill=\"#fff\" font-family=\"Barlow Condensed\" font-size=\"16\" font-weight=\"600\" text-transform=\"uppercase\">01</text></g></svg></figure>",
+      "description": "The signature SVG route map: dashed secondary routes, a resolving primary route at the 4px non-scaling route weight, station nodes, and a diagnosis junction. Stable global station numbering; mobile ships a subset, never a re-index. No fabricated data.",
+      "html": "<figure class=\"ds-topo\"><svg viewBox=\"0 0 760 620\" xmlns=\"http://www.w3.org/2000/svg\"><g fill=\"none\" stroke=\"#fff\" stroke-width=\"2\" stroke-dasharray=\"8 8\" opacity=\"0.48\"><path d=\"M132 132H220V208H330\"/></g><g fill=\"none\" stroke=\"oklch(0.74 0.07 258)\" stroke-width=\"4\" vector-effect=\"non-scaling-stroke\"><path d=\"M70 294H180L232 342H318\"/></g><g transform=\"translate(66 98)\"><path d=\"M0 14 14 0h128l14 14v52l-14 14H14L0 66Z\" fill=\"oklch(0.31 0.12 262)\" stroke=\"oklch(0.74 0.07 258)\"/><text x=\"18\" y=\"34\" fill=\"#fff\" font-family=\"Barlow Condensed\" font-size=\"16\" font-weight=\"600\" text-transform=\"uppercase\">01</text></g></svg></figure>",
       "css": ".ds-topo { display: block; width: 100%; overflow: visible; color: #fff; } .ds-topo svg text { fill: #fff; stroke: none; font-family: \"Barlow Condensed\", sans-serif; }"
     },
     {
@@ -103,7 +161,7 @@
       "name": "Theme Switcher",
       "kind": "nav",
       "refersTo": "theme-switcher",
-      "description": "Two-option segmented light/dark control with aria-pressed state.",
+      "description": "Two-option segmented light/dark control with aria-pressed state; follows the OS until an explicit choice is made.",
       "html": "<div class=\"ds-theme\" role=\"group\" aria-label=\"Theme\"><button class=\"ds-theme-choice\" aria-pressed=\"true\">Light</button><button class=\"ds-theme-choice\" aria-pressed=\"false\">Dark</button></div>",
       "css": ".ds-theme { display: flex; border: 1px solid oklch(0.9 0.006 90); } .ds-theme-choice { border: 0; border-inline-start: 1px solid oklch(0.9 0.006 90); padding: 0.35rem 0.55rem; background: transparent; font: 600 0.75rem/1.2 \"Barlow Condensed\", sans-serif; text-transform: uppercase; letter-spacing: 0.04em; color: oklch(0.17 0.012 262); cursor: pointer; } .ds-theme-choice:first-child { border-inline-start: 0; } .ds-theme-choice[aria-pressed=\"true\"] { background: oklch(0.36 0.13 262); color: oklch(0.99 0.002 90); }"
     }
@@ -120,14 +178,14 @@
       "Explicit, empty scorecard tracks — evidence is never fabricated."
     ],
     "rules": [
-      { "name": "The One Blue Rule", "body": "Exactly one accent hue. --atlas-blue and --atlas-blue-soft are lightness variants of the same hue; --brand stays in the same family. Never introduce a second accent, gradient, glass, or neon.", "section": "colors" },
+      { "name": "The One Blue Rule", "body": "Exactly one accent hue. Saturated blue, Atlas Route, paper washes, and diagnosis surfaces vary lightness and chroma within the 258–262 degree family; --brand stays in the same family. Never introduce a second accent, gradient, glass, or neon.", "section": "colors" },
       { "name": "The Empty Evidence Rule", "body": "The ScoreCard shows empty tracks and a pending status. No score, metric, customer, credential, or outcome claim is ever rendered. --atlas-blue-soft fills a track only when real measurement exists.", "section": "colors" },
       { "name": "The Signage Rule", "body": "Display/headline/title/label/nav are Barlow Condensed uppercase. Body is the open system stack, lowercase sentence case. The blend of compressed signage and open reading text is the system's voice; never make body copy condensed.", "section": "typography" },
       { "name": "The Flat-By-Fold Rule", "body": "No shadows, no glassmorphism, no gradients. The fold is the depth cue: hairline --atlas-fold separators and angular clip-path corners make adjacent planes read as stacked sheets.", "section": "elevation" },
-      { "name": "The Notched-Corner Rule", "body": "Corners are cut, not rounded. The default radius stays small (8px) for incidental chrome; the distinctive actions, case plate, and ScoreCard use a notched clip-angle to read as punched blueprint plates.", "section": "shapes" }
+      { "name": "The Notched-Corner Rule", "body": "Corners are cut, not rounded. The default radius stays small (8px) for incidental chrome; the distinctive actions, case plate, and ScoreCard use a notched clip-angle from the shared --atlas-chamfer token (0.8rem) to read as punched blueprint plates, with a 1px rim painted by stacked pseudo-elements so cut corners carry a border.", "section": "shapes" }
     ],
     "dos": [
-      "Do use the one engineering blue as the structural accent; keep --atlas-blue / --atlas-blue-soft / --brand in the same hue family.",
+      "Do use the one engineering blue as the structural accent; keep saturated blue, route, wash, diagnosis, and brand roles in the same 258–262 degree hue family.",
       "Do keep the three-plane hero with one route crossing every fold and resolving at the primary action.",
       "Do use Barlow Condensed uppercase for display, headline, title, label, and nav.",
       "Do keep ScoreCard tracks empty and the status pending — never render an invented metric, score, customer, or credential.",

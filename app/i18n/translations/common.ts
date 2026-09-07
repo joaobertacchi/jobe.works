@@ -23,12 +23,12 @@ export type CommonTranslation = {
     case: string;
     contact: string;
     privacy: string;
+    skipToContent: string;
   };
   theme: {
     label: string;
     light: string;
     dark: string;
-    system: string;
   };
 };
 
@@ -57,8 +57,9 @@ export const commonTranslations = {
       case: "Case study",
       contact: "Contact",
       privacy: "Privacy",
+      skipToContent: "Skip to content",
     },
-    theme: { label: "Theme", light: "Light", dark: "Dark", system: "System" },
+    theme: { label: "Theme", light: "Light", dark: "Dark" },
   },
   "pt-BR": {
     siteName: "JOBE",
@@ -83,7 +84,8 @@ export const commonTranslations = {
       case: "Estudo de caso",
       contact: "Contato",
       privacy: "Privacidade",
+      skipToContent: "Pular para o conteúdo",
     },
-    theme: { label: "Tema", light: "Claro", dark: "Escuro", system: "Sistema" },
+    theme: { label: "Tema", light: "Claro", dark: "Escuro" },
   },
 } satisfies Record<SupportedLocale, CommonTranslation>;

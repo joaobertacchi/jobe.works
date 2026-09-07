@@ -1,9 +1,13 @@
+import { useRef } from "react";
 import { Link } from "react-router";
 
 import { useAnalytics } from "../analytics/analytics";
+import { AtlasAction } from "../components/domain/atlas-action";
+import { AtlasCrossRoute } from "../components/domain/atlas-cross-route";
 import { SystemsTopology } from "../components/domain/systems-topology";
 import { isSupportedLocale } from "../i18n/config";
 import { useI18n } from "../i18n/i18n";
+import { commonTranslations } from "../i18n/translations/common";
 import { homeTranslations } from "../i18n/translations/home";
 import { createPageMeta, getSeoLoaderData } from "../seo/metadata";
 import type { Route } from "./+types/$locale._index";
@@ -19,8 +23,8 @@ export function meta({ matches, params }: Route.MetaArgs) {
       "@context": "https://schema.org",
       "@type": "Organization",
       name: loaderData.site.siteName,
-      alternateName: "JOBE — Engineering that Works",
-      email: "joao@jobe.works",
+      alternateName: seo.title,
+      email: commonTranslations[params.locale].footer.email,
       url: new URL(loaderData.urls[params.locale], `${loaderData.site.origin}/`)
         .href,
     },
@@ -30,6 +34,7 @@ export function meta({ matches, params }: Route.MetaArgs) {
 export default function Home() {
   const { locale, translate } = useI18n();
   const { capture } = useAnalytics();
+  const heroRef = useRef<HTMLElement>(null);
 
   const services = [
     {
@@ -67,32 +72,42 @@ export default function Home() {
     },
   ] as const;
 
+  const scorecardTracks = [
+    "context",
+    "product",
+    "architecture",
+    "integrations",
+    "security",
+  ] as const;
+
   function captureCta(ctaId: string) {
     capture({ eventName: "cta_pressed", ctaId, context: "homepage" });
   }
 
   return (
     <main className="home-atlas">
-      <section className="atlas-hero" aria-labelledby="home-title">
+      <section
+        aria-labelledby="home-title"
+        className="atlas-hero"
+        ref={heroRef}
+      >
         <div className="atlas-plane atlas-proposition">
           <h1 className="atlas-display" id="home-title">
             {translate("home.hero.title")}
           </h1>
-          <Link
-            className="atlas-action atlas-mobile-primary"
+          <AtlasAction
+            className="atlas-mobile-primary"
+            onClick={() => captureCta("hero-mobile-book-call")}
             to={`/${locale}/contact`}
-            onClick={() => captureCta("hero-book-call")}
+            variant="primary"
           >
-            <span>{translate("home.hero.ctaPrimary")}</span>
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <path d="M5 12h14m-5-5 5 5-5 5" />
-            </svg>
-          </Link>
+            {translate("home.hero.ctaPrimary")}
+          </AtlasAction>
           <p className="atlas-proposition__description">
             {translate("home.hero.description")}
           </p>
           <p className="atlas-proposition__method">
-            {translate("home.services.description")}
+            {translate("home.hero.method")}
           </p>
         </div>
 
@@ -125,46 +140,26 @@ export default function Home() {
             aria-label={translate("common.navigation.contact")}
             className="atlas-actions"
           >
-            <Link
-              className="atlas-action atlas-action--primary"
+            <AtlasAction
+              index="01"
+              onClick={() => captureCta("hero-rail-book-call")}
               to={`/${locale}/contact`}
-              onClick={() => captureCta("hero-book-call")}
+              variant="primary"
             >
-              <span aria-hidden="true" className="atlas-action__index">
-                01
-              </span>
-              <span>{translate("home.hero.ctaPrimary")}</span>
-              <svg aria-hidden="true" viewBox="0 0 24 24">
-                <path d="M5 12h14m-5-5 5 5-5 5" />
-              </svg>
-            </Link>
-            <Link
-              className="atlas-action atlas-action--secondary"
-              to={`/${locale}/case`}
+              {translate("home.hero.ctaPrimary")}
+            </AtlasAction>
+            <AtlasAction
+              index="02"
               onClick={() => captureCta("hero-stockcast")}
+              to={`/${locale}/case`}
+              variant="secondary"
             >
-              <span aria-hidden="true" className="atlas-action__index">
-                02
-              </span>
-              <span>{translate("home.hero.ctaSecondary")}</span>
-              <svg aria-hidden="true" viewBox="0 0 24 24">
-                <path d="M5 12h14m-5-5 5 5-5 5" />
-              </svg>
-            </Link>
+              {translate("home.hero.ctaSecondary")}
+            </AtlasAction>
           </nav>
         </aside>
 
-        <svg
-          aria-hidden="true"
-          className="atlas-cross-route"
-          preserveAspectRatio="none"
-          viewBox="0 0 1200 120"
-        >
-          <path d="M0 78H300l70-46h296l80 34h454" pathLength="1" />
-          <circle cx="0" cy="78" r="8" />
-          <circle cx="666" cy="32" r="10" />
-          <circle cx="1200" cy="66" r="8" />
-        </svg>
+        <AtlasCrossRoute heroRef={heroRef} />
       </section>
 
       <section
@@ -207,16 +202,13 @@ export default function Home() {
           <p className="atlas-index-name">{translate("home.case.label")}</p>
           <h2 id="case-title">{translate("home.case.title")}</h2>
           <p>{translate("home.case.description")}</p>
-          <Link
-            className="atlas-action atlas-action--light"
-            to={`/${locale}/case`}
+          <AtlasAction
             onClick={() => captureCta("case-read")}
+            to={`/${locale}/case`}
+            variant="light"
           >
-            <span>{translate("home.case.link")}</span>
-            <svg aria-hidden="true" viewBox="0 0 24 24">
-              <path d="M5 12h14m-5-5 5 5-5 5" />
-            </svg>
-          </Link>
+            {translate("home.case.link")}
+          </AtlasAction>
         </div>
         <div
           className="atlas-scorecard"
@@ -224,17 +216,18 @@ export default function Home() {
         >
           <div className="atlas-scorecard__header">
             <span>{translate("home.atlas.evidenceStatus")}</span>
-            <span aria-hidden="true">SC–00</span>
+            <span aria-hidden="true">SC-00</span>
           </div>
-          {Object.values(homeTranslations[locale].atlas.labels)
-            .slice(0, 5)
-            .map((label) => (
-              <div className="atlas-scorecard__row" key={label}>
+          {scorecardTracks.map((track) => {
+            const label = translate(`home.atlas.labels.${track}`);
+            return (
+              <div className="atlas-scorecard__row" key={track}>
                 <span>{label}</span>
                 <span aria-hidden="true" className="atlas-scorecard__track" />
                 <span aria-hidden="true">—</span>
               </div>
-            ))}
+            );
+          })}
         </div>
       </section>
 
@@ -265,16 +258,13 @@ export default function Home() {
             </li>
           ))}
         </ol>
-        <Link
-          className="atlas-action atlas-method__action"
-          to={`/${locale}/contact`}
+        <AtlasAction
+          className="atlas-method__action"
           onClick={() => captureCta("funnel-book-call")}
+          to={`/${locale}/contact`}
         >
-          <span>{translate("home.hero.ctaPrimary")}</span>
-          <svg aria-hidden="true" viewBox="0 0 24 24">
-            <path d="M5 12h14m-5-5 5 5-5 5" />
-          </svg>
-        </Link>
+          {translate("home.hero.ctaPrimary")}
+        </AtlasAction>
       </section>
     </main>
   );

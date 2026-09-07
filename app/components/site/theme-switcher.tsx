@@ -7,19 +7,20 @@ import {
   readTheme,
   resolveTheme,
   THEME_MEDIA_QUERY,
-  type Theme,
 } from "../../theme";
 import { Button } from "../ui/button";
 
-const themes = ["light", "dark", "system"] as const;
+const themes = ["light", "dark"] as const;
+
+type ThemeChoice = (typeof themes)[number];
 
 export function ThemeSwitcher() {
   const { translate } = useI18n();
-  const [theme, setTheme] = useState<Theme>("system");
+  const [theme, setTheme] = useState<ThemeChoice>("light");
+  const [followsSystem, setFollowsSystem] = useState(true);
   const hasInteracted = useRef(false);
 
   useEffect(() => {
-    let active = true;
     const storedTheme = readTheme();
     const prefersDark =
       typeof window.matchMedia === "function" &&
@@ -30,37 +31,36 @@ export function ThemeSwitcher() {
       document.documentElement,
     );
     void Promise.resolve().then(() => {
-      if (active && !hasInteracted.current) setTheme(storedTheme);
-    });
+      if (hasInteracted.current) return;
+      const freshTheme = readTheme();
+      const freshPrefersDark =
+        typeof window.matchMedia === "function" &&
+        window.matchMedia(THEME_MEDIA_QUERY).matches;
 
-    return () => {
-      active = false;
-    };
+      setTheme(resolveTheme(freshTheme, freshPrefersDark));
+      setFollowsSystem(freshTheme === "system");
+    });
   }, []);
 
   useEffect(() => {
-    if (theme !== "system" || typeof window.matchMedia !== "function") return;
+    if (!followsSystem || typeof window.matchMedia !== "function") return;
 
     const mediaQuery = window.matchMedia(THEME_MEDIA_QUERY);
     const handleChange = (event: MediaQueryListEvent) => {
-      applyTheme(
-        resolveTheme("system", event.matches),
-        document.documentElement,
-      );
+      const effective = event.matches ? "dark" : "light";
+      applyTheme(effective, document.documentElement);
+      setTheme(effective);
     };
 
     mediaQuery.addEventListener("change", handleChange);
     return () => mediaQuery.removeEventListener("change", handleChange);
-  }, [theme]);
+  }, [followsSystem]);
 
-  function selectTheme(nextTheme: Theme) {
+  function selectTheme(nextTheme: ThemeChoice) {
     hasInteracted.current = true;
-    const prefersDark =
-      typeof window.matchMedia === "function" &&
-      window.matchMedia(THEME_MEDIA_QUERY).matches;
-
+    setFollowsSystem(false);
     persistTheme(nextTheme);
-    applyTheme(resolveTheme(nextTheme, prefersDark), document.documentElement);
+    applyTheme(nextTheme, document.documentElement);
     setTheme(nextTheme);
   }
 

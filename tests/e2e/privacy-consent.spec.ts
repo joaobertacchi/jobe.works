@@ -257,7 +257,7 @@ test("hero call to action emits cta_pressed after consent", async ({
       analytics.events.some(
         (event) =>
           event.eventName === "cta_pressed" &&
-          event.ctaId === "hero-book-call" &&
+          event.ctaId === "hero-rail-book-call" &&
           event.context === "homepage",
       ),
     )

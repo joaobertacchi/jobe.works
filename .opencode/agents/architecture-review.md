@@ -1,8 +1,8 @@
 ---
 description: Reviews changes for compliance with accepted project architecture after deterministic validation.
 mode: subagent
-model: openai/gpt-5.6-sol
-variant: medium
+model: opencode-go/glm-5.3
+variant: high
 permission:
   edit: deny
   bash: deny

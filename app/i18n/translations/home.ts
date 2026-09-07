@@ -8,6 +8,7 @@ export type HomeTranslation = {
   hero: {
     title: string;
     description: string;
+    method: string;
     ctaPrimary: string;
     ctaSecondary: string;
   };
@@ -66,6 +67,7 @@ export const homeTranslations = {
       title: "Engineering that Works",
       description:
         "JOBE is a senior engineering consultancy for AI products that gained traction and need to hold up in production. You start with a conversation, not a catalog: a structured evaluation that directs you to the right engagement.",
+      method: "One route: evaluate, diagnose, direct.",
       ctaPrimary: "Book a Product Readiness Call",
       ctaSecondary: "See the StockCast case",
     },
@@ -148,7 +150,8 @@ export const homeTranslations = {
     hero: {
       title: "Engenharia que Funciona",
       description:
-        "A JOBE é uma consultoria de engenharia sênior para produtos de IA que ganharam tração e precisam se sustentar em produção. Você começa por uma conversa, não por um catálogo: uma avaliação estruturada que direciona o engajamento certo.",
+        "        A JOBE é uma consultoria de engenharia sênior para produtos de IA que ganharam tração e precisam se sustentar em produção. Você começa por uma conversa, não por um catálogo: uma avaliação estruturada que direciona o engajamento certo.",
+      method: "Uma rota: avaliar, diagnosticar, direcionar.",
       ctaPrimary: "Agendar uma Product Readiness Call",
       ctaSecondary: "Conhecer o caso StockCast",
     },

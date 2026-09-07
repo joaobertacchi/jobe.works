@@ -1,6 +1,7 @@
 import {
   isRouteErrorResponse,
   Outlet,
+  redirect,
   useLoaderData,
   useMatches,
   useParams,
@@ -24,6 +25,7 @@ import type { Route } from "./+types/$locale";
 
 function LocalizedLayout() {
   const { urls } = useLoaderData<typeof clientLoader>();
+  const { translate } = useI18n();
   const hideLanguageSwitcher = useMatches().some(
     ({ handle }) =>
       (handle as { languageSwitcher?: boolean } | undefined)
@@ -31,8 +33,11 @@ function LocalizedLayout() {
   );
   return (
     <div className="flex min-h-screen flex-col">
+      <a className="skip-link" href="#main-content">
+        {translate("common.navigation.skipToContent")}
+      </a>
       <SiteHeader urls={hideLanguageSwitcher ? null : urls} />
-      <div className="flex-1">
+      <div className="flex-1" id="main-content" tabIndex={-1}>
         <Outlet />
       </div>
       <SiteFooter />
@@ -71,6 +76,17 @@ export function shouldRevalidate({
   );
 }
 
+function isWildcardNotFound(
+  error: unknown,
+  params: Route.ClientLoaderArgs["params"],
+) {
+  return (
+    (error instanceof Response || isRouteErrorResponse(error)) &&
+    error.status === 404 &&
+    "*" in params
+  );
+}
+
 export async function clientLoader({
   params,
   serverLoader,
@@ -78,6 +94,11 @@ export async function clientLoader({
 }: Route.ClientLoaderArgs) {
   if (!params.locale || !isSupportedLocale(params.locale)) {
     throw new Response(null, { status: 404 });
+  }
+  // The bare locale root is served prerendered by static hosts but is not a
+  // canonical URL; redirect it instead of rendering a hydration 404.
+  if (url.pathname === `/${params.locale}`) {
+    throw redirect(`/${params.locale}/`, { status: 308 });
   }
   if (!isCanonicalLocalizedPathname(url.pathname)) {
     throw new Response(null, { status: 404 });
@@ -89,11 +110,7 @@ export async function clientLoader({
     }
     return data;
   } catch (error) {
-    if (
-      (error instanceof Response || isRouteErrorResponse(error)) &&
-      error.status === 404 &&
-      "*" in params
-    ) {
+    if (isWildcardNotFound(error, params)) {
       return { urls: null };
     }
     throw error;

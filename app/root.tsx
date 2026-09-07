@@ -25,9 +25,6 @@ import { themeInitializationScript } from "./theme";
 import type { Route } from "./+types/root";
 import "./app.css";
 
-const directionContractComment =
-  "<!-- THESIS: JOBE turns a complex product system into one legible route from symptoms to a directed engineering decision; it refuses the generic split hero, technical cube, and service-card catalog. OWN-WORLD: committed deep engineering blue, near-white and ink, compressed signage typography, folded atlas planes, clipped evidence plates, and precise topology routes. STORY: A founder or technical leader recognizes João-led judgment, sees diagnosis organize the system, and books a Product Readiness Call. FIRST VIEWPORT: compact navigation above three unequal planes: proposition left, dominant architecture topology center, and João plus indexed actions right; one route crosses every fold and resolves at the primary action. FORM: Systems Wayfinding, grounded candidate 6, seed dce77f20; approved Folded Atlas comp `.impeccable/mocks/home-systems-folded-atlas.webp`. FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md -->";
-
 export function Document({
   children,
   locale,
@@ -49,10 +46,6 @@ export function Document({
         <Links />
       </head>
       <body>
-        <div
-          aria-hidden="true"
-          dangerouslySetInnerHTML={{ __html: directionContractComment }}
-        />
         {children}
         <ScrollRestoration />
         <Scripts />

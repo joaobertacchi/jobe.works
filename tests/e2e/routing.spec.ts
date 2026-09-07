@@ -145,6 +145,17 @@ test("keeps navigation in the active locale", async ({ page }) => {
   ).toBeVisible();
 });
 
+test("redirects the slashless locale root to its canonical form", async ({
+  page,
+}) => {
+  await page.goto("/pt-BR");
+
+  await expect(page).toHaveURL("/pt-BR/");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Engenharia que funciona" }),
+  ).toBeVisible();
+});
+
 for (const [url, category] of [
   ["/fr/about", "unsupported locale"],
   ["/en/not-published", "unpublished localized route"],

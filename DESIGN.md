@@ -12,7 +12,14 @@ colors:
   brand-foreground: "oklch(0.99 0.002 90)"
   atlas-blue: "oklch(0.36 0.14 262)"
   atlas-blue-soft: "oklch(0.74 0.07 258)"
+  atlas-blue-deep: "oklch(0.29 0.12 262)"
+  atlas-route: "oklch(0.36 0.14 262)"
+  atlas-canvas: "oklch(0.995 0.003 258)"
   atlas-paper: "oklch(0.985 0.004 255)"
+  atlas-wash: "oklch(0.965 0.016 258)"
+  atlas-diagnosis: "oklch(0.95 0.025 258)"
+  atlas-action-secondary: "oklch(0.975 0.012 258)"
+  atlas-on-blue-muted: "oklch(0.86 0.028 258)"
   atlas-ink: "oklch(0.16 0.016 262)"
   atlas-fold: "oklch(0.9 0.012 258)"
   dark-background: "oklch(0.17 0.014 262)"
@@ -25,7 +32,14 @@ colors:
   dark-brand-foreground: "oklch(0.15 0.02 262)"
   dark-atlas-blue: "oklch(0.31 0.12 262)"
   dark-atlas-blue-soft: "oklch(0.71 0.08 258)"
+  dark-atlas-blue-deep: "oklch(0.22 0.09 262)"
+  dark-atlas-route: "oklch(0.68 0.12 258)"
+  dark-atlas-canvas: "oklch(0.14 0.016 262)"
   dark-atlas-paper: "oklch(0.2 0.016 262)"
+  dark-atlas-wash: "oklch(0.29 0.026 262)"
+  dark-atlas-diagnosis: "oklch(0.33 0.04 260)"
+  dark-atlas-action-secondary: "oklch(0.25 0.025 262)"
+  dark-atlas-on-blue-muted: "oklch(0.82 0.03 258)"
   dark-atlas-ink: "oklch(0.94 0.008 90)"
   dark-atlas-fold: "oklch(0.31 0.02 262)"
 typography:
@@ -65,6 +79,7 @@ rounded:
   md: "8px"
   lg: "12px"
   xl: "16px"
+chamfer: "0.8rem"
 spacing:
   xs: "8px"
   sm: "12px"
@@ -100,10 +115,17 @@ Tight two-tone engineering palette: deep blue on neutral paper/ink. The blue is 
 
 - **Engineering Blue** (`--atlas-blue`, `oklch(0.36 0.14 262)`; dark `oklch(0.31 0.12 262)`): The single accent. Fills the topology panel, StockCast case plate, primary action, and the mobile CTA. Never a second hue.
 - **Engineering Blue Soft** (`--atlas-blue-soft`, `oklch(0.74 0.07 258)`; dark `oklch(0.71 0.08 258)`): The route and wire color on the blue panel — the track that crosses the fold, the cross-route stroke, and secondary topology strokes. Reads as lightened blue, never a new hue.
+- **Engineering Blue Deep** (`--atlas-blue-deep`, `oklch(0.29 0.12 262)`; dark `oklch(0.22 0.09 262)`): The inset blueprint surface inside the case scorecard. It adds depth within a blue region without inventing another hue.
+- **Atlas Route** (`--atlas-route`, light `--atlas-blue`; dark `oklch(0.68 0.12 258)`): The route, node, index, and wayfinding-link color on paper. Dark mode remaps the semantic role to a lighter blue instead of mechanically reusing the blue-panel fill.
 
 ### Neutral
 
-- **Atlas Paper** (`--atlas-paper`, `oklch(0.985 0.004 255)`; dark `oklch(0.2 0.016 262)`): The reading surface. Background of the proposition plane, decision rail, action cards, and the fold highlight. In dark mode it's the ink-dark panel.
+- **Atlas Paper** (`--atlas-paper`, `oklch(0.985 0.004 255)`; dark `oklch(0.2 0.016 262)`): The primary reading surface. Background of the proposition and method planes, consent banner, and fold highlights. In dark mode it's the ink-dark panel.
+- **Atlas Canvas** (`--atlas-canvas`, `oklch(0.995 0.003 258)`; dark `oklch(0.14 0.016 262)`): The quiet page field behind reading sections. It remains nearly neutral but carries enough blue to bind the long page together.
+- **Atlas Wash** (`--atlas-wash`, `oklch(0.965 0.016 258)`; dark `oklch(0.29 0.026 262)`): The decision rail and secondary plane surface.
+- **Diagnosis Surface** (`--atlas-diagnosis`, `oklch(0.95 0.025 258)`; dark `oklch(0.33 0.04 260)`): The emphasized method station. Its additional chroma signals structural importance while the label, node size, and geometry preserve a non-color cue.
+- **Secondary Action Surface** (`--atlas-action-secondary`, `oklch(0.975 0.012 258)`; dark `oklch(0.25 0.025 262)`): The quiet plate behind secondary actions, visibly distinct from both canvas and primary blue.
+- **On-Blue Muted** (`--atlas-on-blue-muted`, `oklch(0.86 0.028 258)`; dark `oklch(0.82 0.03 258)`): Secondary text on saturated blue. It is an explicit opaque foreground rather than a context-dependent translucent gray.
 - **Atlas Ink** (`--atlas-ink`, `oklch(0.16 0.016 262)`; dark `oklch(0.94 0.008 90)`): Primary text and the diagnosis-junction label fill on the blue panel. Dark mode flips it to near-white for contrast.
 - **Atlas Fold** (`--atlas-fold`, `oklch(0.9 0.012 258)`; dark `oklch(0.31 0.02 262)`): Hairline fold lines that divide planes, border the atlas, and separate service/method stops.
 - **Brand** (`--brand`, `oklch(0.36 0.13 262)`; dark `oklch(0.62 0.12 258)`): The earlier brand token, retained for the selection pill, inline links, footer node, and site-header underline. Same blue family.
@@ -111,7 +133,7 @@ Tight two-tone engineering palette: deep blue on neutral paper/ink. The blue is 
 
 ### Named Rules
 
-**The One Blue Rule.** Exactly one accent hue. `--atlas-blue` and `--atlas-blue-soft` are lightness variants of the same hue; `--brand` stays in the same family. Never introduce a second accent, gradient, glass, or neon.
+**The One Blue Rule.** Exactly one accent hue. Saturated blue, route blue, paper washes, and diagnosis surfaces vary lightness and chroma within the 258–262° family; `--brand` stays in the same family. Never introduce a second accent, gradient, glass, or neon.
 
 **The Empty Evidence Rule.** The ScoreCard shows empty tracks and a pending status. No score, metric, customer, credential, or outcome claim is ever rendered. `--atlas-blue-soft` fills a track only when real measurement exists.
 
@@ -125,7 +147,7 @@ Tight two-tone engineering palette: deep blue on neutral paper/ink. The blue is 
 
 ### Hierarchy
 
-- **Display** (700, `clamp(4rem, 7vw, 6rem)`, 0.84, uppercase, -0.03em): The hero proposition. Max width 7ch; it dominates the first viewport.
+- **Display** (700, `clamp(4rem, 7vw, 6rem)`, 0.84, uppercase, -0.03em): The hero proposition. Max width 12ch; it dominates the first viewport.
 - **Headline** (600, `clamp(2.75rem, 5vw, 5rem)`, 0.95, uppercase, -0.02em): Section titles (Services, Como Funciona).
 - **Title** (600, `clamp(1.4rem, 2.2vw, 2rem)`, 1.05, uppercase, -0.02em): Service stop and method stop headings.
 - **Body** (400, `clamp(1rem, 1.2vw, 1.125rem)`, 1.65): Descriptions, max ~68ch, `--muted-foreground`.
@@ -137,14 +159,14 @@ Tight two-tone engineering palette: deep blue on neutral paper/ink. The blue is 
 
 ## Layout
 
-The system uses a 96rem (max) atlas width, hairline-bordered on the sides, that reads as a folded sheet. The hero is a three-column grid — `minmax(0,38fr) minmax(0,44fr) minmax(13rem,18fr)` — proposition left, topology center, decision rail right. Each plane is a `.atlas-plane` separated by a 1px `--atlas-fold` rule and given a fold-shaped clip on its shared edge.
+The system uses a 96rem (max) atlas width, hairline-bordered on the sides, that reads as a folded sheet. The hero is a three-column grid — `minmax(0,37fr) minmax(0,43fr) minmax(15rem,20fr)` — proposition left, topology center, decision rail right. Each plane is a `.atlas-plane` separated by a 1px `--atlas-fold` rule and given a fold-shaped clip on its shared edge. The hero's height budget is `min(44rem, 100svh - 4.75rem)` so the fold line falls between planes, never through a plate.
 
-Sections below the hero (Services, StockCast Case, How It Works) share the atlas border and a `clamp(4.5rem,8vw,8rem)` vertical rhythm, with `clamp(1.25rem,4vw,4rem)` inline padding. Each section has a three-column heading row (title / description / inline link).
+Sections below the hero (Services, StockCast Case, How It Works) share the atlas border and a `clamp(4.5rem,6vw,6.5rem)` vertical rhythm, with `var(--atlas-edge)` inline padding. Each section has a three-column heading row (title / description / inline link).
 
 Responsive behavior:
 
 - **≤72rem:** Hero collapses to two columns, the decision rail becomes a full-width two-column band, and the actions wrap to two columns.
-- **≤48rem:** Hero stacks into a single column, a vertical route rail runs down the left, a compact CTA appears immediately after the h1, the desktop topology is exchanged for a dedicated vertical mobile topology, and the cross-route SVG is hidden. Services and method routes become vertical steps along a left rail.
+- **≤48rem:** Hero stacks into a single column, a compact CTA appears immediately after the h1, the desktop topology is exchanged for a dedicated mobile topology — a hub-centered circuit with dashed station connections and the production bullseye as terminus, no through-rail — the decision rail keeps its 01→02 plate sequence, and the cross-route draws in its mobile mode: a left-corridor entry into the hub's left port and the desktop exit docking on the primary plate. Services and method routes become vertical steps along a left rail.
 
 ## Elevation & Depth
 
@@ -154,7 +176,7 @@ This system is flat and paper-based. Depth is conveyed by tonal layering and fol
 
 ## Shapes
 
-Angular, blueprint-like geometry. The signature is the clipped corner: the primary/secondary actions and the ScoreCard use a `clip-path` with a notched corner (`polygon(0 0, calc(100% - 0.8rem) 0, 100% 0.8rem, ...)`), and the diagnosis method stop uses an eight-point clipped octagon. Station nodes are small stroked circles, and route lines use square caps and miter joins. No rounded pill buttons, no soft blobs.
+Angular, blueprint-like geometry. The signature is the clipped corner: the primary/secondary actions and the ScoreCard use a `clip-path` with a notched corner from the shared `--atlas-chamfer` token (0.8rem), and the diagnosis method stop uses an eight-point clipped octagon at the same token. The chamfer reads as a punched plate: the host element is clipped, while two stacked pseudo-elements paint a 1px `--atlas-blue` rim that follows the notch, so cut corners carry a border and keyboard focus outlines stay unclipped. Station nodes are small stroked circles, and route lines use square caps and miter joins. No rounded pill buttons, no soft blobs.
 
 **The Notched-Corner Rule.** Corners are cut, not rounded. The default radius stays small (8px) for incidental chrome; the distinctive actions, case plate, and ScoreCard use a notched clip-angle to read as punched blueprint plates.
 
@@ -162,15 +184,28 @@ Angular, blueprint-like geometry. The signature is the clipped corner: the prima
 
 ### Buttons / Actions
 
-- **Shape:** Notched-corner clip-path (`calc(100% - 0.8rem)` chamfer on opposite corners), 1px `--atlas-blue` border.
-- **Primary action** (`.atlas-action--primary`): `--atlas-blue` fill, white text, min-height 7rem, an index number (01/02) above the label, and a right arrow. Hover/focus fills `--atlas-ink`.
-- **Secondary action** (`.atlas-action--secondary`): `--atlas-paper` fill, `--atlas-blue` text, 1px blue border.
-- **Mobile primary** (`.atlas-mobile-primary`): compact `--atlas-blue` CTA shown only at ≤48rem, placed right after the h1.
-- **Focus:** `outline: 2px solid var(--brand); outline-offset: 3px`.
+- **Shape:** Notched-corner clip-path (`calc(100% - var(--atlas-chamfer))` chamfer on opposite corners) with a 1px `--atlas-blue` rim painted by stacked pseudo-elements so the cut corners carry a border.
+- **Primary action** (`.atlas-action--primary`): `--atlas-blue` fill, white text, min-height 7rem, an index number (01/02) above the label, and a right arrow. Hover/focus is a true inversion in both themes: light fills `--atlas-ink` with white text; dark fills `--atlas-ink` (near-white) with `--atlas-paper` text.
+- **Secondary action** (`.atlas-action--secondary`): `--atlas-action-secondary` fill with `--atlas-blue` text and border; dark mode remaps the text and border to `--atlas-route` for contrast.
+- **Mobile primary** (`.atlas-mobile-primary`): compact primary CTA shown only at ≤48rem, placed right after the h1.
+- **Focus:** `outline: 2px solid var(--brand); outline-offset: 3px` on the unclipped host (white on the light case-plate variant).
+
+### Cross-Route (Hero Signature)
+
+`.atlas-cross-route` is measured at runtime from the rendered hero and drawn only after measurement. It is an orthogonal, chamfered circuit-board route in two measured segments, and every segment runs in a measured empty corridor — it must never intersect station plates, labels, or copy:
+
+- **Entry.** It starts at a terminal node docked on the proposition plane's content edge in the gap above the method line ("UMA ROTA…"), runs horizontally across the first fold, turns down the corridor just inside the topology panel's left edge, and terminates at the diagnosis junction's left centerline port — it is the only stroke entering the junction. The topology's own primary route resumes at the junction's bottom port and carries the route to the production station.
+- **Exit.** From the junction's right edge it resumes horizontally above the lower stations, turns down the quiet corridor inside the panel's right edge, crosses the fold, runs above the decision plates, and drops into a terminal node docked on the primary plate's top edge near its left corner.
+
+If a corridor collapses at a given viewport, the route does not draw. It re-measures on resize and after fonts load. At ≤48rem it runs in its mobile mode: the entry departs from a terminal below the method statement, descends the plane's left corridor, and docks into the hub's left port, while the exit keeps the desktop shape, docking on the primary plate.
+
+### Route Grammar
+
+One route family, two tiers. The primary route (cross-route, topology primary route, mobile rails) is 4px on desktop and 3px on mobile with `vector-effect: non-scaling-stroke`; stop lines under service/method stations are 2px. Color follows the surface: `--atlas-blue-soft` on the blue panel, `--atlas-route` on paper.
 
 ### Topology (Signature Component)
 
-An accessible SVG frame (`.systems-topology`) rendering the engineering system as a route: Context → Product → Diagnosis → Architecture → Production, with Integrations, Security, and Observability as secondary stations. Dashed secondary routes, a resolving primary route, stroked station nodes, and a diagnosis junction (a filled paper plaque on a small octagon) that carries an ink label. Desktop and dedicated mobile variants sit in the same component, with the mobile shown only at ≤48rem. All text is `stroke: none` and filled, and the diagnosis junction label uses `--atlas-ink` for contrast on the blue panel. There is no fabricated data — it is a topology, not a measured diagram.
+An accessible SVG frame (`.systems-topology`) rendering the engineering system as a route: Context → Product → Diagnosis → Architecture → Production, with Integrations, Security, and Observability as secondary stations. Dashed secondary routes, a resolving primary route, stroked station nodes, and a diagnosis junction (a filled paper plaque on a wide octagon) that carries an ink label. The junction plaque is sized so the diagnosis label fits inside its circular plaque in both locales — geometry adapts to copy, never the reverse — and secondary routes anchor and dot to plate edges, never to label baselines. Desktop and dedicated mobile variants sit in the same component, with the mobile shown only at ≤48rem; the mobile variant shows a stable subset of the global station numbering (01 Context, 02 Product, 06 Architecture, 07 Production) — it never re-indexes. On mobile, 01 and 02 stack above the junction and 06 below it; every connection lands on the hub's left and right flats — three ports per side, top and bottom edges stay clean. The left flat carries 02 (upper), the primary entry (middle), and 06 (lower); the right flat carries 01 (upper), the primary exit (middle), and 07 Production (lower), whose bullseye terminus hangs below 06 off its own solid lane. The junction plaque flips to ink fill with paper text in dark theme for contrast. All text is `stroke: none` and filled. There is no fabricated data — it is a topology, not a measured diagram.
 
 ### ScoreCard
 
@@ -186,7 +221,7 @@ Site header uses a `.site-header__inner` grid (wordmark / primary nav / utilitie
 
 ### Footer & Consent
 
-Footer has a brand-stroked node dot on the top border, the wordmark, a nav row, and a contact email. Consent is a fixed bottom banner (`.consent-banner`) that adds body padding via `:has([data-consent-banner])`, and its controls stack on mobile.
+Footer has a brand-stroked node dot on the top border, the wordmark, a nav row, and a contact email. Header and footer chrome both span the 96rem atlas width, with their content and accents anchored to the shared `--atlas-edge` token (the same edge the hero and sections read from). A visually-hidden skip link is the first focusable element on every localized page. Consent is a fixed bottom banner (`.consent-banner`) that reserves body padding from its measured height (`--consent-banner-height`, floored at 5.5rem) via `:has([data-consent-banner])`; on mobile it renders a compact variant (0.75rem copy, 2.5rem touch targets) and its controls stack.
 
 ## Do's and Don'ts
 

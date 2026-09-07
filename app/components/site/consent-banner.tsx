@@ -130,11 +130,35 @@ function ConsentBannerContent() {
     settingsOpen,
   } = useConsent();
   const { translate, locale } = useI18n();
+  const bannerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const banner = bannerRef.current;
+    if (!banner || !bannerVisible) return;
+    const root = document.documentElement;
+
+    const syncReserve = () => {
+      root.style.setProperty(
+        "--consent-banner-height",
+        `${banner.offsetHeight}px`,
+      );
+    };
+
+    syncReserve();
+    if (typeof ResizeObserver !== "function") return;
+    const observer = new ResizeObserver(syncReserve);
+    observer.observe(banner);
+    return () => {
+      observer.disconnect();
+      root.style.removeProperty("--consent-banner-height");
+    };
+  }, [bannerVisible]);
 
   return (
     <>
       {bannerVisible ? (
         <div
+          ref={bannerRef}
           role="region"
           aria-label={translate("consent.banner.label")}
           className="consent-banner"

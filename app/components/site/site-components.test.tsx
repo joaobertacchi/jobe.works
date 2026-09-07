@@ -205,10 +205,10 @@ describe("SiteFooter", () => {
 
 describe("ThemeSwitcher", () => {
   it.each([
-    ["en", "Theme", ["Light", "Dark", "System"]],
-    ["pt-BR", "Tema", ["Claro", "Escuro", "Sistema"]],
+    ["en", "Theme", ["Light", "Dark"]],
+    ["pt-BR", "Tema", ["Claro", "Escuro"]],
   ] as const)(
-    "renders an accessible localized group in %s",
+    "renders an accessible localized two-option group in %s",
     async (locale, groupName, buttonNames) => {
       installMatchMedia(false);
 
@@ -220,7 +220,7 @@ describe("ThemeSwitcher", () => {
       );
 
       expect(group).toContainElement(buttons[0]);
-      expect(buttons).toHaveLength(3);
+      expect(buttons).toHaveLength(2);
       await waitFor(() => {
         expect(
           buttons.filter(
@@ -252,6 +252,26 @@ describe("ThemeSwitcher", () => {
     },
   );
 
+  it.each([
+    [false, "Light"],
+    [true, "Dark"],
+  ] as const)(
+    "resolves a stored system preference to %s without storing a choice",
+    async (prefersDark, pressedButton) => {
+      window.localStorage.setItem(THEME_STORAGE_KEY, "system");
+      installMatchMedia(prefersDark);
+
+      renderThemeSwitcher();
+
+      await waitFor(() => {
+        expect(
+          screen.getByRole("button", { name: pressedButton }),
+        ).toHaveAttribute("aria-pressed", "true");
+      });
+      expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBe("system");
+    },
+  );
+
   it("persists and immediately applies explicit dark and light selections", () => {
     installMatchMedia(false);
     renderThemeSwitcher();
@@ -277,44 +297,34 @@ describe("ThemeSwitcher", () => {
     );
   });
 
-  it.each([
-    [false, "light"],
-    [true, "dark"],
-  ] as const)(
-    "removes the stored preference and follows system dark=%s",
-    (prefersDark, effectiveTheme) => {
-      window.localStorage.setItem(THEME_STORAGE_KEY, "light");
-      installMatchMedia(prefersDark);
-      renderThemeSwitcher();
-
-      fireEvent.click(screen.getByRole("button", { name: "System" }));
-
-      expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
-      expect(document.documentElement.classList.contains("dark")).toBe(
-        effectiveTheme === "dark",
-      );
-      expect(document.documentElement.style.colorScheme).toBe(effectiveTheme);
-      expect(screen.getByRole("button", { name: "System" })).toHaveAttribute(
-        "aria-pressed",
-        "true",
-      );
-    },
-  );
-
-  it("updates the effective system theme when the media preference changes", () => {
+  it("follows system preference changes until an explicit selection is made", async () => {
     const media = installMatchMedia(false);
     renderThemeSwitcher();
 
     media.emit(true);
 
+    await waitFor(() => {
+      expect(screen.getByRole("button", { name: "Dark" })).toHaveAttribute(
+        "aria-pressed",
+        "true",
+      );
+    });
     expect(document.documentElement).toHaveClass("dark");
     expect(document.documentElement.style.colorScheme).toBe("dark");
     expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
 
-    media.emit(false);
+    fireEvent.click(screen.getByRole("button", { name: "Light" }));
+
+    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBe("light");
+
+    media.emit(true);
 
     expect(document.documentElement).not.toHaveClass("dark");
     expect(document.documentElement.style.colorScheme).toBe("light");
+    expect(screen.getByRole("button", { name: "Light" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
   });
 
   it.each(["light", "dark"] as const)(
@@ -333,21 +343,21 @@ describe("ThemeSwitcher", () => {
     },
   );
 
-  it("preserves a user selection made while stored preferences are loading", async () => {
+  it("keeps a selection made while the stored preference is loading", async () => {
     window.localStorage.setItem(THEME_STORAGE_KEY, "dark");
     installMatchMedia(false);
     renderThemeSwitcher();
 
-    fireEvent.click(screen.getByRole("button", { name: "System" }));
+    fireEvent.click(screen.getByRole("button", { name: "Light" }));
     await act(() => Promise.resolve());
 
-    expect(screen.getByRole("button", { name: "System" })).toHaveAttribute(
+    expect(screen.getByRole("button", { name: "Light" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
     expect(document.documentElement).not.toHaveClass("dark");
     expect(document.documentElement.style.colorScheme).toBe("light");
-    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBeNull();
+    expect(window.localStorage.getItem(THEME_STORAGE_KEY)).toBe("light");
   });
 });
 

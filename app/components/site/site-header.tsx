@@ -22,6 +22,7 @@ export function SiteHeader({
           variant="wordmark"
         >
           {translate("common.siteName")}
+          <span aria-hidden="true" className="site-wordmark__accent" />
         </TextLink>
         <PrimaryNavigation />
         <div className="site-utilities">

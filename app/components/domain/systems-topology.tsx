@@ -42,21 +42,16 @@ export function SystemsTopology({
         </g>
 
         <g aria-hidden="true" className="systems-topology__secondary-routes">
-          <path d="M132 132H220V208H330" />
-          <path d="M270 132H402V208H476" />
-          <path d="M590 132V238H520" />
-          <path d="M112 462H212V396H322" />
-          <path d="M638 462H548V396H452" />
-          <path d="M330 208V278" />
-          <path d="M476 208V278" />
-          <path d="M322 350V396" />
-          <path d="M452 350V396" />
+          <path d="M132 178V230H330V278" />
+          <path d="M378 178V278" />
+          <path d="M590 178V240H426V278" />
+          <path d="M176 430V417H330V402" />
+          <path d="M572 430V368H468" />
+          <path d="M362 506V402" />
         </g>
 
         <g className="systems-topology__primary-route">
-          <path d="M70 294H180L232 342H318" pathLength="1" />
-          <path d="M442 342H510L560 294H688" pathLength="1" />
-          <path d="M380 404V502H650" pathLength="1" />
+          <path d="M394 402V432H491V552H542" pathLength="1" />
         </g>
 
         <g className="systems-topology__node" transform="translate(66 98)">
@@ -121,14 +116,14 @@ export function SystemsTopology({
 
         <g
           className="systems-topology__junction"
-          transform="translate(318 278)"
+          transform="translate(292 278)"
         >
-          <path d="m22 0 80 0 22 22v80l-22 22H22L0 102V22Z" />
-          <circle cx="62" cy="62" r="32" />
-          <text x="62" y="58">
+          <path d="m26 0 124 0 26 26v72l-26 26H26L0 98V26Z" />
+          <circle cx="88" cy="62" r="52" />
+          <text x="88" y="58">
             {labels.diagnosis}
           </text>
-          <path d="M48 76h28" />
+          <path d="M70 80h36" />
         </g>
 
         <g
@@ -147,20 +142,33 @@ export function SystemsTopology({
 
         <g aria-hidden="true" className="systems-topology__junction-dots">
           {[
-            [132, 132],
-            [270, 132],
-            [590, 132],
-            [220, 208],
-            [402, 208],
-            [112, 462],
-            [212, 396],
-            [638, 462],
-            [548, 396],
-            [180, 294],
-            [232, 342],
-            [510, 342],
-            [560, 294],
-            [380, 502],
+            // ports on station plates
+            [132, 178],
+            [378, 178],
+            [590, 178],
+            [176, 430],
+            [572, 430],
+            [362, 506],
+            // ports on the diagnosis junction
+            [330, 278],
+            [378, 278],
+            [426, 278],
+            [330, 402],
+            [362, 402],
+            [394, 402],
+            // the cross-route docks here at the junction's centerline
+            [292, 340],
+            [468, 340],
+            // secondary-route bends
+            [132, 230],
+            [330, 230],
+            [590, 240],
+            [426, 240],
+            [572, 368],
+            // primary-route bends
+            [394, 432],
+            [491, 432],
+            [491, 552],
           ].map(([cx, cy]) => (
             <circle cx={cx} cy={cy} key={`${cx}-${cy}`} r="6" />
           ))}
@@ -170,60 +178,97 @@ export function SystemsTopology({
       <svg
         aria-hidden="true"
         className="systems-topology systems-topology--mobile"
-        viewBox="0 0 320 560"
+        viewBox="0 0 320 550"
         xmlns="http://www.w3.org/2000/svg"
       >
+        <g aria-hidden="true" className="systems-topology__secondary-routes">
+          <path d="M248 62H278V276H248" />
+          <path d="M72 154H48V276H72" />
+          <path d="M72 434H48V328H72" />
+        </g>
+
         <path
           className="systems-topology__mobile-route"
-          d="M160 36V524"
-          pathLength="1"
+          d="M248 328H278V530H192"
         />
 
         {[
-          ["01", labels.context, 40],
+          ["01", labels.context, 24],
           ["02", labels.product, 132],
-          ["04", labels.architecture, 342],
+          ["06", labels.architecture, 396],
         ].map(([index, label, y]) => (
           <g
             className="systems-topology__mobile-station"
             key={String(index)}
-            transform={`translate(40 ${y})`}
+            transform={`translate(72 ${y})`}
           >
-            <path d="M0 12 12 0h216l12 12v52l-12 12H12L0 64Z" />
-            <text x="18" y="30">
+            <path d="M0 12 12 0h152l12 12v52l-12 12H12L0 64Z" />
+            <text x="16" y="28">
               {index}
             </text>
-            <text className="systems-topology__node-label" x="18" y="54">
+            <text className="systems-topology__node-label" x="16" y="52">
               {label}
             </text>
-            <circle cx="120" cy="76" r="5" />
           </g>
         ))}
 
         <g
           className="systems-topology__mobile-diagnosis"
-          transform="translate(94 224)"
+          transform="translate(72 240)"
         >
-          <path d="m18 0 96 0 18 18v96l-18 18H18L0 114V18Z" />
-          <circle cx="66" cy="66" r="34" />
-          <text x="66" y="62">
+          <path d="m26 0 124 0 26 26v72l-26 26H26L0 98V26Z" />
+          <circle cx="88" cy="62" r="50" />
+          <text x="88" y="58">
             {labels.diagnosis}
           </text>
-          <path d="M50 80h32" />
+          <path d="M70 78h36" />
         </g>
 
         <g
           className="systems-topology__mobile-destination"
-          transform="translate(72 450)"
+          transform="translate(110 482)"
         >
-          <circle cx="88" cy="42" r="30" />
-          <circle cx="88" cy="42" r="11" />
-          <text x="138" y="36">
-            05
+          <circle cx="52" cy="48" r="30" />
+          {/*32,32*/}
+          <circle cx="52" cy="48" r="11" />
+          {/*32,32*/}
+          <text x="92" y="42">
+            {/*72,26*/}
+            07
           </text>
-          <text className="systems-topology__node-label" x="138" y="60">
+          <text className="systems-topology__node-label" x="92" y="66">
+            {/*72,50*/}
             {labels.production}
           </text>
+        </g>
+
+        <g aria-hidden="true" className="systems-topology__junction-dots">
+          {[
+            // measured route docks: entry and exit on the middle ports
+            [72, 302],
+            [248, 302],
+            // 01 dashed connection — right lane down to the upper-right port
+            [248, 62],
+            [278, 62],
+            [278, 276],
+            [248, 276],
+            // 02 dashed connection — left lane down to the upper-left port
+            [72, 154],
+            [48, 154],
+            [48, 276],
+            [72, 276],
+            // 06 dashed connection — left lane up to the lower-left port
+            [72, 434],
+            [48, 434],
+            [48, 328],
+            [72, 328],
+            // 07 feed — centered between the hub edge and the exit corridor
+            [278, 328],
+            [278, 530], //278,514
+            [192, 530], //172,514
+          ].map(([cx, cy]) => (
+            <circle cx={cx} cy={cy} key={`${cx}-${cy}`} r="5" />
+          ))}
         </g>
       </svg>
     </div>
