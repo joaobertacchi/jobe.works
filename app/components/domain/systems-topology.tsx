@@ -42,19 +42,19 @@ export function SystemsTopology({
         </g>
 
         <g aria-hidden="true" className="systems-topology__secondary-routes">
-          <path d="M132 178V230H330V278" />
-          <path d="M378 178V278" />
-          <path d="M590 178V240H426V278" />
+          <path d="M172 218V250H330V278" />
+          <path d="M378 128V278" />
+          <path d="M590 218V250H426V278" />
           <path d="M176 430V417H330V402" />
           <path d="M572 430V368H468" />
-          <path d="M362 506V402" />
+          <path d="M378 526V402" />
         </g>
 
         <g className="systems-topology__primary-route">
-          <path d="M394 402V432H491V552H542" pathLength="1" />
+          <path d="M426 402V462H510V552H542" pathLength="1" />
         </g>
 
-        <g className="systems-topology__node" transform="translate(66 98)">
+        <g className="systems-topology__node" transform="translate(96 138)">
           <path d="M0 14 14 0h128l14 14v52l-14 14H14L0 66Z" />
           <text x="18" y="34">
             01
@@ -64,7 +64,7 @@ export function SystemsTopology({
           </text>
         </g>
 
-        <g className="systems-topology__node" transform="translate(238 98)">
+        <g className="systems-topology__node" transform="translate(298 48)">
           <path d="M0 14 14 0h128l14 14v52l-14 14H14L0 66Z" />
           <text x="18" y="34">
             02
@@ -74,7 +74,7 @@ export function SystemsTopology({
           </text>
         </g>
 
-        <g className="systems-topology__node" transform="translate(472 98)">
+        <g className="systems-topology__node" transform="translate(492 138)">
           <path d="M0 14 14 0h156l14 14v52l-14 14H14L0 66Z" />
           <text x="18" y="34">
             03
@@ -94,7 +94,7 @@ export function SystemsTopology({
           </text>
         </g>
 
-        <g className="systems-topology__node" transform="translate(500 430)">
+        <g className="systems-topology__node" transform="translate(540 430)">
           <path d="M0 14 14 0h146l14 14v52l-14 14H14L0 66Z" />
           <text x="18" y="34">
             05
@@ -104,7 +104,7 @@ export function SystemsTopology({
           </text>
         </g>
 
-        <g className="systems-topology__node" transform="translate(278 506)">
+        <g className="systems-topology__node" transform="translate(278 526)">
           <path d="M0 14 14 0h176l14 14v52l-14 14H14L0 66Z" />
           <text x="18" y="34">
             06
@@ -143,32 +143,33 @@ export function SystemsTopology({
         <g aria-hidden="true" className="systems-topology__junction-dots">
           {[
             // ports on station plates
-            [132, 178],
-            [378, 178],
-            [590, 178],
+            [172, 218],
+            [378, 128],
+            [590, 218],
             [176, 430],
             [572, 430],
-            [362, 506],
+            [378, 526],
             // ports on the diagnosis junction
             [330, 278],
             [378, 278],
             [426, 278],
+            [468, 371],
             [330, 402],
-            [362, 402],
-            [394, 402],
+            [378, 402],
+            [426, 402],
             // the cross-route docks here at the junction's centerline
             [292, 340],
             [468, 340],
             // secondary-route bends
-            [132, 230],
-            [330, 230],
-            [590, 240],
-            [426, 240],
+            [172, 250],
+            [330, 250],
+            [590, 250],
+            [426, 250],
             [572, 368],
             // primary-route bends
-            [394, 432],
-            [491, 432],
-            [491, 552],
+            [426, 462],
+            [510, 462],
+            [510, 552],
           ].map(([cx, cy]) => (
             <circle cx={cx} cy={cy} key={`${cx}-${cy}`} r="6" />
           ))}
