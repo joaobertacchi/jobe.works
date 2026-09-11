@@ -44,11 +44,12 @@ test("serves and hydrates a representative prerendered localized page", async ({
 test("serves the StockCast case study page", async ({ page }) => {
   await page.goto("/en/case");
 
+  const article = page.getByRole("article");
   await expect(
-    page.getByRole("heading", { level: 1, name: "StockCast" }),
+    article.getByRole("heading", { level: 1, name: "StockCast" }),
   ).toBeVisible();
   await expect(
-    page.getByText("Case material pending", { exact: true }),
+    article.getByRole("heading", { level: 2 }).first(),
   ).toBeVisible();
 });
 

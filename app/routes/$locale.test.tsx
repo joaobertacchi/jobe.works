@@ -286,16 +286,21 @@ describe("localized route layout", () => {
     ).toBeVisible();
   });
 
-  it("renders the localized case study page", async () => {
-    renderLocalizedRoute("/en/case");
+  it.each(["/en/case", "/pt-BR/case"])(
+    "renders a complete localized case study article on %s",
+    async (pathname) => {
+      renderLocalizedRoute(pathname);
 
-    expect(
-      await screen.findByRole("heading", { name: "StockCast" }),
-    ).toBeVisible();
-    expect(
-      screen.getByRole("heading", { name: "The method behind the case" }),
-    ).toBeVisible();
-  });
+      const article = await screen.findByRole("article");
+      expect(within(article).getByRole("heading", { level: 1 })).toBeVisible();
+      expect(
+        within(article).getAllByRole("heading", { level: 2 }).length,
+      ).toBeGreaterThan(0);
+      expect(within(article).getAllByRole("blockquote").length).toBeGreaterThan(
+        0,
+      );
+    },
+  );
 
   it("renders the localized contact page with the mailto booking path", async () => {
     renderLocalizedRoute("/pt-BR/contact");
