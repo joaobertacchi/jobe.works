@@ -1,4 +1,10 @@
 import { useAnalytics } from "../analytics/analytics";
+import portraitAvif320 from "../assets/images/founder/joao-bertacchi-320.avif";
+import portraitAvif480 from "../assets/images/founder/joao-bertacchi-480.avif";
+import portraitAvif640 from "../assets/images/founder/joao-bertacchi-640.avif";
+import portraitWebp320 from "../assets/images/founder/joao-bertacchi-320.webp";
+import portraitWebp480 from "../assets/images/founder/joao-bertacchi-480.webp";
+import portraitWebp640 from "../assets/images/founder/joao-bertacchi-640.webp";
 import { AtlasAction } from "../components/domain/atlas-action";
 import { AtlasCtaBand } from "../components/sections/atlas-cta-band";
 import { Container } from "../components/ui/container";
@@ -9,6 +15,10 @@ import { useI18n } from "../i18n/i18n";
 import { aboutTranslations } from "../i18n/translations/about";
 import { createPageMeta, getSeoLoaderData } from "../seo/metadata";
 import type { Route } from "./+types/$locale.about";
+
+const portraitSizes = "(min-width: 48rem) 15rem, min(20rem, 100vw - 2.5rem)";
+const portraitAvifSet = `${portraitAvif320} 320w, ${portraitAvif480} 480w, ${portraitAvif640} 640w`;
+const portraitWebpSet = `${portraitWebp320} 320w, ${portraitWebp480} 480w, ${portraitWebp640} 640w`;
 
 export function meta({ matches, params }: Route.MetaArgs) {
   if (!params.locale || !isSupportedLocale(params.locale)) return [];
@@ -63,15 +73,44 @@ export default function About() {
             </Text>
           </section>
 
-          <section className="flex flex-col gap-3">
-            <Heading as="h2" level="section">
-              {translate("about.sections.founder.title")}
-            </Heading>
-            {founderParagraphs.map((paragraph) => (
-              <Text key={paragraph} tone="muted">
-                {paragraph}
-              </Text>
-            ))}
+          <section className="grid gap-6 md:grid-cols-[15rem_minmax(0,1fr)] md:items-start md:gap-8">
+            <figure className="atlas-portrait">
+              <picture className="atlas-portrait__frame">
+                <source
+                  sizes={portraitSizes}
+                  srcSet={portraitAvifSet}
+                  type="image/avif"
+                />
+                <source
+                  sizes={portraitSizes}
+                  srcSet={portraitWebpSet}
+                  type="image/webp"
+                />
+                <img
+                  alt={translate("about.sections.founder.portraitAlt")}
+                  decoding="async"
+                  height={600}
+                  loading="lazy"
+                  sizes={portraitSizes}
+                  src={portraitWebp480}
+                  srcSet={portraitWebpSet}
+                  width={480}
+                />
+              </picture>
+              <figcaption className="atlas-portrait__caption">
+                {translate("about.sections.founder.portraitCaption")}
+              </figcaption>
+            </figure>
+            <div className="flex flex-col gap-3">
+              <Heading as="h2" level="section">
+                {translate("about.sections.founder.title")}
+              </Heading>
+              {founderParagraphs.map((paragraph) => (
+                <Text key={paragraph} tone="muted">
+                  {paragraph}
+                </Text>
+              ))}
+            </div>
           </section>
 
           <section className="flex flex-col gap-4">

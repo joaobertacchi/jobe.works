@@ -1467,6 +1467,46 @@ body:has([data-consent-banner]) {
   inset: 1px;
 }
 
+.atlas-portrait {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: min(20rem, 100%);
+  margin: 0;
+}
+
+.atlas-portrait__frame {
+  display: block;
+  padding: 1px;
+  background: var(--atlas-blue);
+  clip-path: var(--atlas-plate-clip);
+}
+
+.atlas-portrait__frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: var(--atlas-wash);
+  clip-path: var(--atlas-plate-clip);
+}
+
+.atlas-portrait__caption {
+  color: var(--muted-foreground);
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@media (min-width: 48rem) {
+  .atlas-portrait {
+    width: 100%;
+  }
+}
+
 .ui-action {
   --action-border: var(--brand);
   --action-fill: var(--brand);

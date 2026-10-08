@@ -703,3 +703,37 @@ describe("localized route build loader data", () => {
     expect(data).toEqual({ urls: dataUrls, site });
   });
 });
+
+describe("founder portrait", () => {
+  it.each([
+    [
+      "en",
+      "Portrait of João Bertacchi in a white shirt and glasses",
+      "João Bertacchi · Founder",
+    ],
+    [
+      "pt-BR",
+      "Retrato de João Bertacchi de camisa branca e óculos",
+      "João Bertacchi · Fundador",
+    ],
+  ] as const)(
+    "shows the founder portrait in %s",
+    async (locale, alt, caption) => {
+      renderLocalizedRoute(`/${locale}/about`);
+
+      const image = await screen.findByRole("img", { name: alt });
+      expect(image).toHaveAttribute("width", "480");
+      expect(image).toHaveAttribute("height", "600");
+      expect(image).toHaveAttribute("loading", "lazy");
+      expect(image).toHaveAttribute("decoding", "async");
+      expect(image.closest("figure")).toHaveTextContent(caption);
+
+      const sources = image.closest("picture")!.querySelectorAll("source");
+      expect([...sources].map((source) => source.type)).toEqual([
+        "image/avif",
+        "image/webp",
+      ]);
+      expect(sources[0].srcset).toMatch(/320w.*480w.*640w/);
+    },
+  );
+});

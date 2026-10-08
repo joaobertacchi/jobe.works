@@ -16,6 +16,8 @@ export type AboutTranslation = {
       leadership: string;
       background: string;
       today: string;
+      portraitAlt: string;
+      portraitCaption: string;
     };
     principles: { title: string; description: string };
     principlesList: {
@@ -61,6 +63,8 @@ export const aboutTranslations = {
           "Before that, he spent nearly nine years at Embraer — in R&D for the Defense & Security unit and then as technical lead for Digital Transformation, defining cloud architecture and quality standards for suppliers. He was also co-founder and CTO of an education startup and a researcher at RWTH Aachen University in Germany. He holds a degree in Computer Engineering from Unicamp and a master's in Computer Science.",
         today:
           "Today, he combines leadership with hands-on engineering. He founded StockCast, a platform for Brazilian stock market investors with more than 9,000 downloads, building the mobile app, the backend, and an AI financial-analysis pipeline (Claude and Gemini) from scratch — and applying spec-driven development with AI agents every day.",
+        portraitAlt: "Portrait of João Bertacchi in a white shirt and glasses",
+        portraitCaption: "João Bertacchi · Founder",
       },
       principles: {
         title: "How JOBE works",
@@ -115,6 +119,8 @@ export const aboutTranslations = {
           "Antes disso, passou quase nove anos na Embraer — em P&D da unidade de Defesa e Segurança e depois como líder técnico de Transformação Digital, definindo arquitetura em nuvem e padrões de qualidade para fornecedores. Também foi cofundador e CTO de uma startup de educação e pesquisador na RWTH Aachen, na Alemanha. É formado em Engenharia de Computação pela Unicamp, com mestrado em Ciência da Computação.",
         today:
           "Hoje, une a visão de liderança à prática direta de engenharia. É fundador do StockCast, plataforma para investidores da B3 com mais de 9 mil downloads, onde construiu do zero o app mobile, o backend e um pipeline de análise financeira com IA (Claude e Gemini) — e aplica, no dia a dia, o desenvolvimento orientado por especificações com agentes de IA.",
+        portraitAlt: "Retrato de João Bertacchi de camisa branca e óculos",
+        portraitCaption: "João Bertacchi · Fundador",
       },
       principles: {
         title: "Como a JOBE trabalha",
