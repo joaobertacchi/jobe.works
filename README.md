@@ -153,10 +153,11 @@ Configure unknown paths as normal static-server 404 responses. Do not configure 
 
 Pushes to `main` deploy automatically through `.github/workflows/ci.yml` once validation and browser tests pass. One-time setup:
 
-1. Enable Pages with GitHub Actions as the source: `gh api -X POST repos/<owner>/<repo>/pages -f build_type=workflow`.
-2. Set the custom domain: `gh api -X PUT repos/<owner>/<repo>/pages -f cname=jobe.works`.
-3. Point DNS for the apex domain to GitHub Pages (`A` 185.199.108–111.153, `AAAA` 2606:50c0:8000–8003::153).
-4. Enforce HTTPS once the certificate is issued: `gh api -X PUT repos/<owner>/<repo>/pages -F https_enforced=true`.
+1. Enable Pages with GitHub Actions as the source: `gh api -X POST repos/<owner>/<repo>/pages -f build_type=workflow`. If Pages is already enabled, use `-X PUT` instead.
+2. Optionally verify the domain under the GitHub account's Settings → Pages to protect it against takeover.
+3. Set the custom domain: `gh api -X PUT repos/<owner>/<repo>/pages -f cname=jobe.works`.
+4. Point DNS for the apex domain to GitHub Pages (`A` 185.199.108–111.153, `AAAA` 2606:50c0:8000–8003::153). On Cloudflare, keep these records DNS only so GitHub can issue the certificate. No `www` record is required; add `www CNAME <owner>.github.io` only if `www` should redirect to the apex.
+5. Enforce HTTPS once the certificate is issued: `gh api -X PUT repos/<owner>/<repo>/pages -F https_enforced=true`.
 
 ## Command Reference
 
