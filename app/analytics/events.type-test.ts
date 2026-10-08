@@ -30,3 +30,31 @@ capture({ eventName: "page_view", pathname: "/en/", locale: "fr" });
 
 // @ts-expect-error Trackers only receive domain events.
 tracker({ eventName: "custom", payload: 1 });
+
+capture({ eventName: "scorecard_started" });
+capture({
+  eventName: "scorecard_completed",
+  verdict: "needsAttention",
+  band: "strong",
+  criticalRiskCount: 1,
+  unknownCount: 0,
+});
+
+capture({
+  eventName: "scorecard_completed",
+  // @ts-expect-error Verdicts are limited to the scoring vocabulary.
+  verdict: "great",
+  band: "strong",
+  criticalRiskCount: 0,
+  unknownCount: 0,
+});
+
+capture({
+  eventName: "scorecard_completed",
+  verdict: "strong",
+  band: "strong",
+  criticalRiskCount: 0,
+  unknownCount: 0,
+  // @ts-expect-error Individual answers are never sent to analytics.
+  answers: { q01: "yes" },
+});
