@@ -8,6 +8,7 @@ import { contactTranslations } from "./contact";
 import { homeTranslations } from "./home";
 import { notFoundTranslations } from "./not-found";
 import { privacyTranslations } from "./privacy";
+import { scorecardTranslations } from "./scorecard";
 import { servicesTranslations } from "./services";
 
 export const translations = {
@@ -18,6 +19,7 @@ export const translations = {
     about: aboutTranslations.en,
     services: servicesTranslations.en,
     case: caseTranslations.en,
+    scorecard: scorecardTranslations.en,
     contact: contactTranslations.en,
     notFound: notFoundTranslations.en,
     privacy: privacyTranslations.en,
@@ -29,6 +31,7 @@ export const translations = {
     about: aboutTranslations["pt-BR"],
     services: servicesTranslations["pt-BR"],
     case: caseTranslations["pt-BR"],
+    scorecard: scorecardTranslations["pt-BR"],
     contact: contactTranslations["pt-BR"],
     notFound: notFoundTranslations["pt-BR"],
     privacy: privacyTranslations["pt-BR"],

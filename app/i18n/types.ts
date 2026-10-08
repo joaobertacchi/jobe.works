@@ -6,6 +6,7 @@ import type { ContactTranslation } from "./translations/contact";
 import type { HomeTranslation } from "./translations/home";
 import type { NotFoundTranslation } from "./translations/not-found";
 import type { PrivacyTranslation } from "./translations/privacy";
+import type { ScorecardTranslation } from "./translations/scorecard";
 import type { ServicesTranslation } from "./translations/services";
 
 export type Translation = {
@@ -15,6 +16,7 @@ export type Translation = {
   about: AboutTranslation;
   services: ServicesTranslation;
   case: CaseTranslation;
+  scorecard: ScorecardTranslation;
   contact: ContactTranslation;
   notFound: NotFoundTranslation;
   privacy: PrivacyTranslation;
