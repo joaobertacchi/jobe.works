@@ -51,7 +51,7 @@ This repository is an AI-agent harness for localized static marketing and conten
 1. Activate the Node.js version in `.nvmrc` before installing dependencies or running validation.
 2. Add or update meaningful tests for behavior changes.
 3. Run `npm run check` and fix root causes.
-4. Run `npm run test:e2e` for browser-visible changes.
+4. Run `npm run test:e2e` for browser-visible changes, and verify them at every layout in `tests/e2e/layouts.ts` (phone, intermediate, desktop); new layout tests iterate over those layouts instead of choosing ad-hoc widths.
 5. After deterministic validation passes, run the repository's `architecture-review` subagent against the current change and fix all high and medium findings.
 6. Do not weaken validation, thresholds, tests, or hooks to make changes pass.
 

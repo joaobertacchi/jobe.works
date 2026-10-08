@@ -171,7 +171,7 @@ The system uses a 96rem (max) atlas width, hairline-bordered on the sides, that 
 
 Sections below the hero (Services, StockCast Case, How It Works) share the atlas border and a `clamp(4.5rem,6vw,6.5rem)` vertical rhythm, with `var(--atlas-edge)` inline padding. Each section has a three-column heading row (title / description / inline link).
 
-Responsive behavior:
+Responsive behavior (three tiers — phone, intermediate, desktop — mirrored by `tests/e2e/layouts.ts`):
 
 - **≤72rem:** Hero collapses to two columns, the decision rail becomes a full-width two-column band, and the actions wrap to two columns.
 - **≤48rem:** Hero stacks into a single column, a compact CTA appears immediately after the h1, the desktop topology is exchanged for a dedicated mobile topology — a hub-centered circuit with dashed station connections and the production bullseye as terminus, no through-rail — the decision rail keeps its 01→02 plate sequence, and the cross-route draws in its mobile mode: a left-corridor entry into the hub's left port and the desktop exit docking on the primary plate. Services and method routes become vertical steps along a left rail.
