@@ -57,6 +57,13 @@ typography:
     lineHeight: 0.95
     letterSpacing: "-0.02em"
     textTransform: "uppercase"
+  subhead:
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "clamp(1.75rem, 3vw, 2.5rem)"
+    fontWeight: 600
+    lineHeight: 1
+    letterSpacing: "-0.02em"
+    textTransform: "uppercase"
   title:
     fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
     fontSize: "clamp(1.4rem, 2.2vw, 2rem)"
@@ -105,7 +112,7 @@ The material is paper-and-precision, never glass. Surfaces fold and clip with th
 - A single deep engineering blue as the structural accent on white/ink paper.
 - Clipped, angled plates (blueprint corners) and hairline fold lines — no shadows, no glass, no gradients.
 - Precision SVG topology: dashed secondary routes, a resolving primary route, station nodes, and a diagnosis junction.
-- Explicit, empty scorecard tracks — evidence is never fabricated.
+- Published evidence only — the case plate shows real StockCast figures from the case study; nothing is fabricated.
 
 ## Colors
 
@@ -115,7 +122,7 @@ Tight two-tone engineering palette: deep blue on neutral paper/ink. The blue is 
 
 - **Engineering Blue** (`--atlas-blue`, `oklch(0.36 0.14 262)`; dark `oklch(0.31 0.12 262)`): The single accent. Fills the topology panel, StockCast case plate, primary action, and the mobile CTA. Never a second hue.
 - **Engineering Blue Soft** (`--atlas-blue-soft`, `oklch(0.74 0.07 258)`; dark `oklch(0.71 0.08 258)`): The route and wire color on the blue panel — the track that crosses the fold, the cross-route stroke, and secondary topology strokes. Reads as lightened blue, never a new hue.
-- **Engineering Blue Deep** (`--atlas-blue-deep`, `oklch(0.29 0.12 262)`; dark `oklch(0.22 0.09 262)`): The inset blueprint surface inside the case scorecard. It adds depth within a blue region without inventing another hue.
+- **Engineering Blue Deep** (`--atlas-blue-deep`, `oklch(0.29 0.12 262)`; dark `oklch(0.22 0.09 262)`): The inset blueprint surface inside the case evidence ledger. It adds depth within a blue region without inventing another hue.
 - **Atlas Route** (`--atlas-route`, light `--atlas-blue`; dark `oklch(0.68 0.12 258)`): The route, node, index, and wayfinding-link color on paper. Dark mode remaps the semantic role to a lighter blue instead of mechanically reusing the blue-panel fill.
 
 ### Neutral
@@ -135,7 +142,7 @@ Tight two-tone engineering palette: deep blue on neutral paper/ink. The blue is 
 
 **The One Blue Rule.** Exactly one accent hue. Saturated blue, route blue, paper washes, and diagnosis surfaces vary lightness and chroma within the 258–262° family; `--brand` stays in the same family. Never introduce a second accent, gradient, glass, or neon.
 
-**The Empty Evidence Rule.** The ScoreCard shows empty tracks and a pending status. No score, metric, customer, credential, or outcome claim is ever rendered. `--atlas-blue-soft` fills a track only when real measurement exists.
+**The Published Evidence Rule.** Any figure on the site must already be published in the case study (`app/i18n/translations/case.ts`). No score, metric, customer, credential, or outcome claim is invented; empty placeholder tracks read as broken and are not used.
 
 ## Typography
 
@@ -148,7 +155,8 @@ Tight two-tone engineering palette: deep blue on neutral paper/ink. The blue is 
 ### Hierarchy
 
 - **Display** (700, `clamp(4rem, 7vw, 6rem)`, 0.84, uppercase, -0.03em): The hero proposition. Max width 12ch; it dominates the first viewport.
-- **Headline** (600, `clamp(2.75rem, 5vw, 5rem)`, 0.95, uppercase, -0.02em): Section titles (Services, Como Funciona).
+- **Headline** (600, `clamp(2.75rem, 5vw, 5rem)`, 0.95, uppercase, -0.02em): Section titles (Services, Como Funciona) and inner-page h1 (`Heading level="display"`).
+- **Subhead** (600, `clamp(1.75rem, 3vw, 2.5rem)`, 1, uppercase, -0.02em): h2 inside reading pages (About, Case, Privacy) via `Heading level="section"`.
 - **Title** (600, `clamp(1.4rem, 2.2vw, 2rem)`, 1.05, uppercase, -0.02em): Service stop and method stop headings.
 - **Body** (400, `clamp(1rem, 1.2vw, 1.125rem)`, 1.65): Descriptions, max ~68ch, `--muted-foreground`.
 - **Label** (600, `0.875rem`, 0.09em, uppercase): Index names (JOÃO BERTACCHI, ESTUDO DE CASO), and small utility text.
@@ -176,9 +184,9 @@ This system is flat and paper-based. Depth is conveyed by tonal layering and fol
 
 ## Shapes
 
-Angular, blueprint-like geometry. The signature is the clipped corner: the primary/secondary actions and the ScoreCard use a `clip-path` with a notched corner from the shared `--atlas-chamfer` token (0.8rem), and the diagnosis method stop uses an eight-point clipped octagon at the same token. The chamfer reads as a punched plate: the host element is clipped, while two stacked pseudo-elements paint a 1px `--atlas-blue` rim that follows the notch, so cut corners carry a border and keyboard focus outlines stay unclipped. Station nodes are small stroked circles, and route lines use square caps and miter joins. No rounded pill buttons, no soft blobs.
+Angular, blueprint-like geometry. The signature is the clipped corner: the actions, ui/ primitives, cards, and the Evidence Ledger use a `clip-path` with a notched corner from the shared `--atlas-chamfer` token (0.8rem), and the diagnosis method stop uses an eight-point clipped octagon at the same token. The chamfer reads as a punched plate: the host element is clipped, while two stacked pseudo-elements paint a 1px `--atlas-blue` rim that follows the notch, so cut corners carry a border and keyboard focus outlines stay unclipped. Station nodes are small stroked circles, and route lines use square caps and miter joins. No rounded pill buttons, no soft blobs.
 
-**The Notched-Corner Rule.** Corners are cut, not rounded. The default radius stays small (8px) for incidental chrome; the distinctive actions, case plate, and ScoreCard use a notched clip-angle to read as punched blueprint plates.
+**The Notched-Corner Rule.** Corners are cut, not rounded. The default radius stays small (8px) for incidental chrome; the distinctive actions, plates, case plate, and Evidence Ledger use a notched clip-angle to read as punched blueprint plates.
 
 ## Components
 
@@ -188,6 +196,8 @@ Angular, blueprint-like geometry. The signature is the clipped corner: the prima
 - **Primary action** (`.atlas-action--primary`): `--atlas-blue` fill, white text, min-height 7rem, an index number (01/02) above the label, and a right arrow. Hover/focus is a true inversion in both themes: light fills `--atlas-ink` with white text; dark fills `--atlas-ink` (near-white) with `--atlas-paper` text.
 - **Secondary action** (`.atlas-action--secondary`): `--atlas-action-secondary` fill with `--atlas-blue` text and border; dark mode remaps the text and border to `--atlas-route` for contrast.
 - **Mobile primary** (`.atlas-mobile-primary`): compact primary CTA shown only at ≤48rem, placed right after the h1.
+- **Solid action** (`.atlas-action--solid`): compact blue-filled action used after a route (home and Services method sections).
+- **ui/ primitives** (`Button`, `TextLink` primary/inverse → `.ui-action`): the same chamfered rim-and-fill plate in a compact size, Barlow uppercase; `.ui-action--literal` keeps literal strings such as email addresses in their own case. `Button variant="link"` is the underlined text control for low-weight actions (cookie settings, customize). `Card` → `.atlas-plate`: chamfered paper plate with a `--atlas-fold` rim; never rounded or shadowed.
 - **Focus:** `outline: 2px solid var(--brand); outline-offset: 3px` on the unclipped host (white on the light case-plate variant).
 
 ### Cross-Route (Hero Signature)
@@ -207,13 +217,17 @@ One route family, two tiers. The primary route (cross-route, topology primary ro
 
 An accessible SVG frame (`.systems-topology`) rendering the engineering system as a route: Context → Product → Diagnosis → Architecture → Production, with Integrations, Security, and Observability as secondary stations. Dashed secondary routes, a resolving primary route, stroked station nodes, and a diagnosis junction (a filled paper plaque on a wide octagon) that carries an ink label. The junction plaque is sized so the diagnosis label fits inside its circular plaque in both locales — geometry adapts to copy, never the reverse — and secondary routes anchor and dot to plate edges, never to label baselines. Desktop and dedicated mobile variants sit in the same component, with the mobile shown only at ≤48rem; the mobile variant shows a stable subset of the global station numbering (01 Context, 02 Product, 06 Architecture, 07 Production) — it never re-indexes. On mobile, 01 and 02 stack above the junction and 06 below it; every connection lands on the hub's left and right flats — three ports per side, top and bottom edges stay clean. The left flat carries 02 (upper), the primary entry (middle), and 06 (lower); the right flat carries 01 (upper), the primary exit (middle), and 07 Production (lower), whose bullseye terminus hangs below 06 off its own solid lane. The junction plaque flips to ink fill with paper text in dark theme for contrast. All text is `stroke: none` and filled. There is no fabricated data — it is a topology, not a measured diagram.
 
-### ScoreCard
+### Evidence Ledger
 
-`.atlas-scorecard` on the blue case plate: a clipped panel with a heading row, five named tracks (Context, Product, Architecture, Integrations, Security), each with an empty track bar and a pending marker. Rows are separated by a translucent white hairline. This is intentionally empty — evidence is never invented.
+`.atlas-evidence` on the blue case plate: a clipped `--atlas-blue-deep` panel with a header row (status and since-date) and a `dl` of four published StockCast figures — label left in `--atlas-on-blue-muted`, value right in the title ramp with tabular numerals. Rows are separated by a translucent white hairline.
+
+### CTA Band
+
+`AtlasCtaBand` (`.atlas-cta-band`): a full-width `--atlas-blue` section closing Services and About — headline, muted-on-blue description, and a white `.atlas-action--light` plus an optional underlined white text link.
 
 ### Case (StockCast)
 
-`.atlas-case` is a full-bleed deep-blue plate: left copy (index name, headline, description) and right the ScoreCard. It claims no fabricated metrics; it points to the real case via a white "Ver estudo de caso" action.
+`.atlas-case` is a full-bleed deep-blue plate: left copy (index name, headline, description) and right the Evidence Ledger. Its figures come only from the published case study; it points to the real case via a white "Ver estudo de caso" action.
 
 ### Navigation
 
@@ -221,7 +235,7 @@ Site header uses a `.site-header__inner` grid (wordmark / primary nav / utilitie
 
 ### Footer & Consent
 
-Footer has a brand-stroked node dot on the top border, the wordmark, a nav row, and a contact email. Header and footer chrome both span the 96rem atlas width, with their content and accents anchored to the shared `--atlas-edge` token (the same edge the hero and sections read from). A visually-hidden skip link is the first focusable element on every localized page. Consent is a fixed bottom banner (`.consent-banner`) that reserves body padding from its measured height (`--consent-banner-height`, floored at 5.5rem) via `:has([data-consent-banner])`; on mobile it renders a compact variant (0.75rem copy, 2.5rem touch targets) and its controls stack.
+Footer has a brand-stroked node dot on the top border, the wordmark, a nav row, and a contact email. Header and footer chrome both span the 96rem atlas width, with their content and accents anchored to the shared `--atlas-edge` token (the same edge the hero and sections read from). A visually-hidden skip link is the first focusable element on every localized page. Consent is a fixed bottom banner (`.consent-banner`) that reserves body padding from its measured height (`--consent-banner-height`, floored at 5.5rem) via `:has([data-consent-banner])`; Privacy and Customize are underlined text controls on one row; Accept and Reject are equal-weight chamfered actions side by side (two equal columns on mobile, 2.75rem touch targets).
 
 ## Do's and Don'ts
 
@@ -230,7 +244,7 @@ Footer has a brand-stroked node dot on the top border, the wordmark, a nav row, 
 - **Do** use the one engineering blue as the structural accent; keep `--atlas-blue` / `--atlas-blue-soft` / `--brand` in the same hue family.
 - **Do** keep the three-plane hero with one route crossing every fold and resolving at the primary action.
 - **Do** use Barlow Condensed uppercase for display, headline, title, label, and nav.
-- **Do** keep ScoreCard tracks empty and the status pending — never render an invented metric, score, customer, or credential.
+- **Do** show only figures already published in the case study — never render an invented metric, score, customer, or credential.
 - **Do** support both light and dark themes and both en and pt-BR, with a working switch.
 - **Do** use notched/clipped or hairline-fold geometry for depth instead of shadows.
 
@@ -238,7 +252,7 @@ Footer has a brand-stroked node dot on the top border, the wordmark, a nav row, 
 
 - **Don't** introduce a second accent color, gradient, glass, or neon.
 - **Don't** use box-shadows or blur to convey depth — the fold is the depth cue.
-- **Don't** render fabricated evidence, scores, or outcomes on the ScoreCard or anywhere else.
+- **Don't** render fabricated evidence, scores, or outcomes on the Evidence Ledger or anywhere else.
 - **Don't** use a generic split hero, technical cube, or a plain service-card catalog.
 - **Don't** use rounded-pill buttons or soft blobs; cut corners with notches.
 - **Don't** add a backend, server, route action, or runtime server; keep the site static and prerendered.

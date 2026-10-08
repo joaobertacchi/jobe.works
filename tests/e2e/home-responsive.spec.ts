@@ -376,7 +376,7 @@ for (const theme of ["light", "dark"] as const) {
         diagnosisForeground: styles(".atlas-method-stop.is-diagnosis h3").color,
         paperBackground: styles(".atlas-method").backgroundColor,
         routeForeground: styles(".atlas-inline-link").color,
-        scorecardBackground: styles(".atlas-scorecard", "::after")
+        evidenceBackground: styles(".atlas-evidence", "::after")
           .backgroundColor,
         washBackground: styles(".atlas-decision-rail").backgroundColor,
         washForeground: styles(".atlas-decision-rail .atlas-index-name").color,
@@ -418,7 +418,7 @@ for (const theme of ["light", "dark"] as const) {
     expect(
       contrastRatio(palette.routeForeground, palette.canvasBackground),
     ).toBeGreaterThanOrEqual(4.5);
-    expect(relativeLuminance(palette.scorecardBackground)).toBeLessThan(
+    expect(relativeLuminance(palette.evidenceBackground)).toBeLessThan(
       relativeLuminance(palette.caseBackground),
     );
   });

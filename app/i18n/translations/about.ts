@@ -27,6 +27,7 @@ export type AboutTranslation = {
   };
   emailLabel: string;
   emailAddress: string;
+  cta: { description: string; action: string };
 };
 
 export const aboutTranslations = {
@@ -78,6 +79,11 @@ export const aboutTranslations = {
     },
     emailLabel: "Work with JOBE",
     emailAddress: "contato@jobe.works",
+    cta: {
+      description:
+        "Every engagement starts with an Initial Assessment: a structured conversation about your product, what worries you, and where to begin.",
+      action: "Book an Initial Assessment",
+    },
   },
   "pt-BR": {
     seo: {
@@ -127,5 +133,10 @@ export const aboutTranslations = {
     },
     emailLabel: "Trabalhe com a JOBE",
     emailAddress: "contato@jobe.works",
+    cta: {
+      description:
+        "Todo trabalho começa por uma Avaliação Inicial: uma conversa estruturada sobre seu produto, o que preocupa você e por onde começar.",
+      action: "Agendar Avaliação Inicial",
+    },
   },
 } satisfies Record<SupportedLocale, AboutTranslation>;

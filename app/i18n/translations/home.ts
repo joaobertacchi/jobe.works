@@ -18,7 +18,6 @@ export type HomeTranslation = {
     topologyTitle: string;
     topologyDescription: string;
     diagnosis: string;
-    evidenceStatus: string;
     labels: {
       context: string;
       product: string;
@@ -44,6 +43,14 @@ export type HomeTranslation = {
     title: string;
     description: string;
     link: string;
+    evidence: {
+      title: string;
+      since: string;
+      items: Record<
+        "activation" | "installs" | "companies" | "latency",
+        { label: string; value: string }
+      >;
+    };
   };
   funnel: {
     title: string;
@@ -80,7 +87,6 @@ export const homeTranslations = {
       topologyDescription:
         "A systems map connects product context, architecture, integrations, security, and observability to a diagnostic and a production outcome.",
       diagnosis: "Diagnostic",
-      evidenceStatus: "What the Technical Diagnostic covers",
       labels: {
         context: "Context",
         product: "Product",
@@ -119,6 +125,22 @@ export const homeTranslations = {
       description:
         "A platform for Brazilian stock market investors with 9,000+ downloads: mobile app, backend, and an AI financial-analysis pipeline running in production.",
       link: "Read the case study",
+      evidence: {
+        title: "In production",
+        since: "Since Jan 2026",
+        items: {
+          activation: {
+            label: "30-day user activation after fixing the funnel",
+            value: "6% → 26%",
+          },
+          installs: { label: "App installs", value: "~9,500" },
+          companies: { label: "Companies monitored 24/7", value: "323" },
+          latency: {
+            label: "From published document to user notification",
+            value: "~2.5 min",
+          },
+        },
+      },
     },
     funnel: {
       title: "How it works",
@@ -167,7 +189,6 @@ export const homeTranslations = {
       topologyDescription:
         "Um mapa de sistemas conecta contexto, produto, arquitetura, integrações, segurança e observabilidade a um diagnóstico e a um resultado em produção.",
       diagnosis: "Diagnóstico",
-      evidenceStatus: "O que o Diagnóstico Técnico avalia",
       labels: {
         context: "Contexto",
         product: "Produto",
@@ -207,6 +228,22 @@ export const homeTranslations = {
       description:
         "Plataforma para investidores da B3 com mais de 9 mil downloads: app mobile, backend e um pipeline de análise financeira com IA rodando em produção.",
       link: "Ler o estudo de caso",
+      evidence: {
+        title: "Em produção",
+        since: "Desde jan. 2026",
+        items: {
+          activation: {
+            label: "Ativação de usuários em 30 dias após corrigir o funil",
+            value: "6% → 26%",
+          },
+          installs: { label: "Instalações do app", value: "~9.500" },
+          companies: { label: "Empresas monitoradas 24x7", value: "323" },
+          latency: {
+            label: "Do documento publicado à notificação do usuário",
+            value: "~2,5 min",
+          },
+        },
+      },
     },
     funnel: {
       title: "Como funciona",

@@ -22,7 +22,7 @@ describe("TextLink", () => {
 
     const link = screen.getByRole("link", { name: "Email" });
     expect(link).toHaveAttribute("href", "mailto:hello@example.com");
-    expect(link).toHaveClass("bg-brand-foreground", "text-brand");
+    expect(link).toHaveClass("ui-action", "ui-action--inverse");
   });
 
   it("renders semantic primary and secondary links", () => {
@@ -39,7 +39,8 @@ describe("TextLink", () => {
     const secondary = screen.getByRole("link", { name: "Secondary" });
 
     expect(primary).toHaveAttribute("href", "/primary");
-    expect(primary).toHaveClass("bg-brand");
+    expect(primary).toHaveClass("ui-action");
+    expect(primary).not.toHaveClass("ui-action--secondary");
     expect(secondary).toHaveAttribute("href", "/secondary");
     expect(secondary).toHaveClass("underline");
   });
@@ -53,7 +54,21 @@ describe("Button", () => {
 
     expect(button).toBeVisible();
     expect(button).toHaveAttribute("type", "button");
-    expect(button).toHaveClass("bg-brand", "min-h-11");
+    expect(button).toHaveClass("ui-action", "min-h-11");
+    expect(button).not.toHaveClass("ui-action--secondary");
+  });
+
+  it("renders a link-styled button without the action plate", () => {
+    render(
+      <Button size="sm" variant="link">
+        Cookie settings
+      </Button>,
+    );
+
+    const button = screen.getByRole("button", { name: "Cookie settings" });
+
+    expect(button).toHaveClass("underline", "min-h-9");
+    expect(button).not.toHaveClass("ui-action", "px-3");
   });
 
   it("renders a disabled secondary small button", () => {
@@ -66,7 +81,7 @@ describe("Button", () => {
     const button = screen.getByRole("button", { name: "Save" });
 
     expect(button).toBeDisabled();
-    expect(button).toHaveClass("border-border", "min-h-9");
+    expect(button).toHaveClass("ui-action--secondary", "ui-action--sm");
     expect(button).toHaveClass("w-full");
   });
 
@@ -123,7 +138,11 @@ describe("Heading", () => {
 
     const heading = screen.getByRole("heading", { level: 2, name: "Welcome" });
 
-    expect(heading).toHaveClass("text-4xl", "sm:text-6xl");
+    expect(heading).toHaveClass(
+      "font-display",
+      "uppercase",
+      "text-[clamp(2.75rem,5vw,5rem)]",
+    );
   });
 
   it("defaults to an h2 with section styling", () => {
@@ -131,7 +150,11 @@ describe("Heading", () => {
 
     const heading = screen.getByRole("heading", { level: 2, name: "About us" });
 
-    expect(heading).toHaveClass("text-3xl", "sm:text-4xl", "text-foreground");
+    expect(heading).toHaveClass(
+      "font-display",
+      "text-[clamp(1.75rem,3vw,2.5rem)]",
+      "text-foreground",
+    );
   });
 
   it("forwards native heading props", () => {
@@ -199,7 +222,7 @@ describe("Card", () => {
     expect(card).toHaveAttribute("data-testid", "card");
     expect(card).toHaveTextContent("Card content");
     expect(card).toHaveClass("mt-4");
-    expect(card).toHaveClass("rounded-2xl", "bg-surface");
+    expect(card).toHaveClass("atlas-plate");
   });
 });
 

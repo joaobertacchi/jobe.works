@@ -6,7 +6,7 @@ type AtlasActionProps = {
   index?: string;
   onClick?: () => void;
   to: string;
-  variant?: "primary" | "secondary" | "light";
+  variant?: "primary" | "secondary" | "light" | "solid";
 };
 
 export function AtlasAction({

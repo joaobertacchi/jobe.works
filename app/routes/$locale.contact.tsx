@@ -1,3 +1,4 @@
+import { Card } from "../components/ui/card";
 import { Container } from "../components/ui/container";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
@@ -28,39 +29,18 @@ export default function Contact() {
   return (
     <main className="py-16 sm:py-24">
       <Container>
-        <div className="grid gap-14 lg:grid-cols-[0.9fr_1.1fr]">
+        <div className="grid items-start gap-14 lg:grid-cols-[1fr_1fr]">
           <div className="flex flex-col gap-6">
             <Heading as="h1" level="display">
               {translate("contact.title")}
             </Heading>
             <Text tone="muted">{translate("contact.description")}</Text>
-            <div className="flex flex-col gap-3">
-              <Heading as="h2" level="card">
-                {translate("contact.deliverablesTitle")}
-              </Heading>
-              <ul className="flex flex-col gap-2">
-                {deliverables.map((deliverable) => (
-                  <li
-                    className="flex items-start gap-3 text-foreground"
-                    key={deliverable}
-                  >
-                    <span
-                      aria-hidden="true"
-                      className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand"
-                    />
-                    {deliverable}
-                  </li>
-                ))}
-              </ul>
-              <div>
-                <TextLink to={`/${locale}/scorecard`} variant="secondary">
-                  {translate("contact.scorecardPrompt")}
-                </TextLink>
-              </div>
-            </div>
+            <TextLink to={`/${locale}/scorecard`} variant="secondary">
+              {translate("contact.scorecardPrompt")}
+            </TextLink>
           </div>
 
-          <div className="flex flex-col gap-6 self-start rounded-2xl border border-border bg-surface p-6 sm:p-8">
+          <Card className="flex flex-col gap-8">
             <div className="flex flex-col gap-3">
               <Heading as="h2" level="section">
                 {translate("contact.bookByEmailTitle")}
@@ -69,16 +49,31 @@ export default function Contact() {
                 {translate("contact.bookByEmailDescription")}
               </Text>
             </div>
-            <div>
-              <TextLink
-                to={`mailto:${translate("contact.emailAddress")}?subject=${encodeURIComponent(
-                  translate("contact.emailSubject"),
-                )}`}
-              >
-                {translate("contact.emailAddress")}
-              </TextLink>
+            <TextLink
+              className="ui-action--literal w-fit"
+              to={`mailto:${translate("contact.emailAddress")}?subject=${encodeURIComponent(
+                translate("contact.emailSubject"),
+              )}`}
+            >
+              {translate("contact.emailAddress")}
+            </TextLink>
+            <div className="flex flex-col gap-3 border-t border-border pt-8">
+              <Heading as="h3" level="card">
+                {translate("contact.deliverablesTitle")}
+              </Heading>
+              <ul className="flex flex-col gap-2">
+                {deliverables.map((deliverable) => (
+                  <li
+                    className="flex items-start gap-3 text-foreground"
+                    key={deliverable}
+                  >
+                    <span aria-hidden="true" className="atlas-route-marker" />
+                    {deliverable}
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
+          </Card>
         </div>
       </Container>
     </main>

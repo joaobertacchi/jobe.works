@@ -41,7 +41,7 @@ export function SiteFooter() {
           <TextLink to={`/${locale}/privacy`} variant="nav">
             {translate("common.navigation.privacy")}
           </TextLink>
-          <Button size="sm" variant="secondary" onClick={openSettings}>
+          <Button size="sm" variant="link" onClick={openSettings}>
             {translate("consent.cookieSettings")}
           </Button>
         </nav>

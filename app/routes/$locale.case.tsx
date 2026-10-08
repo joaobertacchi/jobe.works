@@ -1,4 +1,5 @@
 import { useAnalytics } from "../analytics/analytics";
+import { Card } from "../components/ui/card";
 import { Container } from "../components/ui/container";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
@@ -30,7 +31,7 @@ export function meta({ matches, params }: Route.MetaArgs) {
 function CaseBlockView({ block }: { block: CaseBlock }) {
   if (block.type === "principle") {
     return (
-      <blockquote className="border-l-2 border-brand pl-4">
+      <blockquote className="border-l border-brand pl-5">
         <Text>
           <strong>{block.label}</strong> {block.text}
         </Text>
@@ -172,7 +173,10 @@ export default function CaseStudy() {
             </section>
           ))}
         </article>
-        <aside className="mx-auto mt-16 flex max-w-3xl flex-col gap-4 border-l-2 border-brand pl-6">
+        <Card
+          className="mx-auto mt-16 flex max-w-3xl flex-col gap-4"
+          role="complementary"
+        >
           <Heading as="h2" level="card">
             {translate("case.scorecard.title")}
           </Heading>
@@ -191,7 +195,7 @@ export default function CaseStudy() {
               {translate("case.scorecard.cta")}
             </TextLink>
           </div>
-        </aside>
+        </Card>
       </Container>
     </main>
   );

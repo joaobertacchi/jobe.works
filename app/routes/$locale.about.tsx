@@ -1,7 +1,9 @@
+import { useAnalytics } from "../analytics/analytics";
+import { AtlasAction } from "../components/domain/atlas-action";
+import { AtlasCtaBand } from "../components/sections/atlas-cta-band";
 import { Container } from "../components/ui/container";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
-import { TextLink } from "../components/ui/text-link";
 import { isSupportedLocale } from "../i18n/config";
 import { useI18n } from "../i18n/i18n";
 import { aboutTranslations } from "../i18n/translations/about";
@@ -17,7 +19,8 @@ export function meta({ matches, params }: Route.MetaArgs) {
 }
 
 export default function About() {
-  const { translate } = useI18n();
+  const { locale, translate } = useI18n();
+  const { capture } = useAnalytics();
   const principles = [
     translate("about.sections.principlesList.diagnostic"),
     translate("about.sections.principlesList.evidence"),
@@ -32,8 +35,8 @@ export default function About() {
   ];
 
   return (
-    <main className="py-16 sm:py-24">
-      <Container>
+    <main>
+      <Container className="py-16 sm:py-24">
         <article className="mx-auto flex max-w-3xl flex-col gap-12">
           <header className="flex flex-col gap-6">
             <Heading as="h1" level="display">
@@ -81,29 +84,42 @@ export default function About() {
             <ul className="flex flex-col gap-3">
               {principles.map((principle) => (
                 <li className="flex items-start gap-3" key={principle}>
-                  <span
-                    aria-hidden="true"
-                    className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brand"
-                  />
+                  <span aria-hidden="true" className="atlas-route-marker" />
                   <Text>{principle}</Text>
                 </li>
               ))}
             </ul>
           </section>
-
-          <section className="flex flex-col gap-3 border-t border-border pt-10">
-            <Heading as="h2" level="section">
-              {translate("about.emailLabel")}
-            </Heading>
-            <TextLink
-              to={`mailto:${translate("about.emailAddress")}`}
-              variant="secondary"
-            >
-              {translate("about.emailAddress")}
-            </TextLink>
-          </section>
         </article>
       </Container>
+      <AtlasCtaBand
+        actions={
+          <>
+            <AtlasAction
+              onClick={() =>
+                capture({
+                  eventName: "cta_pressed",
+                  ctaId: "about-book-call",
+                  context: "about",
+                })
+              }
+              to={`/${locale}/contact`}
+              variant="light"
+            >
+              {translate("about.cta.action")}
+            </AtlasAction>
+            <a
+              className="atlas-cta-band__link"
+              href={`mailto:${translate("about.emailAddress")}`}
+            >
+              {translate("about.emailAddress")}
+            </a>
+          </>
+        }
+        description={translate("about.cta.description")}
+        id="about-cta-title"
+        title={translate("about.emailLabel")}
+      />
     </main>
   );
 }

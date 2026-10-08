@@ -51,7 +51,7 @@ function ConsentDialog() {
     <dialog
       ref={dialogRef}
       aria-labelledby="consent-dialog-title"
-      className="w-full max-w-lg rounded-lg border border-border bg-surface p-6 backdrop:bg-background/80"
+      className="w-full max-w-lg border border-border bg-surface p-6 backdrop:bg-background/80"
       onClick={handleDialogClick}
       onClose={closeSettings}
       onKeyDown={handleKeyDown}
@@ -167,9 +167,14 @@ function ConsentBannerContent() {
           <Container className="consent-banner__inner">
             <div className="consent-banner__copy">
               <Text>{translate("consent.banner.message")}</Text>
-              <TextLink to={`/${locale}/privacy`} variant="secondary">
-                {translate("common.navigation.privacy")}
-              </TextLink>
+              <div className="consent-banner__links">
+                <TextLink to={`/${locale}/privacy`} variant="secondary">
+                  {translate("common.navigation.privacy")}
+                </TextLink>
+                <Button size="sm" variant="link" onClick={openSettings}>
+                  {translate("consent.banner.customize")}
+                </Button>
+              </div>
             </div>
             <div className="consent-banner__actions">
               <Button size="sm" onClick={acceptAll}>
@@ -181,9 +186,6 @@ function ConsentBannerContent() {
                 onClick={rejectNonEssential}
               >
                 {translate("consent.banner.rejectNonEssential")}
-              </Button>
-              <Button size="sm" variant="secondary" onClick={openSettings}>
-                {translate("consent.banner.customize")}
               </Button>
             </div>
           </Container>

@@ -178,6 +178,47 @@ describe("localized route layout", () => {
     ).toHaveAttribute("href", "/en/scorecard");
   });
 
+  it("backs the home case band with published StockCast evidence", async () => {
+    renderLocalizedRoute("/pt-BR/");
+
+    const list = (await screen.findByText("6% → 26%")).closest("dl");
+    expect(list).toHaveAccessibleName("Em produção");
+    const values = within(list as HTMLElement)
+      .getAllByRole("definition")
+      .map((item) => item.textContent);
+    expect(values).toEqual(["6% → 26%", "~9.500", "323", "~2,5 min"]);
+    expect(screen.queryByText("SC-00")).not.toBeInTheDocument();
+  });
+
+  it("closes the services page with the diagnostic route and a booking call", async () => {
+    renderLocalizedRoute("/en/services");
+
+    const route = await screen.findByRole("region", {
+      name: "How every engagement starts",
+    });
+    expect(within(route).getAllByRole("listitem")).toHaveLength(3);
+    const closing = screen.getByRole("region", {
+      name: "Start with a conversation",
+    });
+    expect(
+      within(closing).getByRole("link", { name: /Book an Initial Assessment/ }),
+    ).toHaveAttribute("href", "/en/contact");
+  });
+
+  it("ends the About page with a booking call and the email fallback", async () => {
+    renderLocalizedRoute("/en/about");
+
+    const closing = await screen.findByRole("region", {
+      name: "Work with JOBE",
+    });
+    expect(
+      within(closing).getByRole("link", { name: /Book an Initial Assessment/ }),
+    ).toHaveAttribute("href", "/en/contact");
+    expect(
+      within(closing).getByRole("link", { name: "contato@jobe.works" }),
+    ).toHaveAttribute("href", "mailto:contato@jobe.works");
+  });
+
   it("links the case study and contact pages to the scorecard", async () => {
     renderLocalizedRoute("/pt-BR/case");
     expect(

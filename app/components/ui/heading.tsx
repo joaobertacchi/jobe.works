@@ -8,10 +8,12 @@ export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {
 };
 
 const levelClasses = {
-  display: "text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl",
-  section: "text-3xl font-bold leading-tight tracking-tight sm:text-4xl",
-  card: "text-xl font-semibold leading-snug tracking-tight",
-  eyebrow: "text-sm font-semibold uppercase tracking-[0.2em]",
+  display:
+    "font-display text-[clamp(2.75rem,5vw,5rem)] font-semibold uppercase leading-[0.95] tracking-[-0.02em] text-balance",
+  section:
+    "font-display text-[clamp(1.75rem,3vw,2.5rem)] font-semibold uppercase leading-none tracking-[-0.02em] text-balance",
+  card: "font-display text-[clamp(1.4rem,2.2vw,2rem)] font-semibold uppercase leading-[1.05] tracking-[-0.02em]",
+  eyebrow: "font-display text-sm font-semibold uppercase tracking-[0.09em]",
 };
 
 const toneClasses = {

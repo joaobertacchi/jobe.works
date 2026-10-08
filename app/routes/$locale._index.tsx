@@ -5,6 +5,7 @@ import { useAnalytics } from "../analytics/analytics";
 import { AtlasAction } from "../components/domain/atlas-action";
 import { AtlasCrossRoute } from "../components/domain/atlas-cross-route";
 import { SystemsTopology } from "../components/domain/systems-topology";
+import { FunnelSection } from "../components/sections/funnel-section";
 import { isSupportedLocale } from "../i18n/config";
 import { useI18n } from "../i18n/i18n";
 import { commonTranslations } from "../i18n/translations/common";
@@ -72,13 +73,7 @@ export default function Home() {
     },
   ] as const;
 
-  const scorecardTracks = [
-    "context",
-    "product",
-    "architecture",
-    "integrations",
-    "security",
-  ] as const;
+  const evidence = ["activation", "installs", "companies", "latency"] as const;
 
   function captureCta(ctaId: string) {
     capture({ eventName: "cta_pressed", ctaId, context: "homepage" });
@@ -210,34 +205,38 @@ export default function Home() {
             {translate("home.case.link")}
           </AtlasAction>
         </div>
-        <div
-          className="atlas-scorecard"
-          aria-label={translate("home.atlas.evidenceStatus")}
-        >
-          <div className="atlas-scorecard__header">
-            <span>{translate("home.atlas.evidenceStatus")}</span>
-            <span aria-hidden="true">SC-00</span>
+        <div className="atlas-evidence">
+          <div className="atlas-evidence__header">
+            <span id="case-evidence-title">
+              {translate("home.case.evidence.title")}
+            </span>
+            <span>{translate("home.case.evidence.since")}</span>
           </div>
-          {scorecardTracks.map((track) => {
-            const label = translate(`home.atlas.labels.${track}`);
-            return (
-              <div className="atlas-scorecard__row" key={track}>
-                <span>{label}</span>
-                <span aria-hidden="true" className="atlas-scorecard__track" />
-                <span aria-hidden="true">—</span>
+          <dl aria-labelledby="case-evidence-title">
+            {evidence.map((item) => (
+              <div className="atlas-evidence__row" key={item}>
+                <dt>{translate(`home.case.evidence.items.${item}.label`)}</dt>
+                <dd>{translate(`home.case.evidence.items.${item}.value`)}</dd>
               </div>
-            );
-          })}
+            ))}
+          </dl>
         </div>
       </section>
 
-      <section
-        className="atlas-section atlas-method"
-        aria-labelledby="method-title"
-      >
-        <div className="atlas-section__heading">
-          <h2 id="method-title">{translate("home.funnel.title")}</h2>
-          <p>{translate("home.funnel.description")}</p>
+      <FunnelSection
+        actions={
+          <AtlasAction
+            className="atlas-method__action"
+            onClick={() => captureCta("funnel-book-call")}
+            to={`/${locale}/contact`}
+            variant="solid"
+          >
+            {translate("home.hero.ctaPrimary")}
+          </AtlasAction>
+        }
+        description={translate("home.funnel.description")}
+        id="method-title"
+        link={
           <Link
             className="atlas-inline-link"
             to={`/${locale}/scorecard`}
@@ -248,34 +247,10 @@ export default function Home() {
               <path d="M5 12h14m-5-5 5 5-5 5" />
             </svg>
           </Link>
-        </div>
-        <ol className="atlas-method-route">
-          {steps.map((step, index) => (
-            <li
-              className={
-                step.emphasis
-                  ? "atlas-method-stop is-diagnosis"
-                  : "atlas-method-stop"
-              }
-              key={step.title}
-            >
-              <span aria-hidden="true" className="atlas-method-stop__index">
-                {String(index + 1).padStart(2, "0")}
-              </span>
-              <span aria-hidden="true" className="atlas-method-stop__node" />
-              <h3>{step.title}</h3>
-              <p>{step.description}</p>
-            </li>
-          ))}
-        </ol>
-        <AtlasAction
-          className="atlas-method__action"
-          onClick={() => captureCta("funnel-book-call")}
-          to={`/${locale}/contact`}
-        >
-          {translate("home.hero.ctaPrimary")}
-        </AtlasAction>
-      </section>
+        }
+        steps={steps}
+        title={translate("home.funnel.title")}
+      />
     </main>
   );
 }
