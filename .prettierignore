@@ -1,6 +1,7 @@
 .agents/
 .opencode/
 .impeccable/
+.superpowers/
 .claude/
 .codex/
 .react-router/
