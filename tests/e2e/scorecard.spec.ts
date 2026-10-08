@@ -69,7 +69,7 @@ async function expectNoHorizontalScroll(page: Page) {
   expect(overflow).toEqual({ pageOverflow: 0, offenders: [] });
 }
 
-test("completes the scorecard in English and offers a prefilled diagnostic email", async ({
+test("completes the scorecard in English and offers a prefilled assessment email", async ({
   page,
 }) => {
   await page.goto("/en/scorecard");
@@ -90,7 +90,7 @@ test("completes the scorecard in English and offers a prefilled diagnostic email
 
   const cta = page.getByRole("link", { name: en.results.nextStep.cta });
   const href = decodeURIComponent((await cta.getAttribute("href")) ?? "");
-  expect(href).toMatch(/^mailto:joao@jobe\.works\?subject=/);
+  expect(href).toMatch(/^mailto:contato@jobe\.works\?subject=/);
   expect(href).toContain("Score: 94/100");
 });
 
@@ -125,7 +125,7 @@ test("opens a shared result link directly and can retake", async ({ page }) => {
 test("navigates from the home hero to the scorecard", async ({ page }) => {
   await page.goto("/en/");
   await page
-    .getByRole("link", { name: /Take the readiness scorecard/ })
+    .getByRole("link", { name: /Take the Production Readiness Check/ })
     .first()
     .click();
 

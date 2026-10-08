@@ -62,24 +62,25 @@ export const homeTranslations = {
     seo: {
       title: "JOBE — Engineering that Works",
       description:
-        "Senior engineering for AI products that gained traction and need to become safe, scalable, and sustainable in production. Diagnostic-first: a Product Readiness Call, a paid diagnosis, a directed offer.",
+        "JOBE takes AI products from proof of concept to production, rescues mobile apps, and helps companies adopt AI safely. Senior engineering for founders whose products need to hold up for real users and for the business.",
     },
     hero: {
       title: "Engineering that Works",
       description:
-        "JOBE is a senior engineering consultancy for AI products that gained traction and need to hold up in production. You start with a conversation, not a catalog: a structured evaluation that directs you to the right engagement.",
-      method: "One route: evaluate, diagnose, direct.",
-      ctaPrimary: "Book a Product Readiness Call",
-      ctaSecondary: "Take the readiness scorecard",
+        "Your AI product gained traction — or your company is ready to put AI to work. JOBE brings the senior engineering to make it secure, scalable, and sustainable in production, for real users and for the business.",
+      method: "Assess. Diagnose. Deliver.",
+      ctaPrimary: "Book an Initial Assessment",
+      ctaSecondary: "Take the Production Readiness Check",
     },
     atlas: {
       founderName: "João Bertacchi",
-      founderStatement: "Evaluate first. Direct the right engagement second.",
-      topologyTitle: "A product system routed through diagnosis",
+      founderStatement:
+        "Founder. 20+ years taking products to production, leading teams of 50+ engineers and delivering critical applications for global brands.",
+      topologyTitle: "From product context to production",
       topologyDescription:
-        "A systems map connects product context, architecture, integrations, security, and observability to a diagnosis and a production outcome.",
-      diagnosis: "Diagnosis",
-      evidenceStatus: "Evidence preview pending real case material",
+        "A systems map connects product context, architecture, integrations, security, and observability to a diagnostic and a production outcome.",
+      diagnosis: "Diagnostic",
+      evidenceStatus: "What the Technical Diagnostic covers",
       labels: {
         context: "Context",
         product: "Product",
@@ -92,53 +93,54 @@ export const homeTranslations = {
     },
     services: {
       title: "Services",
-      description: "Three offers, one method: evaluate first, then direct.",
+      description: "Three ways to make engineering work for your business.",
       items: {
         sprint: {
-          title: "AI Productization Sprint",
+          title: "AI to Production",
           description:
-            "Turn a product that gained traction into something safe, scalable, and sustainable — with a security lens built in.",
+            "Your AI product gained traction. JOBE makes it secure, scalable, and sustainable — with AI Security Review and Mobile App Rescue when you need them.",
         },
         fractional: {
-          title: "Fractional CTO & Architecture",
+          title: "Fractional CTO",
           description:
-            "Senior architecture and technology direction on a recurring basis, usually the origin of implementation projects.",
+            "Senior technology leadership without a full-time hire: architecture decisions, technical roadmap, and direction for your team.",
         },
         enablement: {
-          title: "AI-Native SDLC & Engineering Enablement",
+          title: "AI Adoption",
           description:
-            "Consulting, training, and practice adoption for the safe, productive use of AI tools across the engineering lifecycle.",
+            "Bring AI into your engineering team — and beyond — with practices, training, and governance that keep it safe and productive.",
         },
       },
-      link: "Explore services",
+      link: "See all services",
     },
     case: {
       label: "Case study",
       title: "StockCast",
       description:
-        "The diagnostic-first method in practice: a product that gained traction, and the engineering needed to make it work in production.",
+        "A platform for Brazilian stock market investors with 9,000+ downloads: mobile app, backend, and an AI financial-analysis pipeline running in production.",
       link: "Read the case study",
     },
     funnel: {
       title: "How it works",
       description:
-        "You never choose among services — the evaluation directs the engagement.",
-      scorecardPrompt: "Not ready to talk? Start with the 4-minute scorecard",
+        "You don't need to know upfront which service you need. The assessment points the way.",
+      scorecardPrompt:
+        "Not ready to talk? Take the 4-minute Production Readiness Check",
       steps: {
         call: {
-          title: "Product Readiness Call",
+          title: "Initial Assessment",
           description:
-            "A structured 30–45 minute conversation about your context and symptoms. You leave with a summary of perceived risks, a preliminary classification, and next steps.",
+            "A structured 30–45 minute conversation about your product and what worries you. Free for a limited time. You leave with the main risks, a first read of the problem, and recommended next steps.",
         },
         diagnosis: {
-          title: "Diagnosis",
+          title: "Technical Diagnostic",
           description:
-            "When there is a commercial next step, an evidence-based diagnosis maps architecture, integrations, security, observability, cloud and AI costs, and risks — with a prioritized roadmap.",
+            "An in-depth, evidence-based review of code, architecture, integrations, security, operations, and cloud and AI costs — delivered as prioritized risks, quick wins, and a 30/60/90-day plan.",
         },
         engagement: {
-          title: "Directed engagement",
+          title: "Execution",
           description:
-            "The dominant problem picks the offer: a sprint, fractional CTO, or team enablement — then implementation and recurring support.",
+            "JOBE executes the plan — AI to Production, Fractional CTO, or AI Adoption — and stays alongside as your product grows.",
         },
       },
     },
@@ -147,25 +149,25 @@ export const homeTranslations = {
     seo: {
       title: "JOBE — Engenharia que Funciona",
       description:
-        "Engenharia sênior para produtos de IA que ganharam tração e precisam se tornar seguros, escaláveis e sustentáveis em produção. Diagnóstico primeiro: uma Product Readiness Call, um diagnóstico pago, uma oferta direcionada.",
+        "A JOBE leva produtos de IA da prova de conceito à produção, resgata apps mobile e ajuda empresas a adotar IA com segurança. Engenharia sênior para founders cujos produtos precisam se sustentar para usuários reais e para o negócio.",
     },
     hero: {
       title: "Engenharia que Funciona",
       description:
-        "        A JOBE é uma consultoria de engenharia sênior para produtos de IA que ganharam tração e precisam se sustentar em produção. Você começa por uma conversa, não por um catálogo: uma avaliação estruturada que direciona o engajamento certo.",
-      method: "Uma rota: avaliar, diagnosticar, direcionar.",
-      ctaPrimary: "Agendar uma Product Readiness Call",
-      ctaSecondary: "Fazer o scorecard de readiness",
+        "Seu produto de IA ganhou tração — ou sua empresa está pronta para colocar a IA para trabalhar. A JOBE traz a engenharia sênior para torná-lo seguro, escalável e sustentável em produção, para usuários reais e para o negócio.",
+      method: "Avaliar. Diagnosticar. Entregar.",
+      ctaPrimary: "Agendar Avaliação Inicial",
+      ctaSecondary: "Fazer a Autoavaliação de Produção",
     },
     atlas: {
       founderName: "João Bertacchi",
       founderStatement:
-        "Avaliar primeiro. Direcionar o engajamento certo depois.",
-      topologyTitle: "Um sistema de produto direcionado pelo diagnóstico",
+        "Fundador. Mais de 20 anos levando produtos à produção, liderando times de mais de 50 engenheiros e entregando aplicações críticas para marcas globais.",
+      topologyTitle: "Do contexto do produto à produção",
       topologyDescription:
         "Um mapa de sistemas conecta contexto, produto, arquitetura, integrações, segurança e observabilidade a um diagnóstico e a um resultado em produção.",
       diagnosis: "Diagnóstico",
-      evidenceStatus: "Prévia de evidências pendente de material real do caso",
+      evidenceStatus: "O que o Diagnóstico Técnico avalia",
       labels: {
         context: "Contexto",
         product: "Produto",
@@ -179,54 +181,54 @@ export const homeTranslations = {
     services: {
       title: "Serviços",
       description:
-        "Três ofertas, um método: avaliar primeiro, direcionar depois.",
+        "Três frentes para a engenharia trabalhar a favor do seu negócio.",
       items: {
         sprint: {
-          title: "AI Productization Sprint",
+          title: "IA em Produção",
           description:
-            "Transformar um produto que ganhou tração em algo seguro, escalável e sustentável — com uma lente de segurança embutida.",
+            "Seu produto de IA ganhou tração. A JOBE o torna seguro, escalável e sustentável — com Segurança para IA e Resgate de Apps Mobile quando você precisar.",
         },
         fractional: {
-          title: "Fractional CTO & Arquitetura",
+          title: "CTO sob Demanda",
           description:
-            "Direção sênior de arquitetura e tecnologia de forma recorrente, normalmente a origem de projetos de implementação.",
+            "Liderança técnica sênior sem uma contratação em tempo integral: decisões de arquitetura, roadmap técnico e direção para o seu time.",
         },
         enablement: {
-          title: "SDLC Nativo em IA & Enablement de Engenharia",
+          title: "Adoção de IA",
           description:
-            "Consultoria, treinamento e adoção de práticas para o uso seguro e produtivo de ferramentas de IA em todo o ciclo de engenharia.",
+            "Leve a IA para o time de engenharia — e para outras áreas da empresa — com práticas, treinamento e governança que mantêm o uso seguro e produtivo.",
         },
       },
-      link: "Conhecer serviços",
+      link: "Ver serviços",
     },
     case: {
       label: "Estudo de caso",
       title: "StockCast",
       description:
-        "O método de diagnóstico primeiro na prática: um produto que ganhou tração e a engenharia necessária para fazê-lo funcionar em produção.",
+        "Plataforma para investidores da B3 com mais de 9 mil downloads: app mobile, backend e um pipeline de análise financeira com IA rodando em produção.",
       link: "Ler o estudo de caso",
     },
     funnel: {
       title: "Como funciona",
       description:
-        "Você nunca escolhe entre serviços — a avaliação direciona o engajamento.",
+        "Você não precisa saber de antemão qual serviço contratar. A avaliação aponta o caminho.",
       scorecardPrompt:
-        "Ainda não é hora de conversar? Comece pelo scorecard de 4 minutos",
+        "Ainda não é hora de conversar? Faça a Autoavaliação de Produção em 4 minutos",
       steps: {
         call: {
-          title: "Product Readiness Call",
+          title: "Avaliação Inicial",
           description:
-            "Uma conversa estruturada de 30–45 minutos sobre seu contexto e seus sintomas. Você sai com um resumo dos riscos percebidos, uma classificação preliminar e próximos passos.",
+            "Uma conversa estruturada de 30–45 minutos sobre seu produto e o que preocupa você. Sem custo por tempo limitado. Você sai com os principais riscos, uma primeira leitura do problema e os próximos passos recomendados.",
         },
         diagnosis: {
-          title: "Diagnóstico",
+          title: "Diagnóstico Técnico",
           description:
-            "Quando há um próximo passo comercial, um diagnóstico baseado em evidências mapeia arquitetura, integrações, segurança, observabilidade, custos de cloud e IA e riscos — com um roadmap priorizado.",
+            "Uma análise aprofundada e baseada em evidências de código, arquitetura, integrações, segurança, operação e custos de cloud e IA — entregue como riscos priorizados, ganhos rápidos e um plano de 30/60/90 dias.",
         },
         engagement: {
-          title: "Engajamento direcionado",
+          title: "Execução",
           description:
-            "O problema dominante escolhe a oferta: um sprint, fractional CTO ou enablement do time — depois, implementação e suporte recorrente.",
+            "A JOBE executa o plano — IA em Produção, CTO sob Demanda ou Adoção de IA — e segue junto enquanto seu produto cresce.",
         },
       },
     },

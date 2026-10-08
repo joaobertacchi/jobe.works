@@ -105,7 +105,7 @@ test("shows the consent banner and keeps analytics idle before a choice", async 
   await expectBanner(page);
 
   await page
-    .getByRole("link", { name: "Book a Product Readiness Call" })
+    .getByRole("link", { name: "Book an Initial Assessment" })
     .first()
     .click();
   await expect(page).toHaveURL("/en/contact");
@@ -247,7 +247,7 @@ test("hero call to action emits cta_pressed after consent", async ({
   await page.goto("/en/");
   await page.getByRole("button", { name: "Accept all" }).click();
   await page
-    .getByRole("link", { name: "Book a Product Readiness Call" })
+    .getByRole("link", { name: "Book an Initial Assessment" })
     .first()
     .click();
 
@@ -279,13 +279,13 @@ test("contact page offers the mailto booking path without emitting a lead event"
   await page.goto("/en/contact?utm_source=newsletter&unknown=ignored");
 
   const mailto = page.getByRole("main").getByRole("link", {
-    name: "joao@jobe.works",
+    name: "contato@jobe.works",
     exact: true,
   });
   await expect(mailto).toBeVisible();
   await expect
     .poll(() => mailto.getAttribute("href"))
-    .toContain("mailto:joao@jobe.works");
+    .toContain("mailto:contato@jobe.works");
   await settleBrowserEffects(page);
   await analytics.flush();
 

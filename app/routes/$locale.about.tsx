@@ -24,6 +24,12 @@ export default function About() {
     translate("about.sections.principlesList.production"),
     translate("about.sections.principlesList.recurring"),
   ];
+  const founderParagraphs = [
+    translate("about.sections.founder.introduction"),
+    translate("about.sections.founder.leadership"),
+    translate("about.sections.founder.background"),
+    translate("about.sections.founder.today"),
+  ];
 
   return (
     <main className="py-16 sm:py-24">
@@ -54,6 +60,17 @@ export default function About() {
             </Text>
           </section>
 
+          <section className="flex flex-col gap-3">
+            <Heading as="h2" level="section">
+              {translate("about.sections.founder.title")}
+            </Heading>
+            {founderParagraphs.map((paragraph) => (
+              <Text key={paragraph} tone="muted">
+                {paragraph}
+              </Text>
+            ))}
+          </section>
+
           <section className="flex flex-col gap-4">
             <Heading as="h2" level="section">
               {translate("about.sections.principles.title")}
@@ -78,7 +95,10 @@ export default function About() {
             <Heading as="h2" level="section">
               {translate("about.emailLabel")}
             </Heading>
-            <TextLink to="mailto:joao@jobe.works" variant="secondary">
+            <TextLink
+              to={`mailto:${translate("about.emailAddress")}`}
+              variant="secondary"
+            >
               {translate("about.emailAddress")}
             </TextLink>
           </section>

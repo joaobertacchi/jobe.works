@@ -43,7 +43,7 @@ export const commonTranslations = {
       navigationLabel: "Footer navigation",
       description:
         "Engineering that works — in production, and for the business.",
-      email: "joao@jobe.works",
+      email: "contato@jobe.works",
     },
     errors: {
       title: "Error",
@@ -70,7 +70,7 @@ export const commonTranslations = {
     footer: {
       navigationLabel: "Navegação do rodapé",
       description: "Engenharia que funciona — em produção, e para o negócio.",
-      email: "joao@jobe.works",
+      email: "contato@jobe.works",
     },
     errors: {
       title: "Erro",

@@ -47,122 +47,122 @@ export const servicesTranslations = {
     seo: {
       title: "Services | JOBE — Engineering that Works",
       description:
-        "AI Productization Sprint, Fractional CTO & Architecture, and AI-Native SDLC & Engineering Enablement — entered through a Product Readiness Call and a paid diagnosis.",
+        "AI to Production, Fractional CTO, and AI Adoption: senior engineering to take AI products to production, lead technology, and bring AI into your company safely.",
     },
     title: "Services",
     description:
-      "JOBE's work is a progression: content or referral, an initial technical evaluation, a paid diagnosis, then a directed offer. The dominant problem decides the engagement — you never choose among eight services.",
+      "Every engagement starts with an assessment of your product and your context. From there, JOBE recommends the path with the most impact — you don't have to pick from a catalog.",
     items: {
       sprint: {
-        title: "AI Productization Sprint",
+        title: "AI to Production",
         description:
-          "Resolves the most urgent, highest-perceived-value problem: turning a product that gained traction into something safe, scalable, and sustainable. A security lens is embedded, with a mobile-specific variant when applicable — including React Native rescue and modernization.",
+          "For AI products that gained traction and now need to hold up. JOBE takes the product from proof of concept to production — architecture, integrations, tests, CI/CD, observability, and security — so it can grow without breaking. Includes AI Security Review, to find and fix the risks specific to AI applications, and Mobile App Rescue, to recover and modernize React Native apps that have become fragile or hard to evolve.",
       },
       fractional: {
-        title: "Fractional CTO & Architecture",
+        title: "Fractional CTO",
         description:
-          "Recurring senior technology direction: architecture decisions, roadmaps, and engineering judgment without a full-time hire. Typically generates the implementation projects that follow.",
+          "Senior technology leadership on a recurring basis, without a full-time hire. JOBE makes architecture decisions with you, shapes the technical roadmap, and structures your team and architecture to grow safely.",
       },
       enablement: {
-        title: "AI-Native SDLC & Engineering Enablement",
+        title: "AI Adoption",
         description:
-          "Consulting, training, and practice adoption so teams use AI tools across the development lifecycle safely and productively — with Secure AI and governance as part of the practice.",
+          "For companies ready to put AI to work. In engineering, JOBE brings AI agents into the development lifecycle — including spec-driven development — with training, practices, and quality controls. Beyond engineering, it helps other areas of the company adopt AI with security and governance from the start.",
       },
     },
     crossSell: {
-      label: "Cross-sell",
-      title: "AI Engineering Economics",
+      label: "Add-on",
+      title: "AI Cost Control",
       description:
-        "For clients with relevant LLM spend: engineering and economic control of AI costs. Offered as a natural cross-sell, never a fourth entry door — the message stays focused.",
+        "When LLM spend becomes significant, JOBE helps bring it under control: visibility into where the money goes, model and architecture choices that fit each use, and engineering practices that cut costs without compromising quality. Available alongside any of the services above.",
     },
     funnel: {
-      title: "How the engagement starts",
+      title: "How every engagement starts",
       description:
-        "Every engagement follows the same sequence. The diagnosis is paid and evidence-based; the structured call is the first step.",
+        "The same path, whatever the problem: a conversation first, evidence next, then execution.",
       steps: {
         call: {
-          title: "Product Readiness Call",
+          title: "Initial Assessment",
           description:
-            "A structured 30–45 minute conversation based on your reports. You receive a summary of perceived risks, a preliminary problem classification, next steps, and a mini-scorecard.",
+            "A structured 30–45 minute conversation based on what you share about your product and context. Free for a limited time. You receive a summary of the risks identified, a first classification of the problem, recommended next steps, and a short scorecard of your product.",
         },
         diagnosis: {
-          title: "Paid diagnosis",
+          title: "Technical Diagnostic",
           description:
-            "Interviews, repository access, architecture review, integration analysis, CI/CD and environment inspection, security analysis, observability evaluation, cloud and AI cost analysis, and risk identification. You receive a detailed scorecard, an architecture diagram, prioritized risks, quick wins, a backlog, a 30/60/90-day plan, preliminary estimates, and an executive presentation.",
+            "An in-depth, evidence-based review: interviews with founders and team, repository and architecture review, integrations, CI/CD, tests and environments, security, observability, and cloud and AI costs. You receive a detailed scorecard, a diagram of the current architecture, risks ranked by impact and urgency, quick wins, a prioritized backlog, a 30/60/90-day plan, preliminary estimates, and an executive presentation.",
         },
         engagement: {
-          title: "Directed offer",
+          title: "Execution",
           description:
-            "The dominant problem picks the offer, and implementation follows — with fractional CTO, team enablement, and secure AI and governance as the recurring layer.",
+            "The main problem defines the path: AI to Production, Fractional CTO, or AI Adoption. After implementation, JOBE can stay on as your fractional CTO, keep enabling your team, and support AI security and governance.",
         },
       },
     },
     closing: {
       title: "Start with a conversation",
       description:
-        "Book a Product Readiness Call and leave with a clear, honest read on your risks and next steps — no catalog, no pressure.",
-      cta: "Book a Product Readiness Call",
+        "Book an Initial Assessment and leave with a clear, honest read of your risks and next steps — free for a limited time, with no commitment.",
+      cta: "Book an Initial Assessment",
     },
   },
   "pt-BR": {
     seo: {
       title: "Serviços | JOBE — Engenharia que Funciona",
       description:
-        "AI Productization Sprint, Fractional CTO & Arquitetura e SDLC Nativo em IA & Enablement de Engenharia — acessados por uma Product Readiness Call e um diagnóstico pago.",
+        "IA em Produção, CTO sob Demanda e Adoção de IA: engenharia sênior para levar produtos de IA à produção, liderar a tecnologia e trazer a IA para dentro da sua empresa com segurança.",
     },
     title: "Serviços",
     description:
-      "O trabalho da JOBE é uma progressão: conteúdo ou indicação, avaliação técnica inicial, diagnóstico pago e, então, uma oferta direcionada. O problema dominante decide o engajamento — você nunca escolhe entre oito serviços.",
+      "Todo trabalho começa com uma avaliação do seu produto e do seu contexto. A partir dela, a JOBE recomenda o caminho de maior impacto — você não precisa escolher em um catálogo.",
     items: {
       sprint: {
-        title: "AI Productization Sprint",
+        title: "IA em Produção",
         description:
-          "Resolve o problema mais urgente e de maior valor percebido: transformar um produto que ganhou tração em algo seguro, escalável e sustentável. Uma lente de segurança vem embutida, com variante mobile quando aplicável — incluindo resgate e modernização de React Native.",
+          "Para produtos de IA que ganharam tração e agora precisam se sustentar. A JOBE leva o produto da prova de conceito à produção — arquitetura, integrações, testes, CI/CD, observabilidade e segurança — para que ele cresça sem quebrar. Inclui Segurança para IA, para encontrar e corrigir os riscos específicos de aplicações com IA, e Resgate de Apps Mobile, para recuperar e modernizar apps React Native que ficaram frágeis ou difíceis de evoluir.",
       },
       fractional: {
-        title: "Fractional CTO & Arquitetura",
+        title: "CTO sob Demanda",
         description:
-          "Direção sênior recorrente de tecnologia: decisões de arquitetura, roadmaps e julgamento de engenharia sem uma contratação integral. Normalmente origina os projetos de implementação que vêm depois.",
+          "Liderança técnica sênior de forma recorrente, sem uma contratação em tempo integral. A JOBE toma decisões de arquitetura com você, define o roadmap técnico e estrutura o time e a arquitetura para crescer com segurança.",
       },
       enablement: {
-        title: "SDLC Nativo em IA & Enablement de Engenharia",
+        title: "Adoção de IA",
         description:
-          "Consultoria, treinamento e adoção de práticas para que times usem ferramentas de IA em todo o ciclo de desenvolvimento com segurança e produtividade — com Secure AI e governança como parte da prática.",
+          "Para empresas prontas para colocar a IA para trabalhar. Na engenharia, a JOBE leva agentes de IA para o ciclo de desenvolvimento — incluindo desenvolvimento orientado por especificações — com treinamento, práticas e controles de qualidade. Além da engenharia, ajuda outras áreas da empresa a adotar IA com segurança e governança desde o início.",
       },
     },
     crossSell: {
-      label: "Venda cruzada",
-      title: "AI Engineering Economics",
+      label: "Complemento",
+      title: "Custos de IA sob Controle",
       description:
-        "Para clientes com gasto relevante de LLM: controle de engenharia e econômico dos custos de IA. Oferecida como venda cruzada natural, nunca como quarta porta de entrada — a mensagem permanece focada.",
+        "Quando o gasto com LLMs se torna relevante, a JOBE ajuda a colocá-lo sob controle: visibilidade de para onde vai o dinheiro, escolhas de modelo e arquitetura adequadas a cada uso e práticas de engenharia que reduzem custos sem comprometer a qualidade. Disponível junto com qualquer um dos serviços acima.",
     },
     funnel: {
-      title: "Como o engajamento começa",
+      title: "Como todo trabalho começa",
       description:
-        "Todo engajamento segue a mesma sequência. O diagnóstico é pago e baseado em evidências; a conversa estruturada é o primeiro passo.",
+        "O mesmo caminho, seja qual for o problema: primeiro uma conversa, depois evidências, então execução.",
       steps: {
         call: {
-          title: "Product Readiness Call",
+          title: "Avaliação Inicial",
           description:
-            "Uma conversa estruturada de 30–45 minutos baseada nos seus relatos. Você recebe um resumo dos riscos percebidos, uma classificação preliminar do problema, próximos passos e um mini-scorecard.",
+            "Uma conversa estruturada de 30–45 minutos, baseada no que você compartilha sobre seu produto e seu contexto. Sem custo por tempo limitado. Você recebe um resumo dos riscos identificados, uma primeira classificação do problema, os próximos passos recomendados e uma avaliação resumida do seu produto.",
         },
         diagnosis: {
-          title: "Diagnóstico pago",
+          title: "Diagnóstico Técnico",
           description:
-            "Entrevistas, acesso ao repositório, revisão de arquitetura, análise de integrações, inspeção de CI/CD e ambientes, análise de segurança, avaliação de observabilidade, análise de custos de cloud e IA e identificação de riscos. Você recebe um scorecard detalhado, um diagrama da arquitetura, riscos priorizados, quick wins, um backlog, um plano de 30/60/90 dias, estimativas preliminares e uma apresentação executiva.",
+            "Uma análise aprofundada e baseada em evidências: entrevistas com founders e time, revisão do repositório e da arquitetura, integrações, CI/CD, testes e ambientes, segurança, observabilidade e custos de cloud e IA. Você recebe uma avaliação detalhada, um diagrama da arquitetura atual, riscos classificados por impacto e urgência, ganhos rápidos, um backlog priorizado, um plano de 30/60/90 dias, estimativas preliminares e uma apresentação executiva.",
         },
         engagement: {
-          title: "Oferta direcionada",
+          title: "Execução",
           description:
-            "O problema dominante escolhe a oferta, e a implementação vem em seguida — com fractional CTO, enablement do time e Secure AI e governança como a camada recorrente.",
+            "O problema principal define o caminho: IA em Produção, CTO sob Demanda ou Adoção de IA. Depois da implementação, a JOBE pode seguir como seu CTO sob demanda, continuar capacitando seu time e apoiar a segurança e a governança de IA.",
         },
       },
     },
     closing: {
       title: "Comece por uma conversa",
       description:
-        "Agende uma Product Readiness Call e saia com uma leitura clara e honesta dos seus riscos e próximos passos — sem catálogo, sem pressão.",
-      cta: "Agendar uma Product Readiness Call",
+        "Agende uma Avaliação Inicial e saia com uma leitura clara e honesta dos seus riscos e próximos passos — sem custo por tempo limitado e sem compromisso.",
+      cta: "Agendar Avaliação Inicial",
     },
   },
 } satisfies Record<SupportedLocale, ServicesTranslation>;

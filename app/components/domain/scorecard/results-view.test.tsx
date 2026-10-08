@@ -23,7 +23,7 @@ describe("ResultsView", () => {
 
     expect(
       await screen.findByText(
-        "Product Readiness Score: 94 out of 100. Readiness: Needs attention.",
+        "Production Readiness Score: 94 out of 100. Readiness: Needs attention.",
       ),
     ).toBeInTheDocument();
     expect(screen.getByText(copy.results.criticalBanner)).toBeVisible();
@@ -53,7 +53,7 @@ describe("ResultsView", () => {
     expect(screen.getAllByText("100%")).toHaveLength(6);
   });
 
-  it("builds a prefilled diagnostic email", async () => {
+  it("builds a prefilled assessment email", async () => {
     openShared("yyyyyyynyyyyyyyyyyyy");
 
     const cta = await screen.findByRole("link", {
@@ -61,8 +61,8 @@ describe("ResultsView", () => {
     });
     const href = decodeURIComponent(cta.getAttribute("href") ?? "");
 
-    expect(href).toMatch(/^mailto:joao@jobe\.works\?subject=/);
-    expect(href).toContain("Product Readiness Scorecard — 94/100");
+    expect(href).toMatch(/^mailto:contato@jobe\.works\?subject=/);
+    expect(href).toContain("Production Readiness Check — 94/100");
     expect(href).toContain("Readiness: Needs attention");
     expect(href).toContain("Main findings: Security — Critical risk");
     expect(href).toContain("Areas to verify: 0");

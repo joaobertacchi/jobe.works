@@ -193,7 +193,7 @@ test("keyboard traversal reaches navigation and visibly focused theme controls",
 test("CTA link exposes visible keyboard focus", async ({ page }) => {
   await page.goto("/en/");
   const link = page
-    .getByRole("link", { name: "Book a Product Readiness Call" })
+    .getByRole("link", { name: "Book an Initial Assessment" })
     .first();
   await tabTo(page, link);
   await expect(link).toBeFocused();
@@ -384,11 +384,11 @@ test("the Folded Atlas preserves its systems route on mobile", async ({
   ).toBeVisible();
   await expect(
     page.getByRole("img", {
-      name: "A product system routed through diagnosis",
+      name: "From product context to production",
     }),
   ).toBeVisible();
   await expect(
-    page.getByRole("link", { name: "Book a Product Readiness Call" }).first(),
+    page.getByRole("link", { name: "Book an Initial Assessment" }).first(),
   ).toBeVisible();
 
   const planeTops = await page

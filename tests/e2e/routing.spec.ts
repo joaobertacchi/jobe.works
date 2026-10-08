@@ -93,7 +93,7 @@ test("keeps localized Home content after hydration", async ({ page }) => {
   await expect(
     page
       .getByRole("region", { name: "Services" })
-      .getByText("Three offers, one method: evaluate first, then direct.", {
+      .getByText("Three ways to make engineering work for your business.", {
         exact: true,
       }),
   ).toBeVisible();

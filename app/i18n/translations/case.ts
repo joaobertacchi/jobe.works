@@ -59,8 +59,8 @@ export const caseTranslations = {
     scorecard: {
       title: "How does your product compare?",
       description:
-        "Take the 20-question Product Readiness Scorecard and see where your product stands.",
-      cta: "Take the scorecard",
+        "Take the 20-question Production Readiness Check and see where your product stands.",
+      cta: "Take the check",
     },
     subtitle:
       "Evolving real systems when the technical foundation starts to limit the business",
@@ -146,8 +146,8 @@ export const caseTranslations = {
     scorecard: {
       title: "Como seu produto se compara?",
       description:
-        "Responda ao Product Readiness Scorecard de 20 perguntas e veja onde seu produto está.",
-      cta: "Fazer o scorecard",
+        "Responda às 20 perguntas da Autoavaliação de Produção e veja onde seu produto está.",
+      cta: "Fazer a autoavaliação",
     },
     subtitle:
       "Evoluindo sistemas reais quando a base técnica começa a limitar o negócio",

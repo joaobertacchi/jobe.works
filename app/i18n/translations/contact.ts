@@ -39,26 +39,26 @@ export type ContactTranslation = {
 export const contactTranslations = {
   en: {
     seo: {
-      title: "Book a Product Readiness Call | JOBE — Engineering that Works",
+      title: "Book an Initial Assessment | JOBE — Engineering that Works",
       description:
-        "Start with a structured 30–45 minute conversation about your product and your context. Leave with a summary of perceived risks, a preliminary classification, next steps, and a mini-scorecard.",
+        "Start with a structured 30–45 minute conversation about your product and your context, free for a limited time. Leave with the main risks, a first classification of the problem, next steps, and a short scorecard.",
     },
-    title: "Book a Product Readiness Call",
+    title: "Book an Initial Assessment",
     description:
-      "A structured 30–45 minute conversation about your product, your symptoms, and your context — based on what you tell us. It is the first step of every engagement.",
+      "A structured 30–45 minute conversation about your product, what worries you, and your context. It is the first step of every JOBE engagement — and it is free for a limited time.",
     deliverablesTitle: "You leave with",
     deliverables: {
-      risks: "A summary of perceived risks",
-      classification: "A preliminary problem classification",
+      risks: "A summary of the risks identified",
+      classification: "A first classification of the problem",
       nextSteps: "Recommended next steps",
-      scorecard: "A mini-scorecard for your product",
+      scorecard: "A short scorecard of your product",
     },
-    scorecardPrompt: "Want a head start? Take the Product Readiness Scorecard",
+    scorecardPrompt: "Want a head start? Take the Production Readiness Check",
     bookByEmailTitle: "Book by email",
     bookByEmailDescription:
-      "Write a short note about your product and your context, and JOBE will reply by email to schedule your call.",
-    emailAddress: "joao@jobe.works",
-    emailSubject: "Product Readiness Call",
+      "Write a short note about your product and your context. JOBE replies by email to schedule your assessment.",
+    emailAddress: "contato@jobe.works",
+    emailSubject: "Initial Assessment",
     fields: {
       name: "Name",
       email: "Email",
@@ -66,9 +66,9 @@ export const contactTranslations = {
     },
     messagePlaceholder:
       "Briefly describe your product, its stage, and what concerns you.",
-    submit: "Book the call",
+    submit: "Book the assessment",
     submitting: "Sending...",
-    success: "Thanks. We will reply by email to schedule your call.",
+    success: "Thanks. JOBE will reply by email to schedule your assessment.",
     error: "We could not send your message. Keep your details and try again.",
     validation: {
       required: "This field is required.",
@@ -78,27 +78,26 @@ export const contactTranslations = {
   },
   "pt-BR": {
     seo: {
-      title:
-        "Agendar uma Product Readiness Call | JOBE — Engenharia que Funciona",
+      title: "Agendar Avaliação Inicial | JOBE — Engenharia que Funciona",
       description:
-        "Comece com uma conversa estruturada de 30–45 minutos sobre seu produto e seu contexto. Saia com um resumo dos riscos percebidos, uma classificação preliminar, próximos passos e um mini-scorecard.",
+        "Comece com uma conversa estruturada de 30–45 minutos sobre seu produto e seu contexto, sem custo por tempo limitado. Saia com os principais riscos, uma primeira classificação do problema, próximos passos e uma avaliação resumida.",
     },
-    title: "Agendar uma Product Readiness Call",
+    title: "Agendar Avaliação Inicial",
     description:
-      "Uma conversa estruturada de 30–45 minutos sobre seu produto, seus sintomas e seu contexto — baseada no que você nos conta. É o primeiro passo de todo engajamento.",
+      "Uma conversa estruturada de 30–45 minutos sobre seu produto, o que preocupa você e seu contexto. É o primeiro passo de todo trabalho da JOBE — e não tem custo por tempo limitado.",
     deliverablesTitle: "Você sai com",
     deliverables: {
-      risks: "Um resumo dos riscos percebidos",
-      classification: "Uma classificação preliminar do problema",
+      risks: "Um resumo dos riscos identificados",
+      classification: "Uma primeira classificação do problema",
       nextSteps: "Próximos passos recomendados",
-      scorecard: "Um mini-scorecard do seu produto",
+      scorecard: "Uma avaliação resumida do seu produto",
     },
-    scorecardPrompt: "Quer adiantar? Faça o Product Readiness Scorecard",
+    scorecardPrompt: "Quer adiantar? Faça a Autoavaliação de Produção",
     bookByEmailTitle: "Agende por e-mail",
     bookByEmailDescription:
-      "Escreva uma nota curta sobre seu produto e seu contexto, e a JOBE responderá por e-mail para agendar sua conversa.",
-    emailAddress: "joao@jobe.works",
-    emailSubject: "Product Readiness Call",
+      "Escreva uma nota curta sobre seu produto e seu contexto. A JOBE responde por e-mail para agendar sua avaliação.",
+    emailAddress: "contato@jobe.works",
+    emailSubject: "Avaliação Inicial",
     fields: {
       name: "Nome",
       email: "E-mail",
@@ -106,9 +105,10 @@ export const contactTranslations = {
     },
     messagePlaceholder:
       "Descreva brevemente seu produto, sua fase e o que o preocupa.",
-    submit: "Agendar a conversa",
+    submit: "Agendar a avaliação",
     submitting: "Enviando...",
-    success: "Obrigado. Responderemos por e-mail para agendar sua conversa.",
+    success:
+      "Obrigado. A JOBE responderá por e-mail para agendar sua avaliação.",
     error:
       "Não foi possível enviar sua mensagem. Mantenha seus dados e tente novamente.",
     validation: {

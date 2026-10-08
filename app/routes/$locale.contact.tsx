@@ -71,7 +71,7 @@ export default function Contact() {
             </div>
             <div>
               <TextLink
-                to={`mailto:joao@jobe.works?subject=${encodeURIComponent(
+                to={`mailto:${translate("contact.emailAddress")}?subject=${encodeURIComponent(
                   translate("contact.emailSubject"),
                 )}`}
               >

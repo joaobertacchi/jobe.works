@@ -39,7 +39,7 @@ describe("route SEO metadata", () => {
     const meta = scorecardMeta(args("/pt-BR/scorecard", "pt-BR"));
 
     expect(meta).toContainEqual({
-      title: "Product Readiness Scorecard | JOBE — Engenharia que Funciona",
+      title: "Autoavaliação de Produção | JOBE — Engenharia que Funciona",
     });
     expect(meta).not.toContainEqual({
       name: "robots",
@@ -58,7 +58,7 @@ describe("route SEO metadata", () => {
         "script:ld+json": expect.objectContaining({
           "@type": "Organization",
           name: "JOBE",
-          email: "joao@jobe.works",
+          email: "contato@jobe.works",
         }),
       }),
     );

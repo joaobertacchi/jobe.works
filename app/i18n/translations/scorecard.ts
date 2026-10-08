@@ -57,12 +57,12 @@ export type ScorecardTranslation = {
 export const scorecardTranslations = {
   en: {
     seo: {
-      title: "Product Readiness Scorecard | JOBE — Engineering that Works",
+      title: "Production Readiness Check | JOBE — Engineering that Works",
       description:
-        "A free 20-question scorecard for AI products in production: get a readiness score, critical risk flags, and the findings to address first.",
+        "A free 20-question check for AI products in production: get a readiness score, critical risk flags, and the issues to address first.",
     },
     intro: {
-      eyebrow: "Product Readiness Scorecard",
+      eyebrow: "Production Readiness Check",
       title: "Is your product ready for production?",
       description:
         "Twenty questions across delivery, testing, security, operations, recovery, performance, and privacy. Get a readiness score, the critical risks behind it, and where to look first.",
@@ -71,7 +71,7 @@ export const scorecardTranslations = {
         duration: "~4 minutes",
         signup: "No sign-up",
       },
-      start: "Start the scorecard",
+      start: "Start the check",
       note: "Answers stay in your browser.",
     },
     answers: {
@@ -204,14 +204,14 @@ export const scorecardTranslations = {
     navigation: {
       back: "Back",
       position: "Question %{current} of %{total}",
-      progress: "Scorecard progress",
+      progress: "Check progress",
       shortcutHint: "Tip: press 1–4 to answer",
     },
     results: {
       eyebrow: "Your result",
       readiness: "Readiness",
       scoreAnnouncement:
-        "Product Readiness Score: %{score} out of 100. Readiness: %{verdict}.",
+        "Production Readiness Score: %{score} out of 100. Readiness: %{verdict}.",
       criticalBanner:
         "Critical risk: at least one critical risk should be addressed before considering the product production-ready.",
       verdicts: {
@@ -296,8 +296,8 @@ export const scorecardTranslations = {
       nextStep: {
         title: "Discover which risks to fix first",
         description:
-          "Book a diagnostic conversation to review these findings and identify the highest-impact actions.",
-        cta: "Book a diagnostic conversation",
+          "Book an Initial Assessment to review these findings and identify the highest-impact actions.",
+        cta: "Book an Initial Assessment",
         strongTitle: "Keep it that way as you grow",
         strongDescription:
           "A short conversation can confirm the foundation and spot risks before they scale.",
@@ -305,28 +305,28 @@ export const scorecardTranslations = {
       },
     },
     mailto: {
-      subject: "Product Readiness Scorecard — %{score}/100",
-      body: "Hi João,\n\nI took the Product Readiness Scorecard and would like to book a diagnostic conversation.\n\nScore: %{score}/100\nReadiness: %{verdict}\nMain findings: %{findings}\nAreas to verify: %{unknowns}\n\nResult: %{url}\n",
+      subject: "Production Readiness Check — %{score}/100",
+      body: "Hello JOBE team,\n\nI took the Production Readiness Check and would like to book an Initial Assessment.\n\nScore: %{score}/100\nReadiness: %{verdict}\nMain findings: %{findings}\nAreas to verify: %{unknowns}\n\nResult: %{url}\n",
       none: "none",
     },
   },
   "pt-BR": {
     seo: {
-      title: "Product Readiness Scorecard | JOBE — Engenharia que Funciona",
+      title: "Autoavaliação de Produção | JOBE — Engenharia que Funciona",
       description:
-        "Um scorecard gratuito de 20 perguntas para produtos de IA em produção: receba um score de readiness, alertas de riscos críticos e os findings a tratar primeiro.",
+        "Uma autoavaliação gratuita de 20 perguntas para produtos de IA em produção: receba uma nota de prontidão, alertas de riscos críticos e os pontos a tratar primeiro.",
     },
     intro: {
-      eyebrow: "Product Readiness Scorecard",
+      eyebrow: "Autoavaliação de Produção",
       title: "Seu produto está pronto para produção?",
       description:
-        "Vinte perguntas sobre entrega, testes, segurança, operação, recuperação, desempenho e privacidade. Receba um score de readiness, os riscos críticos por trás dele e por onde começar.",
+        "Vinte perguntas sobre entrega, testes, segurança, operação, recuperação, desempenho e privacidade. Receba uma nota de prontidão, os riscos críticos por trás dela e por onde começar.",
       stats: {
         questions: "20 perguntas",
         duration: "~4 minutos",
         signup: "Sem cadastro",
       },
-      start: "Começar o scorecard",
+      start: "Começar a autoavaliação",
       note: "As respostas ficam no seu navegador.",
     },
     answers: {
@@ -459,14 +459,14 @@ export const scorecardTranslations = {
     navigation: {
       back: "Voltar",
       position: "Pergunta %{current} de %{total}",
-      progress: "Progresso do scorecard",
+      progress: "Progresso da autoavaliação",
       shortcutHint: "Dica: use as teclas 1–4 para responder",
     },
     results: {
       eyebrow: "Seu resultado",
-      readiness: "Readiness",
+      readiness: "Prontidão",
       scoreAnnouncement:
-        "Product Readiness Score: %{score} de 100. Readiness: %{verdict}.",
+        "Nota de prontidão para produção: %{score} de 100. Prontidão: %{verdict}.",
       criticalBanner:
         "Risco crítico: existe pelo menos um risco crítico que deve ser tratado antes de considerar o produto pronto para produção.",
       verdicts: {
@@ -497,9 +497,9 @@ export const scorecardTranslations = {
         },
       },
       categoriesTitle: "Por categoria",
-      findingsTitle: "Principais findings",
+      findingsTitle: "Principais pontos de atenção",
       noFindings:
-        "Nenhum finding relevante. Suas respostas indicam uma base sólida.",
+        "Nenhum ponto de atenção relevante. Suas respostas indicam uma base sólida.",
       severities: {
         criticalRisk: "Risco crítico",
         criticalGap: "Lacuna crítica",
@@ -551,8 +551,8 @@ export const scorecardTranslations = {
       nextStep: {
         title: "Descubra quais riscos corrigir primeiro",
         description:
-          "Agende uma conversa de diagnóstico para revisar os principais findings e identificar as ações de maior impacto.",
-        cta: "Agendar conversa de diagnóstico",
+          "Agende uma Avaliação Inicial para revisar os principais pontos de atenção e identificar as ações de maior impacto.",
+        cta: "Agendar Avaliação Inicial",
         strongTitle: "Mantenha essa base enquanto cresce",
         strongDescription:
           "Uma conversa curta pode confirmar essa base e identificar riscos antes que escalem.",
@@ -560,8 +560,8 @@ export const scorecardTranslations = {
       },
     },
     mailto: {
-      subject: "Product Readiness Scorecard — %{score}/100",
-      body: "Olá João,\n\nFiz o Product Readiness Scorecard e gostaria de agendar uma conversa de diagnóstico.\n\nScore: %{score}/100\nReadiness: %{verdict}\nPrincipais findings: %{findings}\nÁreas para verificar: %{unknowns}\n\nResultado: %{url}\n",
+      subject: "Autoavaliação de Produção — %{score}/100",
+      body: "Olá, equipe JOBE,\n\nFiz a Autoavaliação de Produção e gostaria de agendar uma Avaliação Inicial.\n\nNota: %{score}/100\nProntidão: %{verdict}\nPrincipais pontos de atenção: %{findings}\nÁreas para verificar: %{unknowns}\n\nResultado: %{url}\n",
       none: "nenhum",
     },
   },

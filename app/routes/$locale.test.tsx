@@ -168,18 +168,20 @@ describe("localized route layout", () => {
     renderLocalizedRoute("/en/");
 
     const heroLinks = await screen.findAllByRole("link", {
-      name: /Take the readiness scorecard/,
+      name: /Take the Production Readiness Check/,
     });
     expect(heroLinks[0]).toHaveAttribute("href", "/en/scorecard");
     expect(
-      screen.getByRole("link", { name: /Start with the 4-minute scorecard/ }),
+      screen.getByRole("link", {
+        name: /Take the 4-minute Production Readiness Check/,
+      }),
     ).toHaveAttribute("href", "/en/scorecard");
   });
 
   it("links the case study and contact pages to the scorecard", async () => {
     renderLocalizedRoute("/pt-BR/case");
     expect(
-      await screen.findByRole("link", { name: "Fazer o scorecard" }),
+      await screen.findByRole("link", { name: "Fazer a autoavaliação" }),
     ).toHaveAttribute("href", "/pt-BR/scorecard");
   });
 
@@ -187,7 +189,7 @@ describe("localized route layout", () => {
     renderLocalizedRoute("/en/contact");
     expect(
       await screen.findByRole("link", {
-        name: "Want a head start? Take the Product Readiness Scorecard",
+        name: "Want a head start? Take the Production Readiness Check",
       }),
     ).toHaveAttribute("href", "/en/scorecard");
   });
@@ -198,11 +200,11 @@ describe("localized route layout", () => {
     expect(
       await screen.findByRole("heading", {
         level: 1,
-        name: "Product Readiness Scorecard",
+        name: "Autoavaliação de Produção",
       }),
     ).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "Começar o scorecard" }),
+      screen.getByRole("button", { name: "Começar a autoavaliação" }),
     ).toBeVisible();
   });
 
@@ -239,7 +241,7 @@ describe("localized route layout", () => {
     ]);
 
     const heroCtas = await screen.findAllByRole("link", {
-      name: "Book a Product Readiness Call",
+      name: "Book an Initial Assessment",
     });
 
     fireEvent.click(heroCtas[0]);
@@ -266,13 +268,13 @@ describe("localized route layout", () => {
   it.each([
     [
       "/en/",
-      "A product system routed through diagnosis",
-      "Evaluate first. Direct the right engagement second.",
+      "From product context to production",
+      "Founder. 20+ years taking products to production, leading teams of 50+ engineers and delivering critical applications for global brands.",
     ],
     [
       "/pt-BR/",
-      "Um sistema de produto direcionado pelo diagnóstico",
-      "Avaliar primeiro. Direcionar o engajamento certo depois.",
+      "Do contexto do produto à produção",
+      "Fundador. Mais de 20 anos levando produtos à produção, liderando times de mais de 50 engenheiros e entregando aplicações críticas para marcas globais.",
     ],
   ])(
     "renders the localized Systems Wayfinding evidence on %s",
@@ -331,9 +333,20 @@ describe("localized route layout", () => {
     ).toBeVisible();
     expect(
       screen.getByText(
-        "JOBE une JOão e BErtacchi — com uma leitura secundária da palavra job: o trabalho em si. O slogan carrega a mesma ambiguidade: engenharia que funciona, Jobe Works, jobe.works.",
+        "JOBE vem de JOão e BErtacchi — com um aceno à palavra job, o trabalho em si. O slogan carrega o mesmo duplo sentido: engenharia que funciona, a obra da JOBE, jobe.works.",
       ),
     ).toBeVisible();
+    expect(
+      screen.getByRole("heading", { level: 2, name: "O fundador" }),
+    ).toBeVisible();
+    expect(
+      screen.getByText(/^Como Diretor de Tecnologia na ProFUSION/),
+    ).toBeVisible();
+    for (const link of screen.getAllByRole("link", {
+      name: "contato@jobe.works",
+    })) {
+      expect(link).toHaveAttribute("href", "mailto:contato@jobe.works");
+    }
   });
 
   it.each(["/en/case", "/pt-BR/case"])(
@@ -357,16 +370,16 @@ describe("localized route layout", () => {
 
     expect(
       await screen.findByRole("heading", {
-        name: "Agendar uma Product Readiness Call",
+        name: "Agendar Avaliação Inicial",
       }),
     ).toBeVisible();
     expect(
       within(screen.getByRole("main")).getByRole("link", {
-        name: "joao@jobe.works",
+        name: "contato@jobe.works",
       }),
     ).toHaveAttribute(
       "href",
-      expect.stringContaining("mailto:joao@jobe.works"),
+      expect.stringContaining("mailto:contato@jobe.works"),
     );
   });
 

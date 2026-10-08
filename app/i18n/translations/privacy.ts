@@ -45,7 +45,7 @@ export const privacyTranslations = {
       },
       purpose: {
         title: "Email contact",
-        body: "The site invites inquiries by email at joao@jobe.works, used to respond to your inquiry and, when relevant, to schedule a Product Readiness Call. No form on this site collects your name, email address, or message into a site-owned system.",
+        body: "The site invites inquiries by email at contato@jobe.works, used to respond to your inquiry and, when relevant, to schedule an Initial Assessment. No form on this site collects your name, email address, or message into a site-owned system.",
       },
       storage: {
         title: "Local preferences",
@@ -77,7 +77,7 @@ export const privacyTranslations = {
       },
       rights: {
         title: "Your choices",
-        body: "You can change or withdraw your consent choices at any time using the Cookie settings control in the footer. To exercise your data rights, write to joao@jobe.works.",
+        body: "You can change or withdraw your consent choices at any time using the Cookie settings control in the footer. To exercise your data rights, write to contato@jobe.works.",
       },
     },
   },
@@ -101,7 +101,7 @@ export const privacyTranslations = {
       },
       purpose: {
         title: "Contato por e-mail",
-        body: "O site convida a contatos por e-mail em joao@jobe.works, usados para responder à sua solicitação e, quando relevante, agendar uma Product Readiness Call. Nenhum formulário deste site coleta seu nome, e-mail ou mensagem em um sistema próprio.",
+        body: "O site convida a contatos por e-mail em contato@jobe.works, usados para responder à sua solicitação e, quando relevante, agendar uma Avaliação Inicial. Nenhum formulário deste site coleta seu nome, e-mail ou mensagem em um sistema próprio.",
       },
       storage: {
         title: "Preferências locais",
@@ -133,7 +133,7 @@ export const privacyTranslations = {
       },
       rights: {
         title: "Suas escolhas",
-        body: "Você pode alterar ou retirar suas escolhas de consentimento a qualquer momento pelo controle de Configurações de cookies no rodapé. Para exercer seus direitos sobre dados, escreva para joao@jobe.works.",
+        body: "Você pode alterar ou retirar suas escolhas de consentimento a qualquer momento pelo controle de Configurações de cookies no rodapé. Para exercer seus direitos sobre dados, escreva para contato@jobe.works.",
       },
     },
   },

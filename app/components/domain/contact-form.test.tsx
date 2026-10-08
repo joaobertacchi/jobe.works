@@ -60,7 +60,9 @@ describe("ContactForm", () => {
     expect(screen.getByLabelText("Email")).toBeRequired();
     expect(screen.getByLabelText("Message")).toBeRequired();
 
-    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Book the assessment" }),
+    );
 
     expect(screen.getAllByText("This field is required.")).toHaveLength(3);
     expect(screen.getByRole("status")).toHaveTextContent(
@@ -71,7 +73,9 @@ describe("ContactForm", () => {
     fireEvent.change(screen.getByLabelText("Email"), {
       target: { value: "invalid" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Book the assessment" }),
+    );
 
     expect(screen.getByText("Enter a valid email address.")).toBeVisible();
     expect(mocks.submitExampleContact).not.toHaveBeenCalled();
@@ -83,7 +87,9 @@ describe("ContactForm", () => {
     expect(liveRegion).toBeEmptyDOMElement();
     fillEnglishFields();
 
-    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Book the assessment" }),
+    );
 
     await waitFor(() =>
       expect(mocks.submitExampleContact).toHaveBeenCalledTimes(1),
@@ -99,7 +105,7 @@ describe("ContactForm", () => {
       [{ eventName: "lead_submitted", formId: "contact-form" }],
     ]);
     expect(liveRegion).toHaveTextContent(
-      "Thanks. We will reply by email to schedule your call.",
+      "Thanks. JOBE will reply by email to schedule your assessment.",
     );
     expect(screen.getByLabelText("Name")).toHaveValue("");
     expect(screen.getByLabelText("Email")).toHaveValue("");
@@ -121,7 +127,9 @@ describe("ContactForm", () => {
     renderForm();
     fillEnglishFields();
 
-    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Book the assessment" }),
+    );
     fireEvent.click(screen.getByRole("button", { name: "Sending..." }));
 
     const button = screen.getByRole("button", { name: "Sending..." });
@@ -132,7 +140,7 @@ describe("ContactForm", () => {
     await waitFor(() =>
       expect(
         screen.getByText(
-          "Thanks. We will reply by email to schedule your call.",
+          "Thanks. JOBE will reply by email to schedule your assessment.",
         ),
       ).toBeVisible(),
     );
@@ -142,16 +150,20 @@ describe("ContactForm", () => {
     renderForm();
     fillEnglishFields();
 
-    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Book the assessment" }),
+    );
 
     const liveRegion = screen.getByRole("status");
     await waitFor(() =>
       expect(liveRegion).toHaveTextContent(
-        "Thanks. We will reply by email to schedule your call.",
+        "Thanks. JOBE will reply by email to schedule your assessment.",
       ),
     );
 
-    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Book the assessment" }),
+    );
 
     expect(liveRegion).toHaveTextContent("Check the highlighted fields.");
     expect(screen.getAllByText("This field is required.")).toHaveLength(3);
@@ -167,7 +179,9 @@ describe("ContactForm", () => {
     expect(liveRegion).toBeEmptyDOMElement();
     fillEnglishFields();
 
-    fireEvent.click(screen.getByRole("button", { name: "Book the call" }));
+    fireEvent.click(
+      screen.getByRole("button", { name: "Book the assessment" }),
+    );
 
     await waitFor(() =>
       expect(liveRegion).toHaveTextContent(
@@ -189,7 +203,7 @@ describe("ContactForm", () => {
     expect(screen.getByLabelText("E-mail")).toBeVisible();
     expect(screen.getByLabelText("Mensagem")).toBeVisible();
     expect(
-      screen.getByRole("button", { name: "Agendar a conversa" }),
+      screen.getByRole("button", { name: "Agendar a avaliação" }),
     ).toBeVisible();
   });
 
