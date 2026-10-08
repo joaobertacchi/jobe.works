@@ -12,10 +12,14 @@ CI deploys `build/client` to GitHub Pages with the official Pages actions after 
 
 The site is served from the custom domain `https://jobe.works`, matching the default `SITE_ORIGIN`, because the build emits root-absolute URLs.
 
-GitHub Pages serves unknown paths with a root `404.html`. The workflow copies `pt-BR/404/index.html` to `404.html` after validation; the portable artifact produced by `finalizeStaticBuild` is unchanged.
+After validation, `scripts/stage-github-pages.ts` adapts the artifact to GitHub Pages hosting conventions; the portable artifact produced by `finalizeStaticBuild` is unchanged:
+
+- GitHub Pages answers `/en/about` with a `301` to `/en/about/` when the page is stored as `en/about/index.html`, and the client router treats trailing-slash inner paths as not found. Each inner page is therefore moved to `<locale>/<page>.html`, which Pages serves at the canonical extensionless URL. Root and locale home pages keep their `index.html`, matching their trailing-slash canonical URLs.
+- GitHub Pages serves unknown paths with a root `404.html`, copied from the `pt-BR` not-found page.
 
 ## Consequences
 
 - Moving to another host requires only replacing the deploy job; the build is untouched.
-- GitHub Pages redirects extensionless directory URLs (for example `/en/about`) to a trailing-slash form. Any change to canonical URL shape to avoid that redirect is a separate SEO decision under ADR 019.
+- Nested inner pages (for example `/en/guides/setup`) would make flattening ambiguous; the staging script fails the deploy until that case is designed.
+- Unknown paths under `/en/` render the Portuguese not-found page, because GitHub Pages supports one root `404.html`.
 - Pages settings (source, custom domain, HTTPS) and DNS live outside the repository and are documented in the README.

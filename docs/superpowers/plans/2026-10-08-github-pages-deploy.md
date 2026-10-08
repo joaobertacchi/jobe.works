@@ -246,7 +246,7 @@ for p in / /pt-BR/ /en/ /en/about /en/about/ /sitemap.xml /robots.txt /favicon.s
 done
 curl -s https://jobe.works/does-not-exist | grep -o '<title>[^<]*'
 ```
-Expected: `200` for `/`, `/pt-BR/`, `/en/`, `/en/about/`, `/sitemap.xml`, `/robots.txt`, `/favicon.svg`; `404` for `/does-not-exist` with the localized not-found `<title>`; `/en/about` either `200` or a single `301` to `/en/about/`. Write the observed `/en/about` result into the Consequences of ADR 026 (commit `docs: note observed Pages redirect behavior`).
+Expected: `200` for `/`, `/pt-BR/`, `/en/`, `/en/about/`, `/sitemap.xml`, `/robots.txt`, `/favicon.svg`; `404` for `/does-not-exist` with the localized not-found `<title>`; `/en/about` `200` with no redirect (served from `en/about.html` by the staging script added after final review).
 
 - [ ] **Step 4: Verify a PR does not deploy**
 
