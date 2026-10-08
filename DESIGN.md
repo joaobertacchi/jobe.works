@@ -229,6 +229,10 @@ An accessible SVG frame (`.systems-topology`) rendering the engineering system a
 
 `.atlas-case` is a full-bleed deep-blue plate: left copy (index name, headline, description) and right the Evidence Ledger. Its figures come only from the published case study; it points to the real case via a white "Ver estudo de caso" action.
 
+### Founder Portrait
+
+`.atlas-portrait` on About: a 4:5 photograph inside a chamfered plate — 1px `--atlas-blue` rim, `--atlas-plate-clip` notches, no shadow or rounding — with a Barlow uppercase caption (name · role). It sits beside the founder text at ≥48rem (15rem column) and above it on phones (≤20rem). Derivatives are AVIF + WebP at 320/480/640w, each ≤24 KB, generated offline with ImageMagick from the original and imported through Vite; never place photographs in `public/`.
+
 ### Navigation
 
 Site header uses a `.site-header__inner` grid (wordmark / primary nav / utilities), a 2px brand underline accent, and compressed uppercase nav items. The primary nav lists every content destination (Services, Case study, Readiness Check, About); the current page is marked with `aria-current="page"` and a brand color plus a 2px inset underline, computed from the trailing-slash-normalized pathname so prerendered HTML and the hydrated page agree. Utilities hold the language switcher and a persistent compact `ui-action` booking call (`.site-header__cta`) to Contact. Nav links and utilities keep 2.75rem touch targets. On narrower viewports the nav wraps to a full-width row under the identity row.
