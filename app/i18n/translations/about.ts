@@ -34,11 +34,11 @@ export const aboutTranslations = {
     seo: {
       title: "About JOBE | Engineering that Works",
       description:
-        "JOBE is a senior engineering consultancy founded by João Bertacchi. It takes AI products to production, rescues mobile apps, and structures teams and architecture to grow safely.",
+        "JOBE is a senior engineering consultancy founded by João Bertacchi. It takes AI products to production, rescues fragile systems and mobile apps, and structures teams and architecture to grow safely.",
     },
     title: "About JOBE",
     description:
-      "JOBE is a senior engineering consultancy founded by João Bertacchi. It helps companies take AI products from proof of concept to production, recover and modernize mobile apps, and structure teams and architecture to grow safely.",
+      "JOBE is a senior engineering consultancy founded by João Bertacchi. It helps companies take AI products from proof of concept to production, recover and modernize systems and mobile apps, and structure teams and architecture to grow safely.",
     sections: {
       name: {
         title: "The name",
@@ -83,11 +83,11 @@ export const aboutTranslations = {
     seo: {
       title: "Sobre a JOBE | Engenharia que Funciona",
       description:
-        "A JOBE é uma consultoria de engenharia sênior fundada por João Bertacchi. Leva produtos de IA à produção, resgata apps mobile e estrutura times e arquitetura para crescer com segurança.",
+        "A JOBE é uma consultoria de engenharia sênior fundada por João Bertacchi. Leva produtos de IA à produção, resgata sistemas frágeis e apps mobile e estrutura times e arquitetura para crescer com segurança.",
     },
     title: "Sobre a JOBE",
     description:
-      "A JOBE é uma consultoria de engenharia sênior fundada por João Bertacchi. Ajuda empresas a levar produtos com IA da prova de conceito para a produção, recuperar e modernizar apps mobile e estruturar times e arquitetura para crescer com segurança.",
+      "A JOBE é uma consultoria de engenharia sênior fundada por João Bertacchi. Ajuda empresas a levar produtos com IA da prova de conceito para a produção, recuperar e modernizar sistemas e apps mobile e estruturar times e arquitetura para crescer com segurança.",
     sections: {
       name: {
         title: "O nome",

@@ -62,7 +62,7 @@ export const homeTranslations = {
     seo: {
       title: "JOBE — Engineering that Works",
       description:
-        "JOBE takes AI products from proof of concept to production, rescues mobile apps, and helps companies adopt AI safely. Senior engineering for founders whose products need to hold up for real users and for the business.",
+        "JOBE takes AI products from proof of concept to production, rescues fragile systems and mobile apps, and helps companies adopt AI safely. Senior engineering for founders whose products need to hold up for real users and for the business.",
     },
     hero: {
       title: "Engineering that Works",
@@ -98,7 +98,7 @@ export const homeTranslations = {
         sprint: {
           title: "AI to Production",
           description:
-            "Your AI product gained traction. JOBE makes it secure, scalable, and sustainable — with AI Security Review and Mobile App Rescue when you need them.",
+            "Your AI product gained traction. JOBE makes it secure, scalable, and sustainable — with AI Security Review and System Rescue when you need them.",
         },
         fractional: {
           title: "Fractional CTO",
@@ -149,7 +149,7 @@ export const homeTranslations = {
     seo: {
       title: "JOBE — Engenharia que Funciona",
       description:
-        "A JOBE leva produtos de IA da prova de conceito à produção, resgata apps mobile e ajuda empresas a adotar IA com segurança. Engenharia sênior para founders cujos produtos precisam se sustentar para usuários reais e para o negócio.",
+        "A JOBE leva produtos de IA da prova de conceito à produção, resgata sistemas frágeis e apps mobile e ajuda empresas a adotar IA com segurança. Engenharia sênior para founders cujos produtos precisam se sustentar para usuários reais e para o negócio.",
     },
     hero: {
       title: "Engenharia que Funciona",
@@ -186,7 +186,7 @@ export const homeTranslations = {
         sprint: {
           title: "IA em Produção",
           description:
-            "Seu produto de IA ganhou tração. A JOBE o torna seguro, escalável e sustentável — com Segurança para IA e Resgate de Apps Mobile quando você precisar.",
+            "Seu produto de IA ganhou tração. A JOBE o torna seguro, escalável e sustentável — com Segurança para IA e Resgate de Sistemas quando você precisar.",
         },
         fractional: {
           title: "CTO sob Demanda",

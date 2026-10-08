@@ -56,7 +56,7 @@ export const servicesTranslations = {
       sprint: {
         title: "AI to Production",
         description:
-          "For AI products that gained traction and now need to hold up. JOBE takes the product from proof of concept to production — architecture, integrations, tests, CI/CD, observability, and security — so it can grow without breaking. Includes AI Security Review, to find and fix the risks specific to AI applications, and Mobile App Rescue, to recover and modernize React Native apps that have become fragile or hard to evolve.",
+          "For AI products that gained traction and now need to hold up. JOBE takes the product from proof of concept to production — architecture, integrations, tests, CI/CD, observability, and security — so it can grow without breaking. Includes AI Security Review, to find and fix the risks specific to AI applications, and System Rescue, to recover and modernize systems that have become fragile or hard to evolve — from backends and integrations to mobile apps.",
       },
       fractional: {
         title: "Fractional CTO",
@@ -117,7 +117,7 @@ export const servicesTranslations = {
       sprint: {
         title: "IA em Produção",
         description:
-          "Para produtos de IA que ganharam tração e agora precisam se sustentar. A JOBE leva o produto da prova de conceito à produção — arquitetura, integrações, testes, CI/CD, observabilidade e segurança — para que ele cresça sem quebrar. Inclui Segurança para IA, para encontrar e corrigir os riscos específicos de aplicações com IA, e Resgate de Apps Mobile, para recuperar e modernizar apps React Native que ficaram frágeis ou difíceis de evoluir.",
+          "Para produtos de IA que ganharam tração e agora precisam se sustentar. A JOBE leva o produto da prova de conceito à produção — arquitetura, integrações, testes, CI/CD, observabilidade e segurança — para que ele cresça sem quebrar. Inclui Segurança para IA, para encontrar e corrigir os riscos específicos de aplicações com IA, e Resgate de Sistemas, para recuperar e modernizar sistemas que ficaram frágeis ou difíceis de evoluir — de backends e integrações a apps mobile.",
       },
       fractional: {
         title: "CTO sob Demanda",
