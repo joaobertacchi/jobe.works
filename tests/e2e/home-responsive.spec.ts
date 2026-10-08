@@ -77,6 +77,90 @@ test("mobile atlas keeps the indexed decision sequence and diagnosis geometry vi
   ).toBeLessThan(1);
 });
 
+test("method section headings never run into their description", async ({
+  page,
+}) => {
+  for (const width of [900, 1152, 1440, 1600, 1920]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const path of ["/pt-BR/", "/en/", "/pt-BR/services", "/en/services"]) {
+      await page.goto(path);
+      await page.evaluate(async () => {
+        await document.fonts.ready;
+      });
+      const layout = await page.evaluate(() => ({
+        fits: document.documentElement.scrollWidth <= window.innerWidth,
+        headings: [...document.querySelectorAll(".atlas-section__heading")].map(
+          (heading) => {
+            const title = heading.querySelector("h2");
+            const description = heading.querySelector("p");
+            if (!title || !description) throw new Error("Incomplete heading");
+            const ink = document.createRange();
+            ink.selectNodeContents(title);
+            const titleRect = title.getBoundingClientRect();
+            const descriptionRect = description.getBoundingClientRect();
+            return {
+              inkRight: ink.getBoundingClientRect().right,
+              descriptionLeft: descriptionRect.left,
+              sameRow: descriptionRect.top < titleRect.bottom,
+            };
+          },
+        ),
+      }));
+
+      expect(layout.fits, `${path} @ ${width}px`).toBe(true);
+      for (const heading of layout.headings) {
+        if (!heading.sameRow) continue;
+        expect(heading.inkRight, `${path} @ ${width}px`).toBeLessThanOrEqual(
+          heading.descriptionLeft,
+        );
+      }
+    }
+  }
+});
+
+test("diagnosis stop keeps its index and node above its highlight and route", async ({
+  page,
+}) => {
+  for (const [width, path] of [
+    [1440, "/en/"],
+    [1440, "/en/services"],
+    [390, "/en/"],
+  ] as const) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(path);
+    const diagnosis = page.locator(".atlas-method-stop.is-diagnosis");
+    await diagnosis.scrollIntoViewIfNeeded();
+    await expect(diagnosis.locator(".atlas-method-stop__index")).toHaveText(
+      "02",
+    );
+
+    const visibility = await diagnosis.evaluate((stop) => {
+      const index = stop.querySelector<HTMLElement>(
+        ".atlas-method-stop__index",
+      );
+      const node = stop.querySelector<HTMLElement>(".atlas-method-stop__node");
+      if (!index || !node) throw new Error("Diagnosis stop is incomplete");
+      const hit = (element: HTMLElement) => {
+        const rect = element.getBoundingClientRect();
+        const target = document.elementFromPoint(
+          rect.left + rect.width / 2,
+          rect.top + rect.height / 2,
+        );
+        return target === element || element.contains(target);
+      };
+      return {
+        clipPath: getComputedStyle(stop).clipPath,
+        indexVisible: hit(index),
+        nodeOnTop: hit(node),
+      };
+    });
+
+    expect(visibility.clipPath, `${path} @ ${width}px`).toBe("none");
+    expect(visibility.indexVisible, `${path} @ ${width}px`).toBe(true);
+    expect(visibility.nodeOnTop, `${path} @ ${width}px`).toBe(true);
+  }
+});
+
 test("tablet header uses an intentional identity row and navigation row", async ({
   page,
 }) => {
@@ -371,8 +455,10 @@ for (const theme of ["light", "dark"] as const) {
         caseMutedForeground: styles(
           ".atlas-case__copy > p:not(.atlas-index-name)",
         ).color,
-        diagnosisBackground: styles(".atlas-method-stop.is-diagnosis")
-          .backgroundColor,
+        diagnosisBackground: styles(
+          ".atlas-method-stop.is-diagnosis",
+          "::before",
+        ).backgroundColor,
         diagnosisForeground: styles(".atlas-method-stop.is-diagnosis h3").color,
         paperBackground: styles(".atlas-method").backgroundColor,
         routeForeground: styles(".atlas-inline-link").color,

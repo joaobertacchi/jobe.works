@@ -746,7 +746,7 @@ body {
 .atlas-section__heading {
   display: grid;
   max-width: 70rem;
-  grid-template-columns: minmax(12rem, 0.7fr) minmax(18rem, 1fr) auto;
+  grid-template-columns: minmax(min-content, 0.7fr) minmax(16rem, 1fr) auto;
   align-items: end;
   gap: 2rem;
 }
@@ -975,7 +975,16 @@ body {
   left: clamp(1rem, 3vw, 2.5rem);
 }
 
-.atlas-method-stop.is-diagnosis {
+/*
+ * The highlight is clipped on a pseudo-element, not the stop: clipping the
+ * stop would cut off its index and node, and would trap the node beneath the
+ * route line in its own stacking context.
+ */
+.atlas-method-stop.is-diagnosis::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  content: "";
   background: var(--atlas-diagnosis);
   clip-path: polygon(
     var(--atlas-chamfer) 0,
@@ -989,8 +998,9 @@ body {
   );
 }
 
-.dark .atlas-method-stop.is-diagnosis {
-  background: var(--atlas-diagnosis);
+.atlas-method-stop.is-diagnosis > h3,
+.atlas-method-stop.is-diagnosis > p {
+  position: relative;
 }
 
 .atlas-method-stop.is-diagnosis .atlas-method-stop__node {
@@ -1189,7 +1199,7 @@ body:has([data-consent-banner]) {
   }
 
   .atlas-section__heading {
-    grid-template-columns: 0.75fr 1.25fr;
+    grid-template-columns: minmax(min-content, 0.75fr) minmax(0, 1.25fr);
   }
 
   .atlas-inline-link {
@@ -1387,33 +1397,13 @@ body:has([data-consent-banner]) {
   }
 
   .atlas-method-stop.is-diagnosis {
-    isolation: isolate;
     margin-left: -0.75rem;
     padding: 1.5rem 1rem 3.5rem 2.25rem;
-    background: transparent;
-    clip-path: none;
   }
 
-  .atlas-method-stop.is-diagnosis::before {
-    position: absolute;
-    z-index: -1;
-    inset: 0;
-    content: "";
-    background: var(--atlas-diagnosis);
-    clip-path: polygon(
-      var(--atlas-chamfer) 0,
-      calc(100% - var(--atlas-chamfer)) 0,
-      100% var(--atlas-chamfer),
-      100% calc(100% - var(--atlas-chamfer)),
-      calc(100% - var(--atlas-chamfer)) 100%,
-      var(--atlas-chamfer) 100%,
-      0 calc(100% - var(--atlas-chamfer)),
-      0 var(--atlas-chamfer)
-    );
-  }
-
-  .dark .atlas-method-stop.is-diagnosis::before {
-    background: var(--atlas-diagnosis);
+  .atlas-method-stop.is-diagnosis .atlas-method-stop__index {
+    position: relative;
+    top: 0;
   }
 
   .atlas-method-stop.is-diagnosis .atlas-method-stop__node {
