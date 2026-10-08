@@ -1,5 +1,5 @@
 import {
-  useEffect,
+  useLayoutEffect,
   useRef,
   type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
@@ -67,11 +67,11 @@ export function QuestionStep({
   const headingId = `scorecard-question-${question.id}`;
   const focusIndex = selected ? options.indexOf(selected) : 0;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     headingRef.current?.focus();
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
       const answer = shortcutAnswer(event, options);
       if (!answer) return;
