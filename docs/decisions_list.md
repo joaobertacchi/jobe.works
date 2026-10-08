@@ -35,6 +35,7 @@ docs/adrs/
 | P019 | Agent Documentation and Mechanical Guardrails | Covered by ADR 022 | [ADR 022](adrs/022-agent-documentation-and-architecture-review.md) |
 | P020 | Agent Effectiveness Metrics and Evaluation | Accepted | [ADR 024](adrs/024-agent-effectiveness-metrics-and-evaluation.md) |
 | P021 | Fork Documentation Lifecycle | Accepted | [ADR 025](adrs/025-fork-documentation-lifecycle.md) |
+| P022 | Deployment Target | Accepted | [ADR 026](adrs/026-github-pages-deployment.md) |
 
 ---
 

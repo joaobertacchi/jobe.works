@@ -149,6 +149,15 @@ Deploy the contents of `build/client` to any conventional static web server or s
 
 Configure unknown paths as normal static-server 404 responses. Do not configure an SPA fallback to `index.html`; every public route is prerendered to its own static HTML artifact.
 
+### GitHub Pages
+
+Pushes to `main` deploy automatically through `.github/workflows/ci.yml` once validation and browser tests pass. One-time setup:
+
+1. Enable Pages with GitHub Actions as the source: `gh api -X POST repos/<owner>/<repo>/pages -f build_type=workflow`.
+2. Set the custom domain: `gh api -X PUT repos/<owner>/<repo>/pages -f cname=jobe.works`.
+3. Point DNS for the apex domain to GitHub Pages (`A` 185.199.108–111.153, `AAAA` 2606:50c0:8000–8003::153).
+4. Enforce HTTPS once the certificate is issued: `gh api -X PUT repos/<owner>/<repo>/pages -F https_enforced=true`.
+
 ## Command Reference
 
 | Command               | Purpose                                        |

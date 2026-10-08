@@ -33,7 +33,7 @@ Accepted ADRs remain active after forking. Fork-specific architectural decisions
 
 | Concern | Decisions |
 |---|---|
-| Product and static deployment boundaries | [ADR 002](adrs/002-marketing-content-sites.md), [ADR 003](adrs/003-static-build-output.md), [ADR 004](adrs/004-provider-neutral-deployment.md), [ADR 005](adrs/005-backend-policy.md) |
+| Product and static deployment boundaries | [ADR 002](adrs/002-marketing-content-sites.md), [ADR 003](adrs/003-static-build-output.md), [ADR 004](adrs/004-provider-neutral-deployment.md), [ADR 005](adrs/005-backend-policy.md), [ADR 026](adrs/026-github-pages-deployment.md) |
 | Framework, routing, and reuse | [ADR 001](adrs/001-react-foundation.md), [ADR 007](adrs/007-react-router-framework.md), [ADR 008](adrs/008-routing-and-static-generation.md), [ADR 009](adrs/009-reuse-model.md) |
 | Agent and documentation model | [ADR 006](adrs/006-ai-agent-harness.md), [ADR 010](adrs/010-agent-contract.md), [ADR 022](adrs/022-agent-documentation-and-architecture-review.md), [ADR 024](adrs/024-agent-effectiveness-metrics-and-evaluation.md), [ADR 025](adrs/025-fork-documentation-lifecycle.md) |
 | Components, styling, content, and localization | [ADR 011](adrs/011-component-design-system-architecture.md), [ADR 012](adrs/012-tailwind-theming-and-styling-model.md), [ADR 013](adrs/013-content-architecture.md), [ADR 014](adrs/014-localization-architecture.md) |
