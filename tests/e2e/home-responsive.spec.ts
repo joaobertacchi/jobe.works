@@ -170,8 +170,8 @@ test("responsive header keeps utilities aligned and wrapped navigation below the
         const language = header.querySelector<HTMLElement>(
           ".language-switcher .utility-link",
         );
-        const theme = header.querySelector<HTMLElement>(".theme-switcher");
-        if (!wordmark || !navigation || !utilities || !language || !theme) {
+        const cta = header.querySelector<HTMLElement>(".site-header__cta");
+        if (!wordmark || !navigation || !utilities || !language || !cta) {
           throw new Error("Responsive header composition is incomplete");
         }
 
@@ -191,7 +191,7 @@ test("responsive header keeps utilities aligned and wrapped navigation below the
           languageText: language.textContent?.trim(),
           language: rect(language),
           navigation: rect(navigation),
-          theme: rect(theme),
+          cta: rect(cta),
           utilities: rect(utilities),
           wordmark: rect(wordmark),
         };
@@ -199,8 +199,8 @@ test("responsive header keeps utilities aligned and wrapped navigation below the
 
     const languageCenter =
       (geometry.language.top + geometry.language.bottom) / 2;
-    const themeCenter = (geometry.theme.top + geometry.theme.bottom) / 2;
-    expect(Math.abs(languageCenter - themeCenter)).toBeLessThanOrEqual(2);
+    const ctaCenter = (geometry.cta.top + geometry.cta.bottom) / 2;
+    expect(Math.abs(languageCenter - ctaCenter)).toBeLessThanOrEqual(2);
     expect(geometry.languageText).toBe(
       viewport.locale === "en" ? "Português" : "English",
     );

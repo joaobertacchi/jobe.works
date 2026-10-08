@@ -75,7 +75,10 @@ test("keeps localized Home content after hydration", async ({ page }) => {
     return value;
   });
 
-  await page.getByRole("link", { name: "About", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Primary navigation" })
+    .getByRole("link", { name: "About", exact: true })
+    .click();
   await expect(page).toHaveURL("/en/about");
   expect(
     await page.evaluate(() => Reflect.get(window, "routingSentinel")),
@@ -138,7 +141,10 @@ test("does not persist a language choice", async ({ page }) => {
 
 test("keeps navigation in the active locale", async ({ page }) => {
   await page.goto("/pt-BR/");
-  await page.getByRole("link", { name: "Sobre" }).click();
+  await page
+    .getByRole("navigation", { name: "Navegação principal" })
+    .getByRole("link", { name: "Sobre" })
+    .click();
 
   await expect(page).toHaveURL("/pt-BR/about");
   await expect(

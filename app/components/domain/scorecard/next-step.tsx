@@ -65,7 +65,7 @@ function CopyResultLink() {
           {translate("scorecard.results.copyFallback")}
           <input
             autoFocus
-            className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground"
+            className="w-full border border-border bg-surface px-3 py-2 text-foreground"
             onFocus={(event) => event.currentTarget.select()}
             readOnly
             value={window.location.href}
@@ -91,7 +91,7 @@ export function NextStep({ result, verdictLabel, onRetake }: NextStepProps) {
   return (
     <section
       aria-labelledby="scorecard-next-step-title"
-      className="rs-reveal flex flex-col gap-6 rounded-2xl bg-brand p-8 text-brand-foreground sm:p-12"
+      className="rs-reveal rs-next-step flex flex-col gap-6 bg-brand p-8 text-brand-foreground sm:p-12"
       style={revealDelay(1800)}
     >
       <Heading

@@ -49,10 +49,8 @@ function arrowDelta(key: string): number {
 
 function optionClasses(checked: boolean): string {
   const base =
-    "group flex min-h-16 items-center gap-4 rounded-xl border px-5 py-4 text-left transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand";
-  return checked
-    ? `${base} border-brand bg-brand text-brand-foreground`
-    : `${base} border-border bg-surface text-foreground hover:-translate-y-0.5 hover:border-brand`;
+    "rs-option group flex min-h-16 items-center gap-4 px-5 py-4 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand";
+  return checked ? `${base} is-checked` : base;
 }
 
 export function QuestionStep({
@@ -143,7 +141,7 @@ export function QuestionStep({
           >
             <span
               aria-hidden="true"
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-current/30 font-display text-sm font-semibold tabular-nums opacity-80"
+              className="flex h-8 w-8 shrink-0 items-center justify-center border border-current/30 font-display text-sm font-semibold tabular-nums opacity-80"
             >
               {index + 1}
             </span>
@@ -156,9 +154,13 @@ export function QuestionStep({
 
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Button onClick={onBack} size="sm" variant="secondary">
-          <span aria-hidden="true" className="mr-2">
-            ←
-          </span>
+          <svg
+            aria-hidden="true"
+            className="mr-2 h-4 w-4 fill-none stroke-current stroke-[1.75]"
+            viewBox="0 0 24 24"
+          >
+            <path d="M19 12H5m5-5-5 5 5 5" />
+          </svg>
           {translate("scorecard.navigation.back")}
         </Button>
         <Text as="span" className="hidden text-sm sm:inline" tone="muted">

@@ -66,7 +66,7 @@ function ResultSummary({
         </Text>
         {result.criticalRisks.length > 0 ? (
           <p
-            className="rs-reveal rounded-lg border border-risk/40 bg-risk/10 px-4 py-3 text-sm font-medium text-foreground"
+            className="rs-reveal border border-risk/40 bg-risk/10 px-4 py-3 text-sm font-medium text-foreground"
             role="note"
             style={revealDelay(650)}
           >
@@ -131,10 +131,10 @@ function CategoryBar({
       </div>
       <span
         aria-hidden="true"
-        className="block h-2 overflow-hidden rounded-full bg-hairline"
+        className="block h-2 overflow-hidden bg-hairline"
       >
         <span
-          className="rs-bar-fill block h-full rounded-full bg-brand"
+          className="rs-bar-fill block h-full bg-brand"
           style={{ width: `${percent}%`, ...revealDelay(delayMs) }}
         />
       </span>
@@ -173,7 +173,7 @@ function FindingCard({ finding, index }: { finding: Finding; index: number }) {
   const kind = finding.severity === "gap" ? "gap" : "critical";
   return (
     <li
-      className={`rs-reveal rs-finding rs-severity-${finding.severity} flex flex-col gap-3 rounded-xl border border-border bg-surface p-6`}
+      className={`rs-reveal rs-finding rs-severity-${finding.severity} atlas-plate flex flex-col gap-3 p-6`}
       style={revealDelay(1200 + index * 120)}
     >
       <div className="flex items-center justify-between gap-3">
@@ -183,7 +183,7 @@ function FindingCard({ finding, index }: { finding: Finding; index: number }) {
         >
           {String(index + 1).padStart(2, "0")}
         </span>
-        <span className="rs-severity-tag rounded-full px-3 py-1 font-display text-xs font-semibold uppercase tracking-wider">
+        <span className="rs-severity-tag px-3 py-1 font-display text-xs font-semibold uppercase tracking-wider">
           {translate(`scorecard.results.severities.${finding.severity}`)}
         </span>
       </div>
@@ -229,7 +229,7 @@ function AreasToVerify({ questionIds }: { questionIds: QuestionId[] }) {
   return (
     <section
       aria-labelledby="scorecard-unknowns-title"
-      className="rs-reveal flex flex-col gap-4 rounded-xl border border-dashed border-unknown p-6 sm:p-8"
+      className="rs-reveal flex flex-col gap-4 border border-dashed border-unknown p-6 sm:p-8"
       style={revealDelay(1600)}
     >
       <Heading className="font-display" id="scorecard-unknowns-title">
@@ -241,7 +241,7 @@ function AreasToVerify({ questionIds }: { questionIds: QuestionId[] }) {
       <ul className="flex flex-wrap gap-2">
         {questionIds.map((id) => (
           <li
-            className="rounded-full border border-unknown/60 px-3 py-1 text-sm text-foreground"
+            className="border border-unknown/60 px-3 py-1 text-sm text-foreground"
             key={id}
           >
             {translate(`scorecard.questions.${id}.topic`)}

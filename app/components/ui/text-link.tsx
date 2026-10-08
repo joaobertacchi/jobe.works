@@ -1,11 +1,9 @@
-import { Link, NavLink, type LinkProps } from "react-router";
+import { Link, type LinkProps } from "react-router";
 
 type TextLinkVariant = "primary" | "secondary" | "inverse" | "nav" | "wordmark";
 
 type TextLinkProps = Omit<LinkProps, "className"> & {
-  activeClassName?: string;
   className?: string;
-  end?: boolean;
   variant?: TextLinkVariant;
 };
 
@@ -24,27 +22,13 @@ const variantClasses: Record<TextLinkVariant, string> = {
 };
 
 export function TextLink({
-  activeClassName,
   className,
-  end,
   variant = "primary",
   ...props
 }: TextLinkProps) {
   const classes = [baseClasses, variantClasses[variant], className]
     .filter(Boolean)
     .join(" ");
-
-  if (activeClassName) {
-    return (
-      <NavLink
-        className={({ isActive }) =>
-          isActive ? [classes, activeClassName].join(" ") : classes
-        }
-        end={end}
-        {...props}
-      />
-    );
-  }
 
   return <Link className={classes} {...props} />;
 }

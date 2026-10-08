@@ -112,7 +112,10 @@ test("explicit preference survives internal navigation and a full reload", async
   await page.goto("/en/");
   await page.getByRole("button", { name: "Dark" }).click();
 
-  await page.getByRole("link", { name: "Services", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Primary navigation" })
+    .getByRole("link", { name: "Services", exact: true })
+    .click();
   await expect(page).toHaveURL("/en/services");
   expect(await storedTheme(page)).toBe("dark");
   await expectTheme(page, "dark", "Dark");

@@ -4,10 +4,19 @@ import { Button } from "../ui/button";
 import { Container } from "../ui/container";
 import { Text } from "../ui/text";
 import { TextLink } from "../ui/text-link";
+import { ThemeSwitcher } from "./theme-switcher";
 
 export function SiteFooter() {
   const { locale, translate } = useI18n();
   const { openSettings } = useConsent();
+  const footerLinks = [
+    { key: "home", to: `/${locale}/` },
+    { key: "services", to: `/${locale}/services` },
+    { key: "case", to: `/${locale}/case` },
+    { key: "scorecard", to: `/${locale}/scorecard` },
+    { key: "about", to: `/${locale}/about` },
+    { key: "contact", to: `/${locale}/contact` },
+  ] as const;
   return (
     <footer className="site-footer">
       <Container className="site-footer__inner">
@@ -32,19 +41,29 @@ export function SiteFooter() {
           aria-label={translate("common.footer.navigationLabel")}
           className="site-footer__navigation"
         >
-          <TextLink to={`/${locale}/`} variant="nav">
-            {translate("common.navigation.home")}
-          </TextLink>
-          <TextLink to={`/${locale}/about`} variant="nav">
-            {translate("common.navigation.about")}
-          </TextLink>
-          <TextLink to={`/${locale}/privacy`} variant="nav">
-            {translate("common.navigation.privacy")}
-          </TextLink>
-          <Button size="sm" variant="link" onClick={openSettings}>
-            {translate("consent.cookieSettings")}
-          </Button>
+          <ul className="site-footer__links">
+            {footerLinks.map(({ key, to }) => (
+              <li key={key}>
+                <TextLink to={to} variant="nav">
+                  {translate(`common.navigation.${key}`)}
+                </TextLink>
+              </li>
+            ))}
+          </ul>
+          <ul className="site-footer__links site-footer__links--legal">
+            <li>
+              <TextLink to={`/${locale}/privacy`} variant="nav">
+                {translate("common.navigation.privacy")}
+              </TextLink>
+            </li>
+            <li>
+              <Button size="sm" variant="link" onClick={openSettings}>
+                {translate("consent.cookieSettings")}
+              </Button>
+            </li>
+          </ul>
         </nav>
+        <ThemeSwitcher />
       </Container>
     </footer>
   );

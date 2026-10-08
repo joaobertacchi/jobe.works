@@ -128,7 +128,10 @@ test("accept all enables analytics and logs page views", async ({ page }) => {
   await expect.poll(() => hasPageView(analytics.events, "/en/")).toBe(true);
   await analytics.flush();
 
-  await page.getByRole("link", { name: "About", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Primary navigation" })
+    .getByRole("link", { name: "About", exact: true })
+    .click();
   await expect(page).toHaveURL("/en/about");
 
   await expect
@@ -194,7 +197,10 @@ test("withdrawing analytics consent prevents subsequent tracking", async ({
   await analytics.flush();
   expect(analytics.events).toHaveLength(baselineEventCount);
 
-  await page.getByRole("link", { name: "About", exact: true }).click();
+  await page
+    .getByRole("navigation", { name: "Primary navigation" })
+    .getByRole("link", { name: "About", exact: true })
+    .click();
   await expect(page).toHaveURL("/en/about");
   await settleBrowserEffects(page);
   await analytics.flush();

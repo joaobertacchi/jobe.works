@@ -1,10 +1,10 @@
+import { useAnalytics } from "../../analytics/analytics";
 import type { SupportedLocale } from "../../i18n/config";
 import { useI18n } from "../../i18n/i18n";
 import { Container } from "../ui/container";
 import { TextLink } from "../ui/text-link";
 import { LanguageSwitcher } from "./language-switcher";
 import { PrimaryNavigation } from "./primary-navigation";
-import { ThemeSwitcher } from "./theme-switcher";
 
 export function SiteHeader({
   urls,
@@ -12,6 +12,7 @@ export function SiteHeader({
   urls: Record<SupportedLocale, string> | null;
 }) {
   const { locale, translate } = useI18n();
+  const { capture } = useAnalytics();
 
   return (
     <header className="site-header">
@@ -27,7 +28,19 @@ export function SiteHeader({
         <PrimaryNavigation />
         <div className="site-utilities">
           {urls === null ? null : <LanguageSwitcher urls={urls} />}
-          <ThemeSwitcher />
+          <TextLink
+            className="site-header__cta ui-action--sm"
+            onClick={() =>
+              capture({
+                eventName: "cta_pressed",
+                ctaId: "header-book-call",
+                context: "header",
+              })
+            }
+            to={`/${locale}/contact`}
+          >
+            {translate("common.navigation.book")}
+          </TextLink>
         </div>
       </Container>
     </header>

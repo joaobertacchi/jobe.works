@@ -22,6 +22,8 @@ export type CommonTranslation = {
     services: string;
     case: string;
     contact: string;
+    scorecard: string;
+    book: string;
     privacy: string;
     skipToContent: string;
   };
@@ -56,6 +58,8 @@ export const commonTranslations = {
       services: "Services",
       case: "Case study",
       contact: "Contact",
+      scorecard: "Readiness Check",
+      book: "Book an assessment",
       privacy: "Privacy",
       skipToContent: "Skip to content",
     },
@@ -83,6 +87,8 @@ export const commonTranslations = {
       services: "Serviços",
       case: "Estudo de caso",
       contact: "Contato",
+      scorecard: "Autoavaliação",
+      book: "Agendar avaliação",
       privacy: "Privacidade",
       skipToContent: "Pular para o conteúdo",
     },

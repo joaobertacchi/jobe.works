@@ -43,10 +43,10 @@ export function ProgressRail({
             style={{ flexBasis: 0, flexGrow: total }}
           >
             <span
-              className={`relative block h-1.5 overflow-hidden rounded-full ${active ? "rs-pulse bg-brand/25" : "bg-hairline"}`}
+              className={`relative block h-1.5 overflow-hidden ${active ? "rs-pulse bg-brand/25" : "bg-hairline"}`}
             >
               <span
-                className="absolute inset-y-0 left-0 rounded-full bg-brand transition-[width] duration-500 ease-out"
+                className="absolute inset-y-0 left-0 bg-brand transition-[width] duration-500 ease-out"
                 style={{ width: `${(answered / total) * 100}%` }}
               />
             </span>

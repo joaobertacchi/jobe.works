@@ -9,6 +9,7 @@ import {
 import { MemoryRouter } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
+import { AnalyticsProvider } from "../../analytics/analytics";
 import type { SupportedLocale } from "../../i18n/config";
 import { I18nProvider } from "../../i18n/i18n";
 import { THEME_STORAGE_KEY } from "../../theme";
@@ -42,7 +43,8 @@ describe("PrimaryNavigation", () => {
       [
         ["Services", "/en/services"],
         ["Case study", "/en/case"],
-        ["Contact", "/en/contact"],
+        ["Readiness Check", "/en/scorecard"],
+        ["About", "/en/about"],
       ],
     ],
     [
@@ -52,7 +54,8 @@ describe("PrimaryNavigation", () => {
       [
         ["Serviços", "/pt-BR/services"],
         ["Estudo de caso", "/pt-BR/case"],
-        ["Contato", "/pt-BR/contact"],
+        ["Autoavaliação", "/pt-BR/scorecard"],
+        ["Sobre", "/pt-BR/about"],
       ],
     ],
   ] as const)(
@@ -77,19 +80,29 @@ describe("PrimaryNavigation", () => {
     const activeLink = screen.getByRole("link", { name: "Case study" });
     const inactiveLinks = [
       screen.getByRole("link", { name: "Services" }),
-      screen.getByRole("link", { name: "Contact" }),
+      screen.getByRole("link", { name: "About" }),
     ];
 
     expect(activeLink).toHaveAttribute("aria-current", "page");
+    expect(activeLink).toHaveClass("is-active");
     for (const link of inactiveLinks) {
       expect(link).not.toHaveAttribute("aria-current");
     }
   });
 
+  it("marks the destination active on its prerendered trailing-slash URL", () => {
+    renderWithRouter(<PrimaryNavigation />, "en", "/en/services/");
+
+    expect(screen.getByRole("link", { name: "Services" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+  });
+
   it("does not mark a destination active on a nested URL", () => {
     renderWithRouter(<PrimaryNavigation />, "en", "/en/case/extra");
 
-    for (const name of ["Services", "Case study", "Contact"]) {
+    for (const name of ["Services", "Case study", "About"]) {
       expect(screen.getByRole("link", { name })).not.toHaveAttribute(
         "aria-current",
       );
@@ -122,7 +135,7 @@ describe("LanguageSwitcher", () => {
 });
 
 describe("SiteHeader", () => {
-  it("composes the site identity, navigation, language, and theme controls", () => {
+  it("composes the site identity, navigation, language, and booking call", () => {
     installMatchMedia(false);
     renderWithRouter(<SiteHeader urls={urls} />, "en", "/en/about");
 
@@ -134,7 +147,10 @@ describe("SiteHeader", () => {
     expect(
       screen.getByRole("navigation", { name: "Choose language" }),
     ).toBeVisible();
-    expect(screen.getByRole("group", { name: "Theme" })).toBeVisible();
+    expect(
+      within(header).getByRole("link", { name: "Book an assessment" }),
+    ).toHaveAttribute("href", "/en/contact");
+    expect(within(header).queryByRole("group", { name: "Theme" })).toBeNull();
   });
 
   it("omits only the language switcher when sibling URLs are unavailable", () => {
@@ -149,7 +165,9 @@ describe("SiteHeader", () => {
     expect(
       screen.queryByRole("navigation", { name: "Escolher idioma" }),
     ).toBeNull();
-    expect(screen.getByRole("group", { name: "Tema" })).toBeVisible();
+    expect(
+      within(header).getByRole("link", { name: "Agendar avaliação" }),
+    ).toHaveAttribute("href", "/pt-BR/contact");
   });
 });
 
@@ -182,6 +200,33 @@ describe("SiteFooter", () => {
       );
     },
   );
+
+  it("lists every public destination and hosts the theme controls", () => {
+    installMatchMedia(false);
+    renderWithRouter(<SiteFooter />, "en", "/en/about");
+
+    const navigation = screen.getByRole("navigation", {
+      name: "Footer navigation",
+    });
+    expect(
+      within(navigation)
+        .getAllByRole("link")
+        .map((link) => link.getAttribute("href")),
+    ).toEqual([
+      "/en/",
+      "/en/services",
+      "/en/case",
+      "/en/scorecard",
+      "/en/about",
+      "/en/contact",
+      "/en/privacy",
+    ]);
+    expect(
+      within(screen.getByRole("contentinfo")).getByRole("group", {
+        name: "Theme",
+      }),
+    ).toBeVisible();
+  });
 
   it("exposes a cookie settings button that opens the customize dialog", () => {
     render(
@@ -377,7 +422,9 @@ function renderWithRouter(
   return render(
     <MemoryRouter initialEntries={[pathname]}>
       <ConsentProvider>
-        <I18nProvider locale={locale}>{component}</I18nProvider>
+        <AnalyticsProvider consent={{ analytics: false, marketing: false }}>
+          <I18nProvider locale={locale}>{component}</I18nProvider>
+        </AnalyticsProvider>
       </ConsentProvider>
     </MemoryRouter>,
   );
