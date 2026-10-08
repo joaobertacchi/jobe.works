@@ -15,6 +15,7 @@ This repository is an AI-agent harness for localized static marketing and conten
 - Emit typed analytics events through `app/analytics/`; do not call providers from pages or arbitrary components.
 - Keep consent handling in `app/consent/` and vendor-specific code in `app/integrations/` or the established analytics tracker boundary.
 - Treat browser-visible configuration as public and never expose secrets in frontend code.
+- The site has three responsive layouts, not two: phone (≤48rem, verify at 390px), intermediate (48–72rem, verify at 900px), and desktop (>72rem, verify at 1440px), defined in `tests/e2e/layouts.ts`. Every visual check, screenshot round, and layout test covers all three. This overrides any skill or checklist that says "desktop and mobile".
 
 ## Code Map
 
@@ -51,7 +52,7 @@ This repository is an AI-agent harness for localized static marketing and conten
 1. Activate the Node.js version in `.nvmrc` before installing dependencies or running validation.
 2. Add or update meaningful tests for behavior changes.
 3. Run `npm run check` and fix root causes.
-4. Run `npm run test:e2e` for browser-visible changes, and verify them at every layout in `tests/e2e/layouts.ts` (phone, intermediate, desktop); new layout tests iterate over those layouts instead of choosing ad-hoc widths.
+4. Run `npm run test:e2e` for browser-visible changes and verify them at all three layouts; new layout tests iterate over `tests/e2e/layouts.ts` instead of choosing ad-hoc widths.
 5. After deterministic validation passes, run the repository's `architecture-review` subagent against the current change and fix all high and medium findings.
 6. Do not weaken validation, thresholds, tests, or hooks to make changes pass.
 
