@@ -154,8 +154,9 @@ reliability 8, performance 3, privacy 3. **Total 52.**
 7. **Findings:** max 3, at most one per category.
    - A category's severity is the worst present: `criticalRisk` >
      `criticalGap` > `gap`.
-   - A category is a `gap` if its percent is below 70 and it has no critical
-     flag.
+   - A category is a `gap` if its percent is below 70 and it has no Critical
+     Risk or Critical Gap. A Critical Unknown alone does not prevent a `gap`
+     finding.
    - Sort by severity, then by lost weight (`applicable − earned`) descending,
      then by the canonical category order above.
    - Critical Unknowns are not findings. They are listed separately under
@@ -266,7 +267,8 @@ The body is URL-encoded.
   - areas-to-verify topics per question
   - CTA, mailto subject and body template, copy and retake labels
 - pt-BR question copy is taken verbatim from the source checklist. English is
-  as in section 3.2.
+  as in section 3.2. Questions without an example in the checklist get a short
+  localized hint so every question renders the same layout.
 - Verdict labels:
 
   | Verdict | en | pt-BR |
