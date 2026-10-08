@@ -16,4 +16,25 @@ describe("application styles", () => {
     const css = readFileSync("app/app.css", "utf8");
     expect(css).toContain("--brand: oklch(0.36 0.13 262);");
   });
+
+  it("defines scorecard severity tokens for light and dark themes", () => {
+    const css = readFileSync("app/app.css", "utf8");
+    const [light, dark] = css.split(/^\.dark \{/m);
+
+    for (const token of ["--risk:", "--gap:", "--unknown:"]) {
+      expect(light).toContain(token);
+      expect(dark).toContain(token);
+    }
+    expect(css).toContain("--color-risk: var(--risk);");
+  });
+
+  it("disables scorecard motion for reduced-motion users", () => {
+    const css = readFileSync("app/app.css", "utf8");
+    const reduced = css.slice(
+      css.lastIndexOf("@media (prefers-reduced-motion: reduce)"),
+    );
+
+    expect(reduced).toContain(".rs-reveal");
+    expect(reduced).toContain(".rs-ring-arc");
+  });
 });
