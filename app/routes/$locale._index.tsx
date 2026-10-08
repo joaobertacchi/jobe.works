@@ -150,8 +150,8 @@ export default function Home() {
             </AtlasAction>
             <AtlasAction
               index="02"
-              onClick={() => captureCta("hero-stockcast")}
-              to={`/${locale}/case`}
+              onClick={() => captureCta("hero-scorecard")}
+              to={`/${locale}/scorecard`}
               variant="secondary"
             >
               {translate("home.hero.ctaSecondary")}
@@ -238,6 +238,16 @@ export default function Home() {
         <div className="atlas-section__heading">
           <h2 id="method-title">{translate("home.funnel.title")}</h2>
           <p>{translate("home.funnel.description")}</p>
+          <Link
+            className="atlas-inline-link"
+            to={`/${locale}/scorecard`}
+            onClick={() => captureCta("funnel-scorecard")}
+          >
+            {translate("home.funnel.scorecardPrompt")}
+            <svg aria-hidden="true" viewBox="0 0 24 24">
+              <path d="M5 12h14m-5-5 5 5-5 5" />
+            </svg>
+          </Link>
         </div>
         <ol className="atlas-method-route">
           {steps.map((step, index) => (

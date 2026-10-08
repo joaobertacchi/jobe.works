@@ -4,6 +4,7 @@ import { meta as rootMeta } from "./_index";
 import { meta as notFoundMeta } from "./$locale.404";
 import { meta as homeMeta } from "./$locale._index";
 import { meta as privacyMeta } from "./$locale.privacy";
+import { meta as scorecardMeta } from "./$locale.scorecard";
 
 const site = {
   origin: "https://jobe.works",
@@ -34,6 +35,18 @@ function args(pathname: string, locale: "en" | "pt-BR") {
 }
 
 describe("route SEO metadata", () => {
+  it("emits localized, indexable scorecard metadata", () => {
+    const meta = scorecardMeta(args("/pt-BR/scorecard", "pt-BR"));
+
+    expect(meta).toContainEqual({
+      title: "Product Readiness Scorecard | JOBE — Engenharia que Funciona",
+    });
+    expect(meta).not.toContainEqual({
+      name: "robots",
+      content: "noindex,follow",
+    });
+  });
+
   it("emits localized Home metadata and Organization JSON-LD", () => {
     const meta = homeMeta(args("/en/", "en"));
 

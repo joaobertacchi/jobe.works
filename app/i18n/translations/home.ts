@@ -48,6 +48,7 @@ export type HomeTranslation = {
   funnel: {
     title: string;
     description: string;
+    scorecardPrompt: string;
     steps: {
       call: { title: string; description: string };
       diagnosis: { title: string; description: string };
@@ -69,7 +70,7 @@ export const homeTranslations = {
         "JOBE is a senior engineering consultancy for AI products that gained traction and need to hold up in production. You start with a conversation, not a catalog: a structured evaluation that directs you to the right engagement.",
       method: "One route: evaluate, diagnose, direct.",
       ctaPrimary: "Book a Product Readiness Call",
-      ctaSecondary: "See the StockCast case",
+      ctaSecondary: "Take the readiness scorecard",
     },
     atlas: {
       founderName: "João Bertacchi",
@@ -122,6 +123,7 @@ export const homeTranslations = {
       title: "How it works",
       description:
         "You never choose among services — the evaluation directs the engagement.",
+      scorecardPrompt: "Not ready to talk? Start with the 4-minute scorecard",
       steps: {
         call: {
           title: "Product Readiness Call",
@@ -153,7 +155,7 @@ export const homeTranslations = {
         "        A JOBE é uma consultoria de engenharia sênior para produtos de IA que ganharam tração e precisam se sustentar em produção. Você começa por uma conversa, não por um catálogo: uma avaliação estruturada que direciona o engajamento certo.",
       method: "Uma rota: avaliar, diagnosticar, direcionar.",
       ctaPrimary: "Agendar uma Product Readiness Call",
-      ctaSecondary: "Conhecer o caso StockCast",
+      ctaSecondary: "Fazer o scorecard de readiness",
     },
     atlas: {
       founderName: "João Bertacchi",
@@ -208,6 +210,8 @@ export const homeTranslations = {
       title: "Como funciona",
       description:
         "Você nunca escolhe entre serviços — a avaliação direciona o engajamento.",
+      scorecardPrompt:
+        "Ainda não é hora de conversar? Comece pelo scorecard de 4 minutos",
       steps: {
         call: {
           title: "Product Readiness Call",

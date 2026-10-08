@@ -17,6 +17,7 @@ import NotFound from "./$locale.404";
 import About from "./$locale.about";
 import Home from "./$locale._index";
 import Services from "./$locale.services";
+import ScorecardPage from "./$locale.scorecard";
 import CaseStudy from "./$locale.case";
 import Contact from "./$locale.contact";
 import Privacy from "./$locale.privacy";
@@ -46,6 +47,12 @@ const canonicalManifest = [
     kind: "page",
     pattern: "/:locale/services",
     urls: { en: "/en/services", "pt-BR": "/pt-BR/services" },
+  },
+  {
+    id: "scorecard",
+    kind: "page",
+    pattern: "/:locale/scorecard",
+    urls: { en: "/en/scorecard", "pt-BR": "/pt-BR/scorecard" },
   },
   {
     id: "case",
@@ -135,6 +142,7 @@ function renderLocalizedRoute(
               { index: true, Component: Home },
               { path: "about", Component: About },
               { path: "services", Component: Services },
+              { path: "scorecard", Component: ScorecardPage },
               { path: "case", Component: CaseStudy },
               { path: "contact", Component: Contact },
               { path: "privacy", Component: Privacy },
@@ -156,6 +164,48 @@ function renderLocalizedRoute(
 }
 
 describe("localized route layout", () => {
+  it("links the home hero and funnel to the scorecard", async () => {
+    renderLocalizedRoute("/en/");
+
+    const heroLinks = await screen.findAllByRole("link", {
+      name: /Take the readiness scorecard/,
+    });
+    expect(heroLinks[0]).toHaveAttribute("href", "/en/scorecard");
+    expect(
+      screen.getByRole("link", { name: /Start with the 4-minute scorecard/ }),
+    ).toHaveAttribute("href", "/en/scorecard");
+  });
+
+  it("links the case study and contact pages to the scorecard", async () => {
+    renderLocalizedRoute("/pt-BR/case");
+    expect(
+      await screen.findByRole("link", { name: "Fazer o scorecard" }),
+    ).toHaveAttribute("href", "/pt-BR/scorecard");
+  });
+
+  it("links the contact page to the scorecard", async () => {
+    renderLocalizedRoute("/en/contact");
+    expect(
+      await screen.findByRole("link", {
+        name: "Want a head start? Take the Product Readiness Scorecard",
+      }),
+    ).toHaveAttribute("href", "/en/scorecard");
+  });
+
+  it("renders the localized scorecard page", async () => {
+    renderLocalizedRoute("/pt-BR/scorecard");
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Product Readiness Scorecard",
+      }),
+    ).toBeVisible();
+    expect(
+      screen.getByRole("button", { name: "Começar o scorecard" }),
+    ).toBeVisible();
+  });
+
   it.each([
     [
       "en",

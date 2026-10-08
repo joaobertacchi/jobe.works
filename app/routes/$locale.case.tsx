@@ -1,6 +1,8 @@
+import { useAnalytics } from "../analytics/analytics";
 import { Container } from "../components/ui/container";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
+import { TextLink } from "../components/ui/text-link";
 import { isSupportedLocale } from "../i18n/config";
 import { useI18n } from "../i18n/i18n";
 import { caseTranslations } from "../i18n/translations/case";
@@ -49,7 +51,8 @@ function CaseBlockView({ block }: { block: CaseBlock }) {
 }
 
 export default function CaseStudy() {
-  const { translate } = useI18n();
+  const { locale, translate } = useI18n();
+  const { capture } = useAnalytics();
 
   const sections: CaseSection[] = [
     {
@@ -169,6 +172,26 @@ export default function CaseStudy() {
             </section>
           ))}
         </article>
+        <aside className="mx-auto mt-16 flex max-w-3xl flex-col gap-4 border-l-2 border-brand pl-6">
+          <Heading as="h2" level="card">
+            {translate("case.scorecard.title")}
+          </Heading>
+          <Text tone="muted">{translate("case.scorecard.description")}</Text>
+          <div>
+            <TextLink
+              onClick={() =>
+                capture({
+                  eventName: "cta_pressed",
+                  ctaId: "case-scorecard",
+                  context: "case",
+                })
+              }
+              to={`/${locale}/scorecard`}
+            >
+              {translate("case.scorecard.cta")}
+            </TextLink>
+          </div>
+        </aside>
       </Container>
     </main>
   );

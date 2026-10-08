@@ -9,6 +9,7 @@ export type CaseTranslation = {
   };
   title: string;
   subtitle: string;
+  scorecard: { title: string; description: string; cta: string };
   introduction: {
     context: string;
     system: string;
@@ -55,6 +56,12 @@ export const caseTranslations = {
         "How we evolved StockCast, a production system processing financial media, AI, and data 24/7: analytics architecture, 24/7 pipelines, and AI workflows.",
     },
     title: "StockCast",
+    scorecard: {
+      title: "How does your product compare?",
+      description:
+        "Take the 20-question Product Readiness Scorecard and see where your product stands.",
+      cta: "Take the scorecard",
+    },
     subtitle:
       "Evolving real systems when the technical foundation starts to limit the business",
     introduction: {
@@ -136,6 +143,12 @@ export const caseTranslations = {
         "Como evoluímos o StockCast, um sistema em produção que processa mídia, IA e dados financeiros 24x7: arquitetura de analytics, pipelines 24x7 e workflows de IA.",
     },
     title: "StockCast",
+    scorecard: {
+      title: "Como seu produto se compara?",
+      description:
+        "Responda ao Product Readiness Scorecard de 20 perguntas e veja onde seu produto está.",
+      cta: "Fazer o scorecard",
+    },
     subtitle:
       "Evoluindo sistemas reais quando a base técnica começa a limitar o negócio",
     introduction: {

@@ -14,6 +14,7 @@ export type ContactTranslation = {
     nextSteps: string;
     scorecard: string;
   };
+  scorecardPrompt: string;
   bookByEmailTitle: string;
   bookByEmailDescription: string;
   emailAddress: string;
@@ -52,6 +53,7 @@ export const contactTranslations = {
       nextSteps: "Recommended next steps",
       scorecard: "A mini-scorecard for your product",
     },
+    scorecardPrompt: "Want a head start? Take the Product Readiness Scorecard",
     bookByEmailTitle: "Book by email",
     bookByEmailDescription:
       "Write a short note about your product and your context, and JOBE will reply by email to schedule your call.",
@@ -91,6 +93,7 @@ export const contactTranslations = {
       nextSteps: "Próximos passos recomendados",
       scorecard: "Um mini-scorecard do seu produto",
     },
+    scorecardPrompt: "Quer adiantar? Faça o Product Readiness Scorecard",
     bookByEmailTitle: "Agende por e-mail",
     bookByEmailDescription:
       "Escreva uma nota curta sobre seu produto e seu contexto, e a JOBE responderá por e-mail para agendar sua conversa.",

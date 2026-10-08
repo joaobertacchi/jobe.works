@@ -17,7 +17,7 @@ export function meta({ matches, params }: Route.MetaArgs) {
 }
 
 export default function Contact() {
-  const { translate } = useI18n();
+  const { locale, translate } = useI18n();
   const deliverables = [
     translate("contact.deliverables.risks"),
     translate("contact.deliverables.classification"),
@@ -52,6 +52,11 @@ export default function Contact() {
                   </li>
                 ))}
               </ul>
+              <div>
+                <TextLink to={`/${locale}/scorecard`} variant="secondary">
+                  {translate("contact.scorecardPrompt")}
+                </TextLink>
+              </div>
             </div>
           </div>
 
