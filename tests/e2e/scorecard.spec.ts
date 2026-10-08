@@ -55,12 +55,18 @@ async function answerAll(
 }
 
 async function expectNoHorizontalScroll(page: Page) {
-  const overflow = await page.evaluate(
-    () =>
-      document.documentElement.scrollWidth -
-      document.documentElement.clientWidth,
-  );
-  expect(overflow).toBeLessThanOrEqual(0);
+  const overflow = await page.evaluate(() => {
+    const width = document.documentElement.clientWidth;
+    const pageOverflow = Math.max(
+      0,
+      document.documentElement.scrollWidth - width,
+    );
+    const offenders = Array.from(document.querySelectorAll("main *"))
+      .filter((element) => element.getBoundingClientRect().right > width + 1)
+      .map((element) => element.tagName.toLowerCase());
+    return { pageOverflow, offenders };
+  });
+  expect(overflow).toEqual({ pageOverflow: 0, offenders: [] });
 }
 
 test("completes the scorecard in English and offers a prefilled diagnostic email", async ({

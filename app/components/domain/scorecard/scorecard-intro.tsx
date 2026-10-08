@@ -1,6 +1,7 @@
 import { useI18n } from "../../../i18n/i18n";
 import { categoryIds } from "../../../scorecard/questions";
 import { Button } from "../../ui/button";
+import { Heading } from "../../ui/heading";
 import { Text } from "../../ui/text";
 import { revealDelay, useHydrated } from "./motion";
 
@@ -72,12 +73,13 @@ export function ScorecardIntro({ onStart }: { onStart: () => void }) {
       className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]"
     >
       <div className="rs-step-enter flex flex-col gap-6">
-        <h2
-          className="font-display text-5xl font-bold leading-[1.02] tracking-tight text-foreground sm:text-7xl"
+        <Heading
+          className="font-display"
           id="scorecard-intro-title"
+          level="display"
         >
           {translate("scorecard.intro.title")}
-        </h2>
+        </Heading>
         <Text className="max-w-xl text-lg" tone="muted">
           {translate("scorecard.intro.description")}
         </Text>

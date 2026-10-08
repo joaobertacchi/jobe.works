@@ -32,7 +32,9 @@
   --brand: oklch(0.36 0.13 262);
   --brand-foreground: oklch(0.99 0.002 90);
   --risk: oklch(0.55 0.19 27);
+  --risk-foreground: oklch(0.47 0.17 27);
   --gap: oklch(0.62 0.14 65);
+  --gap-foreground: oklch(0.49 0.11 60);
   --unknown: oklch(0.55 0.04 262);
   --atlas-blue: oklch(0.36 0.14 262);
   --atlas-blue-soft: oklch(0.74 0.07 258);
@@ -60,7 +62,9 @@
   --brand: oklch(0.62 0.12 258);
   --brand-foreground: oklch(0.15 0.02 262);
   --risk: oklch(0.7 0.16 27);
+  --risk-foreground: oklch(0.8 0.12 27);
   --gap: oklch(0.78 0.13 75);
+  --gap-foreground: oklch(0.85 0.11 75);
   --unknown: oklch(0.72 0.04 262);
   --atlas-blue: oklch(0.31 0.12 262);
   --atlas-blue-soft: oklch(0.71 0.08 258);
@@ -1430,21 +1434,24 @@ body:has([data-consent-banner]) {
 
 .rs-tone-strong {
   --rs-tone: var(--brand);
+  --rs-tone-text: var(--brand);
 }
 
 .rs-tone-gap,
 .rs-severity-criticalGap,
 .rs-severity-gap {
   --rs-tone: var(--gap);
+  --rs-tone-text: var(--gap-foreground);
 }
 
 .rs-tone-risk,
 .rs-severity-criticalRisk {
   --rs-tone: var(--risk);
+  --rs-tone-text: var(--risk-foreground);
 }
 
 .rs-tone-text {
-  color: var(--rs-tone);
+  color: var(--rs-tone-text);
 }
 
 .rs-ring-arc {
@@ -1457,7 +1464,7 @@ body:has([data-consent-banner]) {
 }
 
 .rs-severity-tag {
-  color: var(--rs-tone);
+  color: var(--rs-tone-text);
   background: color-mix(in oklch, var(--rs-tone) 14%, transparent);
 }
 

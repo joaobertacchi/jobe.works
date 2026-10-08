@@ -127,6 +127,17 @@ describe("Scorecard flow", () => {
     expect(screen.getByText("Question 1 of 20")).toBeVisible();
   });
 
+  it("ignores auto-repeated key presses from a held key", async () => {
+    renderScorecard();
+    await start();
+    await screen.findByText("Question 1 of 20");
+
+    fireEvent.keyDown(document, { key: "1", repeat: true });
+
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(screen.getByText("Question 1 of 20")).toBeVisible();
+  });
+
   it("answers the current question once when pressed twice quickly", async () => {
     renderScorecard();
     await start();
@@ -156,6 +167,39 @@ describe("Scorecard flow", () => {
 });
 
 describe("Scorecard shared results", () => {
+  it("shows a result link pasted into an already open scorecard", async () => {
+    renderScorecard();
+    await screen.findByRole("button", { name: copy.intro.start });
+
+    window.history.replaceState(
+      null,
+      "",
+      "/en/scorecard#r=1.nnnnnnnnnnnnnnnnnnnn",
+    );
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+
+    expect(
+      await screen.findByText(copy.results.verdicts.highRisk.label),
+    ).toBeVisible();
+  });
+
+  it("returns to the intro when the hash is replaced by an invalid one", async () => {
+    window.history.replaceState(
+      null,
+      "",
+      "/en/scorecard#r=1.yyyyyyyyyyyyyyyyyyyy",
+    );
+    renderScorecard();
+    await screen.findByText(copy.results.verdicts.strong.label);
+
+    window.history.replaceState(null, "", "/en/scorecard#r=1.broken");
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+
+    expect(
+      await screen.findByRole("button", { name: copy.intro.start }),
+    ).toBeVisible();
+  });
+
   it("opens a valid shared hash on the results without completion analytics", async () => {
     window.history.replaceState(
       null,

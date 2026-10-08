@@ -7,6 +7,7 @@ import {
   applyAnswer,
   computeResult,
   getQuestionFlow,
+  isComplete,
   type Answer,
   type Answers,
 } from "../../../scorecard/scoring";
@@ -50,14 +51,25 @@ export function Scorecard({
   const advanceTimer = useRef<number | undefined>(undefined);
 
   useEffect(() => {
-    // Deferred one-shot read keeps the prerendered and hydrated trees identical.
-    queueMicrotask(() => {
+    function syncFromHash() {
       const shared = fromResultHash(window.location.hash);
-      if (!shared) return;
-      setAnswers(shared);
-      setPhase({ name: "results", shared: true });
-    });
-    return () => window.clearTimeout(advanceTimer.current);
+      if (shared) {
+        setAnswers(shared);
+        setPhase({ name: "results", shared: true });
+        return;
+      }
+      setPhase((current) =>
+        current.name === "results" ? { name: "intro" } : current,
+      );
+    }
+    // Deferred first read keeps the prerendered and hydrated trees identical;
+    // later hash changes (a result link pasted into this tab) re-sync.
+    queueMicrotask(syncFromHash);
+    window.addEventListener("hashchange", syncFromHash);
+    return () => {
+      window.removeEventListener("hashchange", syncFromHash);
+      window.clearTimeout(advanceTimer.current);
+    };
   }, []);
 
   const finish = useCallback(
@@ -92,6 +104,7 @@ export function Scorecard({
 
   function start() {
     capture({ eventName: "scorecard_started" });
+    if (isComplete(answers)) setAnswers({});
     setPhase({ name: "question", questionId: questions[0].id });
   }
 

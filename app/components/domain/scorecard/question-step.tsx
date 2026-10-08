@@ -8,6 +8,7 @@ import { useI18n } from "../../../i18n/i18n";
 import type { Question } from "../../../scorecard/questions";
 import type { Answer } from "../../../scorecard/scoring";
 import { Button } from "../../ui/button";
+import { Heading } from "../../ui/heading";
 import { Text } from "../../ui/text";
 
 const baseOptions: readonly Answer[] = ["yes", "partial", "no", "unknown"];
@@ -33,7 +34,9 @@ function shortcutAnswer(
   event: KeyboardEvent,
   options: readonly Answer[],
 ): Answer | undefined {
-  if (event.altKey || event.ctrlKey || event.metaKey) return undefined;
+  if (event.repeat || event.altKey || event.ctrlKey || event.metaKey) {
+    return undefined;
+  }
   if (isTypingTarget(event.target)) return undefined;
   return options[Number(event.key) - 1];
 }
@@ -106,14 +109,14 @@ export function QuestionStep({
             })}
           </span>
         </p>
-        <h2
-          className="max-w-4xl font-display text-3xl font-bold leading-tight tracking-tight text-foreground outline-none sm:text-5xl"
+        <Heading
+          className="max-w-4xl font-display outline-none"
           id={headingId}
           ref={headingRef}
           tabIndex={-1}
         >
           {translate(`scorecard.questions.${question.id}.text`)}
-        </h2>
+        </Heading>
         <Text className="max-w-2xl italic" tone="muted">
           {translate(`scorecard.questions.${question.id}.hint`)}
         </Text>

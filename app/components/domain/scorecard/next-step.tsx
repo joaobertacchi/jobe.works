@@ -7,6 +7,8 @@ import {
   type ScorecardResult,
 } from "../../../scorecard/scoring";
 import { Button } from "../../ui/button";
+import { Heading } from "../../ui/heading";
+import { TextLink } from "../../ui/text-link";
 import { revealDelay } from "./motion";
 
 function useDiagnosticMailto(
@@ -92,16 +94,17 @@ export function NextStep({ result, verdictLabel, onRetake }: NextStepProps) {
       className="rs-reveal flex flex-col gap-6 rounded-2xl bg-brand p-8 text-brand-foreground sm:p-12"
       style={revealDelay(1800)}
     >
-      <h2
-        className="font-display text-3xl font-bold leading-tight tracking-tight sm:text-5xl"
+      <Heading
+        className="font-display"
         id="scorecard-next-step-title"
+        tone="inverse"
       >
         {translate(
           strong
             ? "scorecard.results.nextStep.strongTitle"
             : "scorecard.results.nextStep.title",
         )}
-      </h2>
+      </Heading>
       <p className="max-w-2xl text-lg leading-relaxed opacity-90">
         {translate(
           strong
@@ -110,9 +113,9 @@ export function NextStep({ result, verdictLabel, onRetake }: NextStepProps) {
         )}
       </p>
       <div className="flex flex-wrap items-center gap-3">
-        <a
-          className="inline-flex min-h-11 items-center justify-center bg-brand-foreground px-5 py-3 font-medium text-brand transition hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-foreground"
-          href={href}
+        <TextLink
+          to={href}
+          variant="inverse"
           onClick={() =>
             capture({
               eventName: "cta_pressed",
@@ -126,7 +129,7 @@ export function NextStep({ result, verdictLabel, onRetake }: NextStepProps) {
               ? "scorecard.results.nextStep.strongCta"
               : "scorecard.results.nextStep.cta",
           )}
-        </a>
+        </TextLink>
         <CopyResultLink />
         <Button onClick={onRetake} variant="secondary">
           {translate("scorecard.results.retake")}

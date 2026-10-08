@@ -1,6 +1,6 @@
 import { Link, NavLink, type LinkProps } from "react-router";
 
-type TextLinkVariant = "primary" | "secondary" | "nav" | "wordmark";
+type TextLinkVariant = "primary" | "secondary" | "inverse" | "nav" | "wordmark";
 
 type TextLinkProps = Omit<LinkProps, "className"> & {
   activeClassName?: string;
@@ -17,6 +17,8 @@ const variantClasses: Record<TextLinkVariant, string> = {
     "min-h-11 px-5 py-3 font-medium bg-brand text-brand-foreground hover:opacity-90",
   secondary:
     "min-h-11 px-5 py-3 font-medium text-foreground underline decoration-border underline-offset-4 hover:text-brand",
+  inverse:
+    "min-h-11 px-5 py-3 font-medium bg-brand-foreground text-brand hover:opacity-90 focus-visible:ring-2 focus-visible:ring-brand-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-brand",
   nav: "text-sm font-medium text-foreground hover:text-brand",
   wordmark:
     "font-display text-2xl font-bold uppercase tracking-tight text-foreground hover:text-brand",

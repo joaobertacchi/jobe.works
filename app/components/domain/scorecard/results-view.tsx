@@ -8,13 +8,11 @@ import {
   type QuestionId,
 } from "../../../scorecard/questions";
 import type { Finding, ScorecardResult } from "../../../scorecard/scoring";
+import { Heading } from "../../ui/heading";
 import { Text } from "../../ui/text";
 import { revealDelay } from "./motion";
 import { NextStep } from "./next-step";
 import { ScoreRing, verdictTone } from "./score-ring";
-
-const sectionTitleClass =
-  "font-display text-2xl font-bold tracking-tight text-foreground sm:text-3xl";
 
 function ResultSummary({
   result,
@@ -46,9 +44,10 @@ function ResultSummary({
         >
           {translate("scorecard.results.eyebrow")}
         </p>
-        <h2
-          className="rs-reveal font-display text-4xl font-bold leading-tight tracking-tight text-foreground outline-none sm:text-6xl"
+        <Heading
+          className="rs-reveal font-display outline-none"
           id="scorecard-result-title"
+          level="display"
           ref={headingRef}
           style={revealDelay(350)}
           tabIndex={-1}
@@ -57,7 +56,7 @@ function ResultSummary({
             {translate("scorecard.results.readiness")}:
           </span>{" "}
           <span className="rs-tone-text">{verdictLabel}</span>
-        </h2>
+        </Heading>
         <Text
           className="rs-reveal max-w-xl"
           style={revealDelay(500)}
@@ -151,9 +150,9 @@ function CategoryBreakdown({ result }: { result: ScorecardResult }) {
       aria-labelledby="scorecard-categories-title"
       className="flex flex-col gap-6"
     >
-      <h2 className={sectionTitleClass} id="scorecard-categories-title">
+      <Heading className="font-display" id="scorecard-categories-title">
         {translate("scorecard.results.categoriesTitle")}
-      </h2>
+      </Heading>
       <ul className="grid gap-x-10 gap-y-5 md:grid-cols-2">
         {categoryIds.map((category, index) => (
           <CategoryBar
@@ -188,9 +187,9 @@ function FindingCard({ finding, index }: { finding: Finding; index: number }) {
           {translate(`scorecard.results.severities.${finding.severity}`)}
         </span>
       </div>
-      <h3 className="font-display text-xl font-semibold text-foreground">
+      <Heading as="h3" className="font-display" level="card">
         {translate(`scorecard.categories.${finding.category}`)}
-      </h3>
+      </Heading>
       <Text tone="muted">
         {translate(`scorecard.results.findings.${finding.category}.${kind}`)}
       </Text>
@@ -205,9 +204,9 @@ function FindingsList({ findings }: { findings: Finding[] }) {
       aria-labelledby="scorecard-findings-title"
       className="flex flex-col gap-6"
     >
-      <h2 className={sectionTitleClass} id="scorecard-findings-title">
+      <Heading className="font-display" id="scorecard-findings-title">
         {translate("scorecard.results.findingsTitle")}
-      </h2>
+      </Heading>
       {findings.length === 0 ? (
         <Text tone="muted">{translate("scorecard.results.noFindings")}</Text>
       ) : (
@@ -233,9 +232,9 @@ function AreasToVerify({ questionIds }: { questionIds: QuestionId[] }) {
       className="rs-reveal flex flex-col gap-4 rounded-xl border border-dashed border-unknown p-6 sm:p-8"
       style={revealDelay(1600)}
     >
-      <h2 className={sectionTitleClass} id="scorecard-unknowns-title">
+      <Heading className="font-display" id="scorecard-unknowns-title">
         {translate("scorecard.results.unknownsTitle")}
-      </h2>
+      </Heading>
       <Text tone="muted">
         {translate("scorecard.results.unknownsDescription")}
       </Text>

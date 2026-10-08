@@ -10,3 +10,6 @@
 /coverage/
 /playwright-report/
 /test-results/
+
+# Editor swap files
+*.swp

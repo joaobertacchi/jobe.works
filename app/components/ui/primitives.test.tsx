@@ -11,6 +11,20 @@ import { Text } from "./text";
 import { TextLink } from "./text-link";
 
 describe("TextLink", () => {
+  it("renders an inverse link for use on brand surfaces", () => {
+    render(
+      <MemoryRouter>
+        <TextLink to="mailto:hello@example.com" variant="inverse">
+          Email
+        </TextLink>
+      </MemoryRouter>,
+    );
+
+    const link = screen.getByRole("link", { name: "Email" });
+    expect(link).toHaveAttribute("href", "mailto:hello@example.com");
+    expect(link).toHaveClass("bg-brand-foreground", "text-brand");
+  });
+
   it("renders semantic primary and secondary links", () => {
     render(
       <MemoryRouter>
@@ -76,6 +90,30 @@ describe("Button", () => {
 });
 
 describe("Heading", () => {
+  it("renders a small eyebrow heading in the brand tone", () => {
+    render(
+      <Heading as="h1" level="eyebrow" tone="brand">
+        Scorecard
+      </Heading>,
+    );
+
+    const heading = screen.getByRole("heading", {
+      level: 1,
+      name: "Scorecard",
+    });
+
+    expect(heading).toHaveClass("text-sm", "uppercase", "text-brand");
+    expect(heading).not.toHaveClass("text-foreground");
+  });
+
+  it("renders inverse headings for brand surfaces", () => {
+    render(<Heading tone="inverse">On brand</Heading>);
+
+    expect(screen.getByRole("heading", { name: "On brand" })).toHaveClass(
+      "text-brand-foreground",
+    );
+  });
+
   it("keeps semantic and visual levels independent", () => {
     render(
       <Heading as="h2" level="display">
