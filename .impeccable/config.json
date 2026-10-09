@@ -1,0 +1,20 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font-size",
+        "value": "15px",
+        "createdAt": "2026-10-09T01:54:14.861Z",
+        "reason": "User confirmed 15px is intentional: SVG text in user units that scales with the diagram viewBox"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "17px",
+        "createdAt": "2026-10-09T01:54:14.902Z",
+        "reason": "User confirmed 17px is intentional: SVG text in user units that scales with the diagram viewBox"
+      }
+    ]
+  }
+}

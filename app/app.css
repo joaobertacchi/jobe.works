@@ -138,7 +138,7 @@ body {
   background: var(--atlas-blue);
   color: white;
   font-family: var(--font-display);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -249,7 +249,7 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   text-underline-offset: 0.25rem;
 }
 
@@ -550,7 +550,7 @@ body {
 
 .atlas-founder-note p:last-child {
   margin-top: 1rem;
-  font-size: 0.925rem;
+  font-size: 0.875rem;
   line-height: 1.55;
   color: color-mix(in oklch, var(--atlas-ink) 72%, transparent);
 }
@@ -1244,7 +1244,6 @@ body:has([data-consent-banner]) {
   .theme-switcher__choice {
     min-height: 2.75rem;
     padding-inline: 0.5rem;
-    font-size: 0.75rem;
   }
 
   .utility-link {
@@ -1495,7 +1494,7 @@ body:has([data-consent-banner]) {
 .atlas-portrait__caption {
   color: var(--muted-foreground);
   font-family: var(--font-display);
-  font-size: 0.8125rem;
+  font-size: 0.875rem;
   font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;

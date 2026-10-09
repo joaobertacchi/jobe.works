@@ -82,6 +82,29 @@ typography:
     fontWeight: 600
     letterSpacing: "0.09em"
     textTransform: "uppercase"
+  display-phone:
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "clamp(3rem, 16.5vw, 5rem)"
+    fontWeight: 700
+    lineHeight: 0.84
+    letterSpacing: "-0.03em"
+    textTransform: "uppercase"
+  body-small:
+    fontFamily: "ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif"
+    fontSize: "0.875rem"
+    fontWeight: 400
+    lineHeight: 1.55
+  label-cta:
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "1.05rem"
+    fontWeight: 600
+    textTransform: "uppercase"
+  label-compact:
+    fontFamily: "Barlow Condensed, Arial Narrow, sans-serif"
+    fontSize: "0.75rem"
+    fontWeight: 600
+    letterSpacing: "0.04em"
+    textTransform: "uppercase"
 rounded:
   md: "8px"
   lg: "12px"
@@ -154,12 +177,17 @@ Tight two-tone engineering palette: deep blue on neutral paper/ink. The blue is 
 
 ### Hierarchy
 
-- **Display** (700, `clamp(4rem, 7vw, 6rem)`, 0.84, uppercase, -0.03em): The hero proposition. Max width 12ch; it dominates the first viewport.
+- **Display** (700, `clamp(4rem, 7vw, 6rem)`, 0.84, uppercase, -0.03em): The hero proposition. Max width 12ch; it dominates the first viewport. On phone (≤48rem) it steps down to `clamp(3rem, 16.5vw, 5rem)` so the longest word fits a 375px viewport.
 - **Headline** (600, `clamp(2.75rem, 5vw, 5rem)`, 0.95, uppercase, -0.02em): Section titles (Services, Como Funciona) and inner-page h1 (`Heading level="display"`).
 - **Subhead** (600, `clamp(1.75rem, 3vw, 2.5rem)`, 1, uppercase, -0.02em): h2 inside reading pages (About, Case, Privacy) via `Heading level="section"`.
 - **Title** (600, `clamp(1.4rem, 2.2vw, 2rem)`, 1.05, uppercase, -0.02em): Service stop and method stop headings.
 - **Body** (400, `clamp(1rem, 1.2vw, 1.125rem)`, 1.65): Descriptions, max ~68ch, `--muted-foreground`.
-- **Label** (600, `0.875rem`, 0.09em, uppercase): Index names (JOÃO BERTACCHI, ESTUDO DE CASO), and small utility text.
+- **Small body** (400, `0.875rem`, 1.55): Secondary reading copy beside a label, such as the founder note, in ink at 72% opacity.
+- **Label** (600, `0.875rem`, 0.09em, uppercase): Index names (JOÃO BERTACCHI, ESTUDO DE CASO), and small utility text such as the skip link, language link, and portrait caption. The skip link and portrait caption tighten tracking to 0.04em.
+- **CTA label** (600, `1.05rem`, uppercase): Text inside action plates (`.atlas-action`); sits between Label and Title so the plate reads as the next step.
+- **Compact label** (600, `0.75rem`, 0.04em, uppercase): Dense chrome controls only: the theme switcher, and header utility links on phone where the identity row must fit.
+
+SVG diagram text is sized in the drawing's user units and scales with its `viewBox`, so it sits outside this ramp. Only `.systems-topology text` (17px), `.systems-topology__mobile-diagnosis text` and `.rs-constellation__node text` (15px) may use those sizes; the detector ignores 15px and 17px for this reason, and any other use is a review finding.
 
 ### Named Rules
 
