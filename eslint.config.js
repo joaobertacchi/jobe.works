@@ -33,5 +33,23 @@ export default defineConfig([
       complexity: ["error", 10],
     },
   },
+  {
+    files: ["tests/e2e/**/*.spec.ts"],
+    rules: {
+      "@typescript-eslint/no-restricted-imports": [
+        "error",
+        {
+          paths: [
+            {
+              name: "@playwright/test",
+              message:
+                "Import test and expect from ./fixtures so navigations wait for hydration.",
+              allowTypeImports: true,
+            },
+          ],
+        },
+      ],
+    },
+  },
   prettier,
 ]);

@@ -233,11 +233,6 @@ test("diagnosis stop keeps its index and node above its highlight and route", as
   ] as const) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto(path);
-    // The consent banner mounts after hydration; scrolling earlier can be
-    // undone by the router's scroll restoration.
-    await expect(
-      page.getByRole("region", { name: "Cookie preferences" }),
-    ).toBeVisible();
     const diagnosis = page.locator(".atlas-method-stop.is-diagnosis");
     await diagnosis.scrollIntoViewIfNeeded();
     await expect(diagnosis.locator(".atlas-method-stop__index")).toHaveText(

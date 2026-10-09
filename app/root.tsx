@@ -11,6 +11,7 @@ import {
 import { AnalyticsProvider } from "./analytics/analytics";
 import { ConsentBanner } from "./components/site/consent-banner";
 import { ConsentProvider, useConsent } from "./consent/consent-context";
+import { useHydrationMarker } from "./hydration";
 import {
   defaultLocale,
   getLocaleFromPathname,
@@ -35,6 +36,8 @@ export function Document({
   locale: SupportedLocale | null;
   redirectToPreferredLocale?: boolean;
 }) {
+  // The outermost component, so its effect runs after every descendant's.
+  useHydrationMarker();
   return (
     <html
       lang={locale ? locales[locale].htmlLang : "und"}

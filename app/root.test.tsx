@@ -40,6 +40,7 @@ describe("root document", () => {
 
     expect(html).toContain(expected);
     expect(html).toContain("<p>Page content</p>");
+    expect(html).not.toContain("data-hydrated");
   });
 
   it("redirects to the preferred locale from the head only when asked", () => {

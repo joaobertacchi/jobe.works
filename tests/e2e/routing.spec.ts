@@ -194,15 +194,19 @@ test("reopens the root in the last used locale", async ({ page }) => {
   await expect(page).toHaveURL("/pt-BR/");
 });
 
-test("redirects the root before the app bundle runs", async ({ page }) => {
-  await page.goto("/en/");
-  await expectStoredLocale(page, "en");
-  await page.route("**/*.js", (route) =>
-    route.fulfill({ contentType: "text/javascript", body: "" }),
-  );
+test.describe("with the app bundle blocked", () => {
+  test.use({ waitForHydration: false });
 
-  await page.goto("/");
-  await expect(page).toHaveURL("/en/");
+  test("redirects the root before the app bundle runs", async ({ page }) => {
+    await page.goto("/en/");
+    await expectStoredLocale(page, "en");
+    await page.route("**/*.js", (route) =>
+      route.fulfill({ contentType: "text/javascript", body: "" }),
+    );
+
+    await page.goto("/");
+    await expect(page).toHaveURL("/en/");
+  });
 });
 
 test.describe("without JavaScript", () => {
