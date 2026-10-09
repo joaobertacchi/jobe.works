@@ -1,4 +1,5 @@
 import { expect, test } from "./fixtures";
+import { layouts } from "./layouts";
 
 function relativeLuminance(oklch: string): number {
   const match = oklch.match(
@@ -76,6 +77,33 @@ test("mobile atlas keeps the indexed decision sequence and diagnosis geometry vi
     Math.max(...serviceHeadingOffsets) - Math.min(...serviceHeadingOffsets),
   ).toBeLessThan(1);
 });
+
+for (const layout of layouts) {
+  test(`hero content shares the page gutter with the sections below at the ${layout.name} layout`, async ({
+    page,
+  }) => {
+    await page.setViewportSize(layout.viewport);
+    await page.goto("/pt-BR/");
+
+    const edges = await page.evaluate(() => {
+      const left = (selector: string) => {
+        const element = document.querySelector(selector);
+        if (!element) throw new Error(`${selector} is missing`);
+        return element.getBoundingClientRect().left;
+      };
+      return {
+        heroTitle: left("#home-title"),
+        servicesTitle: left("#services-title"),
+        founderNote: left(".atlas-founder-note"),
+      };
+    });
+
+    expect(Math.abs(edges.heroTitle - edges.servicesTitle)).toBeLessThan(1);
+    if (layout.name === "phone") {
+      expect(Math.abs(edges.founderNote - edges.servicesTitle)).toBeLessThan(1);
+    }
+  });
+}
 
 test("method section headings never run into their description", async ({
   page,
