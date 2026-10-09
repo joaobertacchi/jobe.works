@@ -20,26 +20,6 @@ export function isSupportedLocale(value: string): value is SupportedLocale {
   return Object.hasOwn(locales, value);
 }
 
-export function selectPreferredLocale(
-  languages: readonly string[],
-): SupportedLocale {
-  for (const language of languages) {
-    const normalizedLanguage = language.toLowerCase();
-    const exactMatch = supportedLocales.find(
-      (locale) => locale.toLowerCase() === normalizedLanguage,
-    );
-    if (exactMatch) return exactMatch;
-
-    const baseLanguage = normalizedLanguage.split("-")[0];
-    const baseMatch = supportedLocales.find(
-      (locale) => locale.split("-")[0].toLowerCase() === baseLanguage,
-    );
-    if (baseMatch) return baseMatch;
-  }
-
-  return defaultLocale;
-}
-
 export function getLocaleFromPathname(
   pathname: string,
 ): SupportedLocale | undefined {

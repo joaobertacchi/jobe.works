@@ -4,21 +4,9 @@ import {
   defaultLocale,
   getLocaleFromPathname,
   isSupportedLocale,
-  selectPreferredLocale,
 } from "./config";
 
 describe("locale configuration", () => {
-  it.each([
-    [["en"], "en"],
-    [["pt-BR"], "pt-BR"],
-    [["en-US"], "en"],
-    [["pt-PT"], "pt-BR"],
-    [["fr-FR", "en-GB"], "en"],
-    [[], "pt-BR"],
-  ] as const)("selects %s as %s", (languages, expected) => {
-    expect(selectPreferredLocale(languages)).toBe(expected);
-  });
-
   it("uses the accepted default locale", () => {
     expect(defaultLocale).toBe("pt-BR");
   });

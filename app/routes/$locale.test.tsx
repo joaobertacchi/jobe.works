@@ -12,6 +12,7 @@ import { describe, expect, it, vi } from "vitest";
 import { AnalyticsProvider } from "../analytics/analytics";
 import type { TrackerRegistration } from "../analytics/types";
 import { ConsentProvider } from "../consent/consent-context";
+import { readPreferredLocale } from "../i18n/locale-preference";
 import type { CanonicalUrlManifest } from "../routing/canonical-url-manifest";
 import NotFound from "./$locale.404";
 import About from "./$locale.about";
@@ -164,6 +165,14 @@ function renderLocalizedRoute(
 }
 
 describe("localized route layout", () => {
+  it("remembers the visited locale for the next visit to the root", async () => {
+    window.localStorage.clear();
+    renderLocalizedRoute("/en/about");
+    await screen.findByRole("main");
+    expect(readPreferredLocale()).toBe("en");
+    window.localStorage.clear();
+  });
+
   it("links the home hero and funnel to the scorecard", async () => {
     renderLocalizedRoute("/en/");
 

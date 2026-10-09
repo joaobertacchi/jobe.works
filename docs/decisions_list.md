@@ -36,6 +36,7 @@ docs/adrs/
 | P020 | Agent Effectiveness Metrics and Evaluation | Accepted | [ADR 024](adrs/024-agent-effectiveness-metrics-and-evaluation.md) |
 | P021 | Fork Documentation Lifecycle | Accepted | [ADR 025](adrs/025-fork-documentation-lifecycle.md) |
 | P022 | Deployment Target | Accepted | [ADR 026](adrs/026-github-pages-deployment.md) |
+| P023 | Locale Preference and Root Redirect | Accepted | [ADR 027](adrs/027-persisted-locale-preference.md) |
 
 ---
 

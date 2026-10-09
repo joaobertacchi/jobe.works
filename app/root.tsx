@@ -19,6 +19,7 @@ import {
   type SupportedLocale,
 } from "./i18n/config";
 import { I18nProvider, useI18n } from "./i18n/i18n";
+import { rootLocaleRedirectScript } from "./i18n/locale-preference";
 import { Heading } from "./components/ui/heading";
 import { Text } from "./components/ui/text";
 import { themeInitializationScript } from "./theme";
@@ -28,9 +29,11 @@ import "./app.css";
 export function Document({
   children,
   locale,
+  redirectToPreferredLocale = false,
 }: {
   children: React.ReactNode;
   locale: SupportedLocale | null;
+  redirectToPreferredLocale?: boolean;
 }) {
   return (
     <html
@@ -40,6 +43,14 @@ export function Document({
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {redirectToPreferredLocale && (
+          <>
+            <script>{rootLocaleRedirectScript}</script>
+            <noscript>
+              <meta httpEquiv="refresh" content={`0;url=/${defaultLocale}/`} />
+            </noscript>
+          </>
+        )}
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <script>{themeInitializationScript}</script>
         <Meta />
@@ -65,7 +76,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
     getLocaleFromPathname(pathname) ??
     (pathname.split("/")[1] ? null : defaultLocale);
   return (
-    <Document locale={locale}>
+    <Document locale={locale} redirectToPreferredLocale={pathname === "/"}>
       <ConsentProvider>
         <ConsentAwareAnalytics>
           {children}

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import {
   isRouteErrorResponse,
   Outlet,
@@ -14,6 +15,7 @@ import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
 import { isSupportedLocale } from "../i18n/config";
 import { I18nProvider, useI18n } from "../i18n/i18n";
+import { persistLocale } from "../i18n/locale-preference";
 import { createSiteConfig } from "../seo/site-config.server";
 import {
   type CanonicalUrlManifest,
@@ -25,7 +27,8 @@ import type { Route } from "./+types/$locale";
 
 function LocalizedLayout() {
   const { urls } = useLoaderData<typeof clientLoader>();
-  const { translate } = useI18n();
+  const { locale, translate } = useI18n();
+  useEffect(() => persistLocale(locale), [locale]);
   const hideLanguageSwitcher = useMatches().some(
     ({ handle }) =>
       (handle as { languageSwitcher?: boolean } | undefined)

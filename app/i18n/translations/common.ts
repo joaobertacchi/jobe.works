@@ -5,7 +5,6 @@ export type CommonTranslation = {
   tagline: string;
   navigationLabel: string;
   languageSwitcherLabel: string;
-  selectingLanguage: string;
   footer: {
     navigationLabel: string;
     description: string;
@@ -40,7 +39,6 @@ export const commonTranslations = {
     tagline: "Engineering that Works",
     navigationLabel: "Primary navigation",
     languageSwitcherLabel: "Choose language",
-    selectingLanguage: "Selecting language",
     footer: {
       navigationLabel: "Footer navigation",
       description:
@@ -70,7 +68,6 @@ export const commonTranslations = {
     tagline: "Engenharia que Funciona",
     navigationLabel: "Navegação principal",
     languageSwitcherLabel: "Escolher idioma",
-    selectingLanguage: "Selecionando idioma",
     footer: {
       navigationLabel: "Navegação do rodapé",
       description: "Engenharia que funciona — em produção, e para o negócio.",

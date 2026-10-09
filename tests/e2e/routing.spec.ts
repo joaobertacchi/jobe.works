@@ -1,8 +1,19 @@
+import type { Page } from "@playwright/test";
+
 import {
   CONSENT_STORAGE_KEY,
   CONSENT_VERSION,
 } from "../../app/consent/consent";
+import { LOCALE_STORAGE_KEY } from "../../app/i18n/locale-preference";
 import { expect, test as base } from "./fixtures";
+
+function expectStoredLocale(page: Page, locale: string) {
+  return expect
+    .poll(() =>
+      page.evaluate((key) => localStorage.getItem(key), LOCALE_STORAGE_KEY),
+    )
+    .toBe(locale);
+}
 
 const test = base.extend<{ consented: void }>({
   consented: [
@@ -119,24 +130,14 @@ test("language switching preserves nested page identity", async ({ page }) => {
   await expect(page.locator("html")).toHaveAttribute("lang", "pt-BR");
 });
 
-test("does not persist a language choice", async ({ page }) => {
-  const snapshotPersistence = () =>
-    page.evaluate(() => ({
-      cookie: document.cookie,
-      localStorage: { ...localStorage },
-      sessionStorage: { ...sessionStorage },
-    }));
-
+test("remembers a language choice for the root", async ({ page }) => {
   await page.goto("/en/about");
-  const persistenceBeforeSwitch = await snapshotPersistence();
+  await expectStoredLocale(page, "en");
 
   await page.getByRole("link", { name: "Português" }).click();
 
   await expect(page).toHaveURL("/pt-BR/about");
-  await expect(
-    page.getByRole("heading", { name: "Sobre a JOBE" }),
-  ).toBeVisible();
-  expect(await snapshotPersistence()).toEqual(persistenceBeforeSwitch);
+  await expectStoredLocale(page, "pt-BR");
 });
 
 test("keeps navigation in the active locale", async ({ page }) => {
@@ -172,26 +173,40 @@ for (const [url, category] of [
   });
 }
 
-test.describe("English browser locale", () => {
+test.describe("first visit with an English browser", () => {
   test.use({ locale: "en-US" });
 
-  test("redirects the root by base language", async ({ page }) => {
-    await page.goto("/");
-    await expect(page).toHaveURL("/en/");
-  });
-});
-
-test.describe("Portuguese browser locale", () => {
-  test.use({ locale: "pt-PT" });
-
-  test("redirects the root by base language", async ({ page }) => {
+  test("opens the root in the default locale", async ({ page }) => {
     await page.goto("/");
     await expect(page).toHaveURL("/pt-BR/");
   });
 });
 
-test.describe("unsupported browser locale", () => {
-  test.use({ locale: "fr-FR" });
+test("reopens the root in the last used locale", async ({ page }) => {
+  await page.goto("/en/about");
+  await expectStoredLocale(page, "en");
+  await page.goto("/");
+  await expect(page).toHaveURL("/en/");
+
+  await page.goto("/pt-BR/services");
+  await expectStoredLocale(page, "pt-BR");
+  await page.goto("/");
+  await expect(page).toHaveURL("/pt-BR/");
+});
+
+test("redirects the root before the app bundle runs", async ({ page }) => {
+  await page.goto("/en/");
+  await expectStoredLocale(page, "en");
+  await page.route("**/*.js", (route) =>
+    route.fulfill({ contentType: "text/javascript", body: "" }),
+  );
+
+  await page.goto("/");
+  await expect(page).toHaveURL("/en/");
+});
+
+test.describe("without JavaScript", () => {
+  test.use({ javaScriptEnabled: false });
 
   test("redirects the root to the default locale", async ({ page }) => {
     await page.goto("/");

@@ -49,7 +49,7 @@ export const privacyTranslations = {
       },
       storage: {
         title: "Local preferences",
-        body: "The theme control may store an explicit light or dark preference in this browser. The language remains represented by the URL and is not persisted separately.",
+        body: "The theme control may store an explicit light or dark preference in this browser. The site also stores the language of the last page you visited, so returning to jobe.works opens in that language.",
       },
       consent: {
         title: "Consent choices",
@@ -105,7 +105,7 @@ export const privacyTranslations = {
       },
       storage: {
         title: "Preferências locais",
-        body: "O controle de tema pode armazenar neste navegador uma preferência explícita por tema claro ou escuro. O idioma permanece representado pela URL e não é persistido separadamente.",
+        body: "O controle de tema pode armazenar neste navegador uma preferência explícita por tema claro ou escuro. O site também armazena o idioma da última página visitada, para que jobe.works volte a abrir nesse idioma.",
       },
       consent: {
         title: "Escolhas de consentimento",

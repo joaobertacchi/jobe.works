@@ -66,6 +66,8 @@ This reduces routing complexity and the amount of localization knowledge require
 
 ## Root Route
 
+> Locale selection superseded by [ADR 027](027-persisted-locale-preference.md).
+
 The root URL:
 
 ```text

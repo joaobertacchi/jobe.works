@@ -76,7 +76,11 @@ pt-BR
 
 When browser locale detection does not produce a supported locale, the user is redirected to the `pt-BR` version.
 
+> Superseded by [ADR 027](027-persisted-locale-preference.md).
+
 ## Root Locale Detection
+
+> Superseded by [ADR 027](027-persisted-locale-preference.md): `/` redirects to the stored locale, or `pt-BR`, before hydration.
 
 The root route:
 
@@ -331,6 +335,8 @@ unsupported browser locale → pt-BR
 
 This is routing fallback, not translation fallback.
 
+> Superseded by [ADR 027](027-persisted-locale-preference.md).
+
 ## Language Switcher
 
 The language switcher must preserve the logical page.
@@ -348,6 +354,8 @@ The canonical URL manifest provides the localized sibling URL rather than the sw
 Because published logical pages must exist in every configured locale, language switching should be deterministic.
 
 ## Locale Persistence
+
+> Superseded by [ADR 027](027-persisted-locale-preference.md): the last visited locale is stored and used by `/`.
 
 Explicit locale selection is not persisted in local storage or cookies.
 
@@ -517,6 +525,8 @@ Rejected because it can hide incomplete localization.
 ### Persisted Locale Preference
 
 Rejected for the base template because the localized URL already represents the selected locale.
+
+> Superseded by [ADR 027](027-persisted-locale-preference.md).
 
 ### Localized Slugs
 

@@ -42,6 +42,23 @@ describe("root document", () => {
     expect(html).toContain("<p>Page content</p>");
   });
 
+  it("redirects to the preferred locale from the head only when asked", () => {
+    const html = (redirect: boolean) =>
+      renderToStaticMarkup(
+        <Document locale="pt-BR" redirectToPreferredLocale={redirect}>
+          <p>Page content</p>
+        </Document>,
+      );
+
+    const head = html(true).split("</head>")[0];
+    expect(head).toContain("location.replace(");
+    expect(head).toContain(
+      '<noscript><meta http-equiv="refresh" content="0;url=/pt-BR/"/></noscript>',
+    );
+    expect(html(false)).not.toContain("location.replace(");
+    expect(html(false)).not.toContain("noscript");
+  });
+
   it("renders the matched child route", async () => {
     const router = createMemoryRouter(
       [
