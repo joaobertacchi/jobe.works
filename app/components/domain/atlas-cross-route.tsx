@@ -164,9 +164,18 @@ function resolveMobileGeometry(
   const topologyBox = topology.getBoundingClientRect();
   if (topologyBox.width === 0 || hubBox.width === 0) return null;
 
-  const panel = relativeTo(topologyBox, heroBox);
   const founderBox = anchors.founder?.getBoundingClientRect();
-  const founderBottom = founderBox ? founderBox.bottom - heroBox.top : 0;
+  const founder = {
+    bottom: founderBox ? founderBox.bottom - heroBox.top : 0,
+    // the exit descends beside the founder note, so its copy must stop short
+    copyRight: Math.max(
+      0,
+      ...Array.from(
+        anchors.founder?.children ?? [],
+        (child) => child.getBoundingClientRect().right - heroBox.left,
+      ),
+    ),
+  };
   const next: CrossRouteGeometry = {
     mode: "mobile",
     width: heroBox.width,
@@ -180,13 +189,14 @@ function resolveMobileGeometry(
     junctionLeft: hubBox.left - heroBox.left,
     junctionRight: hubBox.right - heroBox.left,
     junctionY: hubBox.top - heroBox.top + hubBox.height / 2,
-    exitTurnX: panel.right + 70, // - 16
+    // mirrors the entry: the exit turns down the right edge of the text column
+    exitTurnX: surface.label.right,
     approachY: surface.rail.top - 14,
     dockX: surface.rail.left + 24,
     plateTop: surface.rail.top,
   };
 
-  return mobileCorridorsAreClear(next, founderBottom) ? next : null;
+  return mobileCorridorsAreClear(next, founder) ? next : null;
 }
 
 function corridorsAreClear(next: CrossRouteGeometry): boolean {
@@ -199,14 +209,15 @@ function corridorsAreClear(next: CrossRouteGeometry): boolean {
 
 function mobileCorridorsAreClear(
   next: CrossRouteGeometry,
-  founderBottom: number,
+  founder: { bottom: number; copyRight: number },
 ): boolean {
   return (
     next.junctionY - next.startY >= 24 &&
     next.junctionLeft - next.startX >= 24 &&
     next.exitTurnX - next.junctionRight >= 24 &&
     next.plateTop - next.approachY >= 6 &&
-    next.approachY - founderBottom >= 10
+    next.approachY - founder.bottom >= 10 &&
+    next.exitTurnX - founder.copyRight >= 12
   );
 }
 

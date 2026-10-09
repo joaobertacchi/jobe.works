@@ -1308,6 +1308,10 @@ body:has([data-consent-banner]) {
     padding-block: 2.25rem;
   }
 
+  .atlas-founder-note {
+    padding-inline-end: 1rem;
+  }
+
   .atlas-actions {
     grid-template-columns: 1fr;
     gap: 0.75rem;
@@ -1354,7 +1358,7 @@ body:has([data-consent-banner]) {
 
   .atlas-service-stop,
   .atlas-method-stop {
-    padding: 0 0 3.5rem 1.5rem;
+    padding: 0 1rem 3.5rem 1.5rem;
     border-inline-start: 0 !important;
   }
 

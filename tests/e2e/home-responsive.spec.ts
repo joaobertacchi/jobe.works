@@ -105,6 +105,83 @@ for (const layout of layouts) {
   });
 }
 
+test("phone cross-route turns at the text column edges, mirrored around the hub", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/pt-BR/");
+
+  const route = page.locator(".atlas-cross-route");
+  await expect(route).toBeVisible();
+  const geometry = await page.evaluate(() => {
+    const hero = document.querySelector(".atlas-hero");
+    const method = document.querySelector(".atlas-proposition__method");
+    const founderCopy = document.querySelectorAll(".atlas-founder-note > p");
+    const paths = document.querySelectorAll(".atlas-cross-route path");
+    if (!hero || !method || paths.length !== 2) {
+      throw new Error("Cross-route anchors are missing");
+    }
+    const heroBox = hero.getBoundingClientRect();
+    const methodBox = method.getBoundingClientRect();
+    // the x following a command letter: the entry starts at M, and the exit
+    // turns down at its first L
+    const commandX = (d: string | null, command: "M" | "L") => {
+      const match = (d ?? "").match(new RegExp(`${command}(-?[\\d.]+)`));
+      if (!match) throw new Error(`Route path has no ${command} command`);
+      return Number(match[1]);
+    };
+    return {
+      startX: commandX(paths[0].getAttribute("d"), "M"),
+      exitTurnX: commandX(paths[1].getAttribute("d"), "L"),
+      textLeft: methodBox.left - heroBox.left,
+      textRight: methodBox.right - heroBox.left,
+      heroWidth: heroBox.width,
+      founderCopyRight: Math.max(
+        ...Array.from(
+          founderCopy,
+          (copy) => copy.getBoundingClientRect().right - heroBox.left,
+        ),
+      ),
+    };
+  });
+
+  expect(Math.abs(geometry.startX - geometry.textLeft)).toBeLessThan(1);
+  expect(Math.abs(geometry.exitTurnX - geometry.textRight)).toBeLessThan(1);
+  expect(geometry.exitTurnX).toBeLessThan(geometry.heroWidth);
+  // the exit descends beside the founder note without touching its copy
+  expect(geometry.exitTurnX - geometry.founderCopyRight).toBeGreaterThanOrEqual(
+    12,
+  );
+});
+
+test("phone route stops end their text at the highlighted diagnosis card's inner edge", async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/pt-BR/");
+
+  const edges = await page.evaluate(() => {
+    const right = (element: Element) => element.getBoundingClientRect().right;
+    const diagnosis = document.querySelector(
+      ".atlas-method-stop.is-diagnosis p",
+    );
+    if (!diagnosis) throw new Error("Diagnosis stop copy is missing");
+    return {
+      diagnosis: right(diagnosis),
+      stops: [
+        ...document.querySelectorAll(
+          ".atlas-service-stop p, .atlas-method-stop:not(.is-diagnosis) p",
+        ),
+      ].map(right),
+    };
+  });
+
+  expect(edges.stops).toHaveLength(5);
+  for (const stop of edges.stops) {
+    expect(Math.abs(stop - edges.diagnosis)).toBeLessThan(1);
+  }
+});
+
 test("method section headings never run into their description", async ({
   page,
 }) => {
