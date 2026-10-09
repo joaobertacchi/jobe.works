@@ -11,6 +11,8 @@ export default defineConfig({
   test: {
     allowOnly: !process.env.CI,
     environment: "jsdom",
+    // Never let a local .env PostHog key reach unit tests.
+    env: { VITE_POSTHOG_KEY: "", VITE_POSTHOG_HOST: "" },
     include: [
       "app/**/*.test.{ts,tsx}",
       "scripts/**/*.test.{mjs,ts}",

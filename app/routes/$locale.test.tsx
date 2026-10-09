@@ -169,7 +169,8 @@ describe("localized route layout", () => {
     window.localStorage.clear();
     renderLocalizedRoute("/en/about");
     await screen.findByRole("main");
-    expect(readPreferredLocale()).toBe("en");
+    // The preference is persisted from an effect, after the first paint.
+    await vi.waitFor(() => expect(readPreferredLocale()).toBe("en"));
     window.localStorage.clear();
   });
 
@@ -432,6 +433,30 @@ describe("localized route layout", () => {
       expect.stringContaining("mailto:contato@jobe.works"),
     );
   });
+
+  it.each([
+    ["/en/contact", "contact"],
+    ["/en/about", "about"],
+  ] as const)(
+    "emits contact_link_pressed from the %s email link",
+    async (pathname, context) => {
+      const tracker = vi.fn();
+      renderLocalizedRoute(pathname, false, [
+        { tracker, consentCategory: "analytics" },
+      ]);
+
+      const main = await screen.findByRole("main");
+      fireEvent.click(within(main).getByRole("link", { name: /@jobe\.works/ }));
+
+      await vi.waitFor(() => {
+        expect(tracker).toHaveBeenCalledWith({
+          eventName: "contact_link_pressed",
+          channel: "email",
+          context,
+        });
+      });
+    },
+  );
 
   it.each([
     ["en", "Error", "An unexpected error occurred."],

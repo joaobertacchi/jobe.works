@@ -105,6 +105,7 @@ The included styles demonstrate the architecture; they are not a finished design
 - Define and emit typed events through `app/analytics/`; do not call analytics providers directly from pages.
 - Keep consent behavior in `app/consent/` and provider-specific code in `app/integrations/` or the existing analytics tracker boundary.
 - Treat all browser-visible configuration as public. Do not put secrets in frontend code or client-exposed environment variables.
+- PostHog analytics is enabled by `VITE_POSTHOG_KEY` (and optionally `VITE_POSTHOG_HOST`). Copy `.env.example` to the git-ignored `.env` for local builds, and set the `POSTHOG_KEY`/`POSTHOG_HOST` repository variables under Settings → Secrets and variables → Actions for deploys. Never commit the key. See [ADR 028](docs/adrs/028-posthog-analytics-provider.md).
 
 The base architecture is static. Adding a project-owned backend, serverless function, route action, or runtime server requires an explicit architectural decision for the fork.
 

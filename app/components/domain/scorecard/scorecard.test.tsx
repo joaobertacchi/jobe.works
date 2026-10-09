@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
+import { questions } from "../../../scorecard/questions";
 import { scorecardTranslations } from "../../../i18n/translations/scorecard";
 import { renderScorecard } from "./test-utils";
 
@@ -56,6 +57,11 @@ describe("Scorecard flow", () => {
     await waitFor(() =>
       expect(scorecardEvents()).toEqual([
         { eventName: "scorecard_started" },
+        ...questions.map((question, stepIndex) => ({
+          eventName: "scorecard_step_answered",
+          questionId: question.id,
+          stepIndex,
+        })),
         {
           eventName: "scorecard_completed",
           verdict: "strong",

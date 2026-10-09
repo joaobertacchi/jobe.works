@@ -1,6 +1,10 @@
 import { describe, expect, it } from "vitest";
 
-import { parseCampaignAttribution } from "./attribution";
+import {
+  isAllowlistedCampaignParameter,
+  parseCampaignAttribution,
+  pickCampaignParameters,
+} from "./attribution";
 
 function params(query: string): URLSearchParams {
   return new URLSearchParams(query);
@@ -58,5 +62,25 @@ describe("parseCampaignAttribution", () => {
     expect(
       parseCampaignAttribution(params("utm_source=first&utm_source=second")),
     ).toEqual({ source: "first" });
+  });
+});
+
+describe("pickCampaignParameters", () => {
+  it("keeps allowlisted parameters under their utm_* names", () => {
+    expect(
+      pickCampaignParameters(
+        new URLSearchParams(
+          "utm_source=li&utm_id=7&utm_email=a%40b.c&gclid=1&utm_term=%20",
+        ),
+      ),
+    ).toEqual({ utm_source: "li", utm_id: "7" });
+  });
+});
+
+describe("isAllowlistedCampaignParameter", () => {
+  it("accepts only the six allowlisted parameters", () => {
+    expect(isAllowlistedCampaignParameter("utm_content")).toBe(true);
+    expect(isAllowlistedCampaignParameter("utm_email")).toBe(false);
+    expect(isAllowlistedCampaignParameter("gclid")).toBe(false);
   });
 });

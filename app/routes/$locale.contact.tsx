@@ -1,3 +1,4 @@
+import { useAnalytics } from "../analytics/analytics";
 import { Card } from "../components/ui/card";
 import { Container } from "../components/ui/container";
 import { Heading } from "../components/ui/heading";
@@ -19,6 +20,7 @@ export function meta({ matches, params }: Route.MetaArgs) {
 
 export default function Contact() {
   const { locale, translate } = useI18n();
+  const { capture } = useAnalytics();
   const deliverables = [
     translate("contact.deliverables.risks"),
     translate("contact.deliverables.classification"),
@@ -51,6 +53,13 @@ export default function Contact() {
             </div>
             <TextLink
               className="ui-action--literal w-fit"
+              onClick={() =>
+                capture({
+                  eventName: "contact_link_pressed",
+                  channel: "email",
+                  context: "contact",
+                })
+              }
               to={`mailto:${translate("contact.emailAddress")}?subject=${encodeURIComponent(
                 translate("contact.emailSubject"),
               )}`}

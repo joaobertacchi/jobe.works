@@ -91,6 +91,13 @@ export function Scorecard({
   const answer = useCallback(
     (questionId: QuestionId, value: Answer) => {
       const next = applyAnswer(answers, questionId, value);
+      capture({
+        eventName: "scorecard_step_answered",
+        questionId,
+        stepIndex: getQuestionFlow(answers).findIndex(
+          (question) => question.id === questionId,
+        ),
+      });
       setAnswers(next);
       window.clearTimeout(advanceTimer.current);
       advanceTimer.current = window.setTimeout(() => {
@@ -99,7 +106,7 @@ export function Scorecard({
         else finish(next);
       }, advanceDelayMs);
     },
-    [answers, advanceDelayMs, finish],
+    [answers, advanceDelayMs, capture, finish],
   );
 
   function start() {

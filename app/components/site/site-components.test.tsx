@@ -10,6 +10,7 @@ import { MemoryRouter } from "react-router";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { AnalyticsProvider } from "../../analytics/analytics";
+import type { Tracker } from "../../analytics/types";
 import type { SupportedLocale } from "../../i18n/config";
 import { I18nProvider } from "../../i18n/i18n";
 import { THEME_STORAGE_KEY } from "../../theme";
@@ -132,6 +133,24 @@ describe("LanguageSwitcher", () => {
       ).toHaveAttribute("href", href);
     },
   );
+
+  it("captures the locale switch", () => {
+    const tracker = vi.fn<Tracker>();
+    renderWithRouter(
+      <LanguageSwitcher urls={urls} />,
+      "en",
+      "/en/about",
+      tracker,
+    );
+
+    fireEvent.click(screen.getByRole("link", { name: "Português" }));
+
+    expect(tracker).toHaveBeenCalledWith({
+      eventName: "locale_switched",
+      from: "en",
+      to: "pt-BR",
+    });
+  });
 });
 
 describe("SiteHeader", () => {
@@ -172,6 +191,20 @@ describe("SiteHeader", () => {
 });
 
 describe("SiteFooter", () => {
+  it("captures email link presses", () => {
+    const tracker = vi.fn<Tracker>();
+    renderWithRouter(<SiteFooter />, "en", "/en/about", tracker);
+
+    const footer = screen.getByRole("contentinfo");
+    fireEvent.click(within(footer).getByRole("link", { name: /@/ }));
+
+    expect(tracker).toHaveBeenCalledWith({
+      eventName: "contact_link_pressed",
+      channel: "email",
+      context: "footer",
+    });
+  });
+
   it.each([
     ["en", "Footer navigation", "Home", "Privacy", "/en/", "/en/privacy"],
     [
@@ -232,10 +265,12 @@ describe("SiteFooter", () => {
     render(
       <MemoryRouter initialEntries={["/en/about"]}>
         <ConsentProvider>
-          <I18nProvider locale="en">
-            <SiteFooter />
-            <ConsentBanner locale="en" />
-          </I18nProvider>
+          <AnalyticsProvider consent={{ analytics: false, marketing: false }}>
+            <I18nProvider locale="en">
+              <SiteFooter />
+              <ConsentBanner locale="en" />
+            </I18nProvider>
+          </AnalyticsProvider>
         </ConsentProvider>
       </MemoryRouter>,
     );
@@ -418,11 +453,17 @@ function renderWithRouter(
   component: React.ReactNode,
   locale: SupportedLocale,
   pathname: string,
+  tracker?: Tracker,
 ) {
   return render(
     <MemoryRouter initialEntries={[pathname]}>
       <ConsentProvider>
-        <AnalyticsProvider consent={{ analytics: false, marketing: false }}>
+        <AnalyticsProvider
+          consent={{ analytics: Boolean(tracker), marketing: false }}
+          trackers={
+            tracker ? [{ tracker, consentCategory: "analytics" }] : undefined
+          }
+        >
           <I18nProvider locale={locale}>{component}</I18nProvider>
         </AnalyticsProvider>
       </ConsentProvider>

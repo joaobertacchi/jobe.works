@@ -40,6 +40,15 @@ jobs:
             test-results/
           retention-days: 7
 
+      # The e2e server rebuilds build/ with a fake PostHog key, so the deploy
+      # artifact is rebuilt with the public repository variables.
+      - name: Build for GitHub Pages
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: npm run validate:static
+        env:
+          VITE_POSTHOG_KEY: ${{ vars.POSTHOG_KEY }}
+          VITE_POSTHOG_HOST: ${{ vars.POSTHOG_HOST }}
+
       - name: Stage build for GitHub Pages
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: node scripts/stage-github-pages-cli.mjs build/client pt-BR

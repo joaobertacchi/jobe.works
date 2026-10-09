@@ -37,6 +37,7 @@ docs/adrs/
 | P021 | Fork Documentation Lifecycle | Accepted | [ADR 025](adrs/025-fork-documentation-lifecycle.md) |
 | P022 | Deployment Target | Accepted | [ADR 026](adrs/026-github-pages-deployment.md) |
 | P023 | Locale Preference and Root Redirect | Accepted | [ADR 027](adrs/027-persisted-locale-preference.md) |
+| P024 | Analytics Provider | Accepted | [ADR 028](adrs/028-posthog-analytics-provider.md) |
 
 ---
 

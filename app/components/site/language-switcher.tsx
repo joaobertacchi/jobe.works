@@ -1,5 +1,6 @@
 import { Link } from "react-router";
 
+import { useAnalytics } from "../../analytics/analytics";
 import {
   locales,
   supportedLocales,
@@ -13,6 +14,7 @@ export function LanguageSwitcher({
   urls: Record<SupportedLocale, string>;
 }) {
   const { locale, translate } = useI18n();
+  const { capture } = useAnalytics();
 
   return (
     <nav
@@ -25,6 +27,13 @@ export function LanguageSwitcher({
           <Link
             className="utility-link"
             key={targetLocale}
+            onClick={() =>
+              capture({
+                eventName: "locale_switched",
+                from: locale,
+                to: targetLocale,
+              })
+            }
             to={urls[targetLocale]}
           >
             {locales[targetLocale].label}

@@ -61,6 +61,11 @@ export function ContactForm() {
     });
     setErrors(validationErrors);
     if (Object.keys(validationErrors).length > 0) {
+      capture({
+        eventName: "lead_submit_failed",
+        formId: "contact-form",
+        reason: "validation",
+      });
       setStatus("validation");
       return;
     }
@@ -79,6 +84,11 @@ export function ContactForm() {
       setMarketingOptIn(false);
       setStatus("success");
     } catch {
+      capture({
+        eventName: "lead_submit_failed",
+        formId: "contact-form",
+        reason: "error",
+      });
       setStatus("error");
     }
   }

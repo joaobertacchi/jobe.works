@@ -167,9 +167,15 @@ describe("ContactForm", () => {
 
     expect(liveRegion).toHaveTextContent("Check the highlighted fields.");
     expect(screen.getAllByText("This field is required.")).toHaveLength(3);
+    expect(mocks.capture).toHaveBeenLastCalledWith({
+      eventName: "lead_submit_failed",
+      formId: "contact-form",
+      reason: "validation",
+    });
+    expect(mocks.submitExampleContact).toHaveBeenCalledTimes(1);
   });
 
-  it("preserves input and skips analytics when the provider rejects", async () => {
+  it("preserves input and reports a failed submission when the provider rejects", async () => {
     mocks.submitExampleContact.mockRejectedValueOnce(
       new Error("Provider down"),
     );
@@ -193,7 +199,15 @@ describe("ContactForm", () => {
     expect(screen.getByLabelText("Message")).toHaveValue(
       " Please help with a production issue. ",
     );
-    expect(mocks.capture).not.toHaveBeenCalled();
+    expect(mocks.capture.mock.calls).toEqual([
+      [
+        {
+          eventName: "lead_submit_failed",
+          formId: "contact-form",
+          reason: "error",
+        },
+      ],
+    ]);
   });
 
   it("renders the Portuguese labels and submit action", () => {

@@ -1,3 +1,4 @@
+import { useAnalytics } from "../../analytics/analytics";
 import { useConsent } from "../../consent/consent-context";
 import { useI18n } from "../../i18n/i18n";
 import { Button } from "../ui/button";
@@ -9,6 +10,7 @@ import { ThemeSwitcher } from "./theme-switcher";
 export function SiteFooter() {
   const { locale, translate } = useI18n();
   const { openSettings } = useConsent();
+  const { capture } = useAnalytics();
   const footerLinks = [
     { key: "home", to: `/${locale}/` },
     { key: "services", to: `/${locale}/services` },
@@ -33,6 +35,13 @@ export function SiteFooter() {
           <a
             className="site-footer__email"
             href={`mailto:${translate("common.footer.email")}`}
+            onClick={() =>
+              capture({
+                eventName: "contact_link_pressed",
+                channel: "email",
+                context: "footer",
+              })
+            }
           >
             {translate("common.footer.email")}
           </a>

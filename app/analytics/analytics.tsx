@@ -17,7 +17,7 @@ import {
   parseCampaignAttribution,
   type CampaignAttribution,
 } from "./attribution";
-import { dispatchEvent } from "./manager";
+import { dispatchEvent, isTrackerEligible } from "./manager";
 import { defaultTrackerRegistrations } from "./trackers";
 import type { AnalyticsCustomEvent, TrackerRegistration } from "./types";
 
@@ -54,6 +54,12 @@ export function AnalyticsProvider({
   const capture = useCallback((event: AnalyticsCustomEvent) => {
     void dispatchEvent(currentTrackers.current, event, currentConsent.current);
   }, []);
+
+  useEffect(() => {
+    for (const registration of trackers) {
+      registration.onConsentChange?.(isTrackerEligible(registration, consent));
+    }
+  }, [consent, trackers]);
 
   const analyticsEligible = consent.analytics;
   const marketingEligible = consent.marketing;

@@ -394,6 +394,28 @@ describe("AnalyticsProvider", () => {
     ).toHaveLength(1);
   });
 
+  it("notifies trackers of their consent eligibility as it changes", () => {
+    const onConsentChange = vi.fn();
+    const trackers: TrackerRegistration[] = [
+      { tracker: vi.fn(), consentCategory: "analytics", onConsentChange },
+    ];
+    const { rerender } = render(
+      <Harness consent={rejected} trackers={trackers} />,
+    );
+    expect(onConsentChange).toHaveBeenLastCalledWith(false);
+
+    rerender(<Harness consent={accepted} trackers={trackers} />);
+    expect(onConsentChange).toHaveBeenLastCalledWith(true);
+
+    rerender(
+      <Harness
+        consent={{ analytics: false, marketing: true }}
+        trackers={trackers}
+      />,
+    );
+    expect(onConsentChange).toHaveBeenLastCalledWith(false);
+  });
+
   it("exposes landing attribution parsed from the current URL", () => {
     window.history.replaceState(null, "", "/en/?utm_source=newsletter");
 

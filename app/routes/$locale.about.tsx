@@ -150,6 +150,13 @@ export default function About() {
             <a
               className="atlas-cta-band__link"
               href={`mailto:${translate("about.emailAddress")}`}
+              onClick={() =>
+                capture({
+                  eventName: "contact_link_pressed",
+                  channel: "email",
+                  context: "about",
+                })
+              }
             >
               {translate("about.emailAddress")}
             </a>

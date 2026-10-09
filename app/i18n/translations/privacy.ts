@@ -61,7 +61,7 @@ export const privacyTranslations = {
       },
       analytics: {
         title: "Analytics",
-        body: "When analytics consent is given, the site may measure how pages are used. The analytics providers and what they receive are documented here when an integration is configured.",
+        body: "When you accept analytics, the site loads PostHog (PostHog Inc., cloud hosted in the United States, which involves an international data transfer) and sends it page views and specific interactions: call-to-action and email-link clicks, language changes, scorecard progress and aggregate result, and contact-form submission outcomes. PostHog stores a random visitor identifier in a cookie and in this browser's local storage, and receives technical request data such as IP address, browser, and device. Page URLs are sent without query parameters other than the allowlisted campaign parameters. No session recordings, automatic click capture, scorecard answers, or form contents are sent. Withdrawing consent stops collection immediately.",
       },
       marketing: {
         title: "Advertising and marketing technologies",
@@ -69,7 +69,7 @@ export const privacyTranslations = {
       },
       attribution: {
         title: "Campaign attribution",
-        body: "Only explicitly allowlisted campaign parameters (utm_source, utm_medium, utm_campaign, utm_id, utm_term, utm_content) may be used, kept in memory for the current visit and never persisted. No arbitrary URL parameters are collected.",
+        body: "Only explicitly allowlisted campaign parameters (utm_source, utm_medium, utm_campaign, utm_id, utm_term, utm_content) may be used. The site keeps them in memory for the current visit; with analytics consent, they are also sent to PostHog with your events. No arbitrary URL parameters are collected.",
       },
       contactForms: {
         title: "Contact by email",
@@ -117,7 +117,7 @@ export const privacyTranslations = {
       },
       analytics: {
         title: "Analytics",
-        body: "Com o consentimento de analytics, o site pode medir como as páginas são usadas. Os provedores de analytics e o que recebem serão documentados aqui quando uma integração for configurada.",
+        body: "Quando você aceita analytics, o site carrega o PostHog (PostHog Inc., nuvem hospedada nos Estados Unidos, o que envolve transferência internacional de dados) e envia a ele visualizações de página e interações específicas: cliques em chamadas para ação e em links de e-mail, troca de idioma, progresso e resultado agregado do scorecard e o resultado de envios do formulário de contato. O PostHog armazena um identificador aleatório de visitante em um cookie e no armazenamento local deste navegador, e recebe dados técnicos de requisição como endereço IP, navegador e dispositivo. As URLs das páginas são enviadas sem parâmetros de consulta além dos parâmetros de campanha permitidos. Não são enviadas gravações de sessão, captura automática de cliques, respostas do scorecard nem conteúdo de formulários. Retirar o consentimento interrompe a coleta imediatamente.",
       },
       marketing: {
         title: "Tecnologias de publicidade e marketing",
@@ -125,7 +125,7 @@ export const privacyTranslations = {
       },
       attribution: {
         title: "Atribuição de campanhas",
-        body: "Apenas parâmetros de campanha explicitamente permitidos (utm_source, utm_medium, utm_campaign, utm_id, utm_term, utm_content) podem ser usados, mantidos em memória na visita atual e nunca persistidos. Nenhum parâmetro arbitrário de URL é coletado.",
+        body: "Apenas parâmetros de campanha explicitamente permitidos (utm_source, utm_medium, utm_campaign, utm_id, utm_term, utm_content) podem ser usados. O site os mantém em memória na visita atual; com o consentimento de analytics, eles também são enviados ao PostHog junto com seus eventos. Nenhum parâmetro arbitrário de URL é coletado.",
       },
       contactForms: {
         title: "Contato por e-mail",
