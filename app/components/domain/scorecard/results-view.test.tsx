@@ -61,7 +61,7 @@ describe("ResultsView", () => {
     });
     const href = decodeURIComponent(cta.getAttribute("href") ?? "");
 
-    expect(href).toMatch(/^mailto:contato@jobe\.works\?subject=/);
+    expect(href).toMatch(/^mailto:contact@jobe\.works\?subject=/);
     expect(href).toContain("Production Readiness Check — 94/100");
     expect(href).toContain("Readiness: Needs attention");
     expect(href).toContain("Main findings: Security — Critical risk");

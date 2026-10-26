@@ -285,13 +285,13 @@ test("contact page offers the mailto booking path without emitting a lead event"
   await page.goto("/en/contact?utm_source=newsletter&unknown=ignored");
 
   const mailto = page.getByRole("main").getByRole("link", {
-    name: "contato@jobe.works",
+    name: "contact@jobe.works",
     exact: true,
   });
   await expect(mailto).toBeVisible();
   await expect
     .poll(() => mailto.getAttribute("href"))
-    .toContain("mailto:contato@jobe.works");
+    .toContain("mailto:contact@jobe.works");
   await settleBrowserEffects(page);
   await analytics.flush();
 

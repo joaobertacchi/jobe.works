@@ -82,7 +82,7 @@ export const aboutTranslations = {
       },
     },
     emailLabel: "Work with JOBE",
-    emailAddress: "contato@jobe.works",
+    emailAddress: "contact@jobe.works",
     cta: {
       description:
         "Every engagement starts with an Initial Assessment: a structured conversation about your product, what worries you, and where to begin.",

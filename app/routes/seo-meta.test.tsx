@@ -58,7 +58,7 @@ describe("route SEO metadata", () => {
         "script:ld+json": expect.objectContaining({
           "@type": "Organization",
           name: "JOBE",
-          email: "contato@jobe.works",
+          email: "contact@jobe.works",
         }),
       }),
     );

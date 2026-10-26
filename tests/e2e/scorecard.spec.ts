@@ -90,7 +90,7 @@ test("completes the scorecard in English and offers a prefilled assessment email
 
   const cta = page.getByRole("link", { name: en.results.nextStep.cta });
   const href = decodeURIComponent((await cta.getAttribute("href")) ?? "");
-  expect(href).toMatch(/^mailto:contato@jobe\.works\?subject=/);
+  expect(href).toMatch(/^mailto:contact@jobe\.works\?subject=/);
   expect(href).toContain("Score: 94/100");
 });
 

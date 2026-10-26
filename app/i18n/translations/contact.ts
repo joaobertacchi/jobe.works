@@ -57,7 +57,7 @@ export const contactTranslations = {
     bookByEmailTitle: "Book by email",
     bookByEmailDescription:
       "Write a short note about your product and your context. JOBE replies by email to schedule your assessment.",
-    emailAddress: "contato@jobe.works",
+    emailAddress: "contact@jobe.works",
     emailSubject: "Initial Assessment",
     fields: {
       name: "Name",

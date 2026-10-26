@@ -43,7 +43,7 @@ export const commonTranslations = {
       navigationLabel: "Footer navigation",
       description:
         "Engineering that works — in production, and for the business.",
-      email: "contato@jobe.works",
+      email: "contact@jobe.works",
     },
     errors: {
       title: "Error",

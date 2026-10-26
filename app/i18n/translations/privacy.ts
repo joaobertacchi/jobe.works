@@ -45,7 +45,7 @@ export const privacyTranslations = {
       },
       purpose: {
         title: "Email contact",
-        body: "The site invites inquiries by email at contato@jobe.works, used to respond to your inquiry and, when relevant, to schedule an Initial Assessment. No form on this site collects your name, email address, or message into a site-owned system.",
+        body: "The site invites inquiries by email at contact@jobe.works, used to respond to your inquiry and, when relevant, to schedule an Initial Assessment. No form on this site collects your name, email address, or message into a site-owned system.",
       },
       storage: {
         title: "Local preferences",
@@ -77,7 +77,7 @@ export const privacyTranslations = {
       },
       rights: {
         title: "Your choices",
-        body: "You can change or withdraw your consent choices at any time using the Cookie settings control in the footer. To exercise your data rights, write to contato@jobe.works.",
+        body: "You can change or withdraw your consent choices at any time using the Cookie settings control in the footer. To exercise your data rights, write to contact@jobe.works.",
       },
     },
   },

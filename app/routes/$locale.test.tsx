@@ -225,8 +225,8 @@ describe("localized route layout", () => {
       within(closing).getByRole("link", { name: /Book an Initial Assessment/ }),
     ).toHaveAttribute("href", "/en/contact");
     expect(
-      within(closing).getByRole("link", { name: "contato@jobe.works" }),
-    ).toHaveAttribute("href", "mailto:contato@jobe.works");
+      within(closing).getByRole("link", { name: "contact@jobe.works" }),
+    ).toHaveAttribute("href", "mailto:contact@jobe.works");
   });
 
   it("links the case study and contact pages to the scorecard", async () => {
