@@ -20,6 +20,10 @@ import type { Route } from "./+types/$locale.about";
 const portraitSizes = "(min-width: 48rem) 15rem, min(20rem, 100vw - 2.5rem)";
 const portraitAvifSet = `${portraitAvif320} 320w, ${portraitAvif480} 480w, ${portraitAvif640} 640w`;
 const portraitWebpSet = `${portraitWebp320} 320w, ${portraitWebp480} 480w, ${portraitWebp640} 640w`;
+const productUrls = {
+  stockcast: "https://stockcast.com.br",
+  vox: "https://vox.jobe.works",
+};
 
 export function meta({ matches, params }: Route.MetaArgs) {
   if (!params.locale || !isSupportedLocale(params.locale)) return [];
@@ -39,17 +43,14 @@ export default function About() {
     translate("about.sections.principlesList.recurring"),
   ];
   const founderParagraphs = [
-    translate("about.sections.founder.introduction"),
-    translate("about.sections.founder.stockcast"),
-    translate("about.sections.founder.vox"),
     translate("about.sections.founder.experience"),
     translate("about.sections.founder.leadership"),
     translate("about.sections.founder.background"),
     translate("about.sections.founder.consulting"),
   ];
   const founderLinks = [
-    { key: "vox", href: "https://vox.jobe.works" },
-    { key: "stockcast", href: "https://stockcast.com.br" },
+    { key: "vox", href: productUrls.vox },
+    { key: "stockcast", href: productUrls.stockcast },
     { key: "linkedin", href: "https://www.linkedin.com/in/jebertacchi/" },
     { key: "github", href: "https://github.com/joaobertacchi" },
   ] as const;
@@ -115,6 +116,24 @@ export default function About() {
               <Heading as="h2" level="section">
                 {translate("about.sections.founder.title")}
               </Heading>
+              <Text tone="muted">
+                {translate("about.sections.founder.introduction")}
+              </Text>
+              {(["stockcast", "vox"] as const).map((product) => (
+                <Text key={product} tone="muted">
+                  {translate(`about.sections.founder.${product}.beforeLink`)}{" "}
+                  <TextLink
+                    className="inline!"
+                    href={productUrls[product]}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    variant="secondary"
+                  >
+                    {translate(`about.sections.founder.links.${product}`)}
+                  </TextLink>
+                  {translate(`about.sections.founder.${product}.afterLink`)}
+                </Text>
+              ))}
               {founderParagraphs.map((paragraph) => (
                 <Text key={paragraph} tone="muted">
                   {paragraph}

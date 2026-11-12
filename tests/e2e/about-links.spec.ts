@@ -31,12 +31,12 @@ for (const { name, viewport } of layouts) {
       founderHeading: "The founder",
       narrative: [
         /software engineer and the founder of JOBE/,
-        /He founded StockCast/,
+        /He founded StockCast.*continues to develop and operate the product himself/,
         /about 180 hours of earnings calls each quarter.*JOBE Vox/,
         /more than 20 years in software engineering/,
         /Director of Technology at ProFUSION/,
         /nearly nine years at Embraer/,
-        /helps them decide what to fix first/,
+        /leading large engineering teams.*building and operating his own products.*solutions they can operate reliably/,
       ],
     },
     {
@@ -44,12 +44,12 @@ for (const { name, viewport } of layouts) {
       founderHeading: "O fundador",
       narrative: [
         /engenheiro de software e fundador da JOBE/,
-        /Fundou o StockCast/,
+        /Fundou o StockCast.*continua desenvolvendo e operando o produto/,
         /cerca de 180 horas de teleconferências de resultados por trimestre.*JOBE Vox/,
         /mais de 20 anos de engenharia de software/,
         /Diretor de Tecnologia na ProFUSION/,
         /quase nove anos na Embraer/,
-        /ajuda a definir o que corrigir primeiro/,
+        /liderar grandes equipes de engenharia.*construir e operar seus próprios produtos.*soluções que consigam operar com segurança/,
       ],
     },
   ]) {
@@ -64,6 +64,12 @@ for (const { name, viewport } of layouts) {
       });
       const paragraphs = founder.getByRole("paragraph");
       await expect(paragraphs).toHaveText(narrative);
+      await expect(
+        paragraphs.nth(1).getByRole("link", { name: "StockCast" }),
+      ).toHaveAttribute("href", "https://stockcast.com.br");
+      await expect(
+        paragraphs.nth(2).getByRole("link", { name: "JOBE Vox" }),
+      ).toHaveAttribute("href", "https://vox.jobe.works");
       for (const paragraph of await paragraphs.all()) {
         await expect(paragraph).toBeVisible();
       }
