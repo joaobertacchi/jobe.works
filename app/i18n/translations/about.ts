@@ -13,10 +13,12 @@ export type AboutTranslation = {
     founder: {
       title: string;
       introduction: string;
+      stockcast: string;
+      vox: string;
+      experience: string;
       leadership: string;
       background: string;
-      today: string;
-      vox: string;
+      consulting: string;
       portraitAlt: string;
       portraitCaption: string;
       linksLabel: string;
@@ -65,14 +67,18 @@ export const aboutTranslations = {
       founder: {
         title: "The founder",
         introduction:
-          "João Bertacchi is a software engineer with more than 20 years of experience turning ideas into products that work in production, for real users and for the business. Over his career, he has led the delivery of critical applications for global brands such as PepsiCo, Gatorade, Pfizer, Nestlé, Equinox, and BNP Paribas.",
+          "João Bertacchi is a software engineer and the founder of JOBE. He leads the consultancy and works directly on the architecture, code, and operation of production systems.",
+        stockcast:
+          "He founded StockCast, a platform for Brazilian stock market investors with more than 10,000 downloads. He built its mobile app, backend, and AI financial analysis pipeline with Claude and Gemini from scratch, and uses spec-driven development with AI agents in his daily work.",
+        vox: "StockCast needed to transcribe about 180 hours of earnings calls each quarter. João built and operated an AI transcription pipeline for that workload, used benchmarks to measure transcription quality, and optimized processing costs. That internal infrastructure became JOBE Vox, a standalone commercial transcription API.",
+        experience:
+          "Over more than 20 years in software engineering, João has led the delivery of critical applications for global brands such as PepsiCo, Gatorade, Pfizer, Nestlé, Equinox, and BNP Paribas.",
         leadership:
           "As Director of Technology at ProFUSION, he led more than 50 engineers across mobile, frontend, and backend teams, scaled the engineering practice from 10 to more than 50 professionals, and defined architecture standards and best practices adopted company-wide.",
         background:
           "Before that, he spent nearly nine years at Embraer — in R&D for the Defense & Security unit and then as technical lead for Digital Transformation, defining cloud architecture and quality standards for suppliers. He was also co-founder and CTO of an education startup and a professional worker at RWTH Aachen University in Germany. He holds a degree in Computer Engineering from Unicamp.",
-        today:
-          "Today, he combines leadership with hands-on engineering. He founded StockCast, a platform for Brazilian stock market investors with more than 10,000 downloads, building the mobile app, the backend, and an AI financial-analysis pipeline (Claude and Gemini) from scratch — and applying spec-driven development with AI agents every day.",
-        vox: "StockCast needed to transcribe about 180 hours of earnings calls each quarter. João built and operated an AI transcription pipeline for that workload, used benchmarks to measure transcription quality, and optimized processing costs. That internal infrastructure became JOBE Vox, a standalone commercial transcription API.",
+        consulting:
+          "That production experience informs how João advises clients. He examines how their systems work today, then helps them decide what to fix first and which changes their teams can operate reliably.",
         portraitAlt: "Portrait of João Bertacchi in a white shirt and glasses",
         portraitCaption: "João Bertacchi · Founder",
         linksLabel: "Founder products and profiles",
@@ -130,14 +136,18 @@ export const aboutTranslations = {
       founder: {
         title: "O fundador",
         introduction:
-          "João Bertacchi é engenheiro de software com mais de 20 anos de experiência transformando ideias em produtos que funcionam em produção, para usuários reais e para o negócio. Ao longo da carreira, liderou a entrega de aplicações críticas para marcas globais como PepsiCo, Gatorade, Pfizer, Nestlé, Equinox e BNP Paribas.",
-        leadership:
-          "Como Diretor de Tecnologia na ProFUSION, liderou mais de 50 engenheiros em times de mobile, frontend e backend, escalou a prática de engenharia mobile de 10 para mais de 50 profissionais e definiu padrões de arquitetura e boas práticas adotados em toda a empresa.",
-        background:
-          "Antes disso, passou quase nove anos na Embraer — em P&D da unidade de Defesa e Segurança e depois como líder técnico de Transformação Digital, definindo arquitetura em nuvem e padrões de qualidade para fornecedores. Também foi cofundador e CTO de uma startup de educação e pesquisador na RWTH Aachen, na Alemanha. É formado em Engenharia de Computação pela Unicamp, com mestrado em Ciência da Computação.",
-        today:
-          "Hoje, une a visão de liderança à prática direta de engenharia. É fundador do StockCast, plataforma para investidores da B3 com mais de 9 mil downloads, onde construiu do zero o app mobile, o backend e um pipeline de análise financeira com IA (Claude e Gemini) — e aplica, no dia a dia, o desenvolvimento orientado por especificações com agentes de IA.",
+          "João Bertacchi é engenheiro de software e fundador da JOBE. Lidera a consultoria e atua diretamente na arquitetura, no código e na operação de sistemas em produção.",
+        stockcast:
+          "Fundou o StockCast, plataforma para investidores da B3 com mais de 10 mil downloads. Construiu do zero o app mobile, o backend e o pipeline de análise financeira com IA usando Claude e Gemini, e aplica no dia a dia o desenvolvimento orientado por especificações com agentes de IA.",
         vox: "O StockCast precisava transcrever cerca de 180 horas de teleconferências de resultados por trimestre. João desenvolveu e operou um pipeline de transcrição com IA para esse volume, mediu a qualidade das transcrições com benchmarks e otimizou os custos de processamento. Essa infraestrutura interna deu origem ao JOBE Vox, uma API comercial de transcrição oferecida como produto independente.",
+        experience:
+          "Em mais de 20 anos de engenharia de software, João liderou a entrega de aplicações críticas para marcas globais como PepsiCo, Gatorade, Pfizer, Nestlé, Equinox e BNP Paribas.",
+        leadership:
+          "Como Diretor de Tecnologia na ProFUSION, liderou mais de 50 engenheiros em times de mobile, frontend e backend, escalou a prática de engenharia de 10 para mais de 50 profissionais e definiu padrões de arquitetura e boas práticas adotados em toda a empresa.",
+        background:
+          "Antes disso, passou quase nove anos na Embraer — em P&D da unidade de Defesa e Segurança e depois como líder técnico de Transformação Digital, definindo arquitetura em nuvem e padrões de qualidade para fornecedores. Também foi cofundador e CTO de uma startup de educação e colaborador da RWTH Aachen, na Alemanha. É formado em Engenharia de Computação pela Unicamp.",
+        consulting:
+          "Essa experiência com sistemas em produção orienta o trabalho de João com os clientes. Ele avalia como os sistemas funcionam hoje e ajuda a definir o que corrigir primeiro e quais mudanças as equipes conseguem operar com segurança.",
         portraitAlt: "Retrato de João Bertacchi de camisa branca e óculos",
         portraitCaption: "João Bertacchi · Fundador",
         linksLabel: "Produtos e perfis do fundador",

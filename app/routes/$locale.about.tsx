@@ -40,10 +40,12 @@ export default function About() {
   ];
   const founderParagraphs = [
     translate("about.sections.founder.introduction"),
+    translate("about.sections.founder.stockcast"),
+    translate("about.sections.founder.vox"),
+    translate("about.sections.founder.experience"),
     translate("about.sections.founder.leadership"),
     translate("about.sections.founder.background"),
-    translate("about.sections.founder.today"),
-    translate("about.sections.founder.vox"),
+    translate("about.sections.founder.consulting"),
   ];
   const founderLinks = [
     { key: "vox", href: "https://vox.jobe.works" },
