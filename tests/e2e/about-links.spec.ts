@@ -10,7 +10,7 @@ for (const { name, viewport } of layouts) {
     const links = page.getByRole("navigation", {
       name: "Founder products and profiles",
     });
-    await expect(links.getByRole("link")).toHaveCount(5);
+    await expect(links.getByRole("link")).toHaveCount(4);
     for (const link of await links.getByRole("link").all()) {
       await expect(link).toBeVisible();
     }
