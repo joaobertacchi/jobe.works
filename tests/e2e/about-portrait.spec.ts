@@ -25,16 +25,45 @@ for (const { name, viewport } of layouts) {
     ).toMatch(/\.avif$/);
 
     const box = (await image.boundingBox())!;
-    const heading = (await page
-      .getByRole("heading", { name: "O fundador" })
+    const caption = (await page
+      .getByText("João Bertacchi · Fundador", { exact: true })
       .boundingBox())!;
+    const heading = page.getByRole("heading", { name: "O fundador" });
+    const firstLine = await heading.evaluate((element) => {
+      const range = document.createRange();
+      range.selectNodeContents(element);
+      return range.getBoundingClientRect().toJSON() as DOMRect;
+    });
     if (portraitBesideText[name]) {
       expect(box.width).toBeGreaterThan(200);
       expect(box.width).toBeLessThanOrEqual(260);
-      expect(heading.x).toBeGreaterThan(box.x + box.width);
+      expect(firstLine.x).toBeGreaterThan(box.x + box.width);
+      expect(firstLine.y).toBeLessThan(caption.y);
+
+      const bio = page.locator("section").filter({ has: heading });
+      const lines = await bio.getByRole("paragraph").evaluateAll((paragraphs) =>
+        paragraphs.flatMap((paragraph) => {
+          const range = document.createRange();
+          range.selectNodeContents(paragraph);
+          return Array.from(range.getClientRects(), ({ left, top, right }) => ({
+            left,
+            top,
+            right,
+          }));
+        }),
+      );
+      expect(
+        lines.some(
+          (line) =>
+            line.top >= caption.y + caption.height &&
+            Math.abs(line.left - caption.x) < 2 &&
+            line.right > firstLine.x,
+        ),
+      ).toBe(true);
     } else {
       expect(box.width).toBeLessThanOrEqual(320);
-      expect(heading.y).toBeGreaterThan(box.y + box.height);
+      expect(firstLine.y).toBeGreaterThan(caption.y + caption.height);
+      expect(Math.abs(firstLine.x - caption.x)).toBeLessThan(2);
     }
     expect(
       await page.evaluate(

@@ -17,7 +17,7 @@ import { aboutTranslations } from "../i18n/translations/about";
 import { createPageMeta, getSeoLoaderData } from "../seo/metadata";
 import type { Route } from "./+types/$locale.about";
 
-const portraitSizes = "(min-width: 48rem) 15rem, min(20rem, 100vw - 2.5rem)";
+const portraitSizes = "(width > 48rem) 15rem, min(20rem, 100vw - 2.5rem)";
 const portraitAvifSet = `${portraitAvif320} 320w, ${portraitAvif480} 480w, ${portraitAvif640} 640w`;
 const portraitWebpSet = `${portraitWebp320} 320w, ${portraitWebp480} 480w, ${portraitWebp640} 640w`;
 const productUrls = {
@@ -84,7 +84,7 @@ export default function About() {
             </Text>
           </section>
 
-          <section className="grid gap-6 md:grid-cols-[15rem_minmax(0,1fr)] md:items-start md:gap-8">
+          <section className="flow-root">
             <figure className="atlas-portrait">
               <picture className="atlas-portrait__frame">
                 <source
@@ -112,7 +112,7 @@ export default function About() {
                 {translate("about.sections.founder.portraitCaption")}
               </figcaption>
             </figure>
-            <div className="flex flex-col gap-3">
+            <div className="space-y-3">
               <Heading as="h2" level="section">
                 {translate("about.sections.founder.title")}
               </Heading>
