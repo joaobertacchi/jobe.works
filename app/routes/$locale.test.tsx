@@ -229,6 +229,44 @@ describe("localized route layout", () => {
     ).toHaveAttribute("href", "mailto:contact@jobe.works");
   });
 
+  it("links the About founder section to products and profiles", async () => {
+    renderLocalizedRoute("/en/about");
+
+    const links = await screen.findByRole("navigation", {
+      name: "Founder products and profiles",
+    });
+    const expectLink = (name: string, href: string) =>
+      expect(within(links).getByRole("link", { name })).toHaveAttribute(
+        "href",
+        href,
+      );
+
+    expectLink("StockCast", "https://stockcast.com.br");
+    expectLink("JOBE Vox", "https://vox.jobe.works");
+    expectLink("LinkedIn", "https://www.linkedin.com/in/jebertacchi/");
+    expectLink("GitHub", "https://github.com/joaobertacchi");
+
+    for (const link of within(links)
+      .getAllByRole("link")
+      .filter((item) => item.getAttribute("href")?.startsWith("http"))) {
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    }
+  });
+
+  it("localizes the About founder links", async () => {
+    renderLocalizedRoute("/pt-BR/about");
+
+    const links = await screen.findByRole("navigation", {
+      name: "Produtos e perfis do fundador",
+    });
+    expect(
+      within(links).getByRole("link", {
+        name: "JOBE Vox",
+      }),
+    ).toHaveAttribute("href", "https://vox.jobe.works");
+  });
+
   it("links the case study and contact pages to the scorecard", async () => {
     renderLocalizedRoute("/pt-BR/case");
     expect(

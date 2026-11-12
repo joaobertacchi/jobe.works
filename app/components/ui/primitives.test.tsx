@@ -44,6 +44,23 @@ describe("TextLink", () => {
     expect(secondary).toHaveAttribute("href", "/secondary");
     expect(secondary).toHaveClass("underline");
   });
+
+  it("renders external hrefs as plain anchors", () => {
+    render(
+      <TextLink
+        href="https://example.com"
+        rel="noopener noreferrer"
+        target="_blank"
+      >
+        External
+      </TextLink>,
+    );
+
+    const link = screen.getByRole("link", { name: "External" });
+    expect(link).toHaveAttribute("href", "https://example.com");
+    expect(link).toHaveAttribute("target", "_blank");
+    expect(link).toHaveAttribute("rel", "noopener noreferrer");
+  });
 });
 
 describe("Button", () => {

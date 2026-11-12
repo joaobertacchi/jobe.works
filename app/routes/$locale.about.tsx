@@ -10,6 +10,7 @@ import { AtlasCtaBand } from "../components/sections/atlas-cta-band";
 import { Container } from "../components/ui/container";
 import { Heading } from "../components/ui/heading";
 import { Text } from "../components/ui/text";
+import { TextLink } from "../components/ui/text-link";
 import { isSupportedLocale } from "../i18n/config";
 import { useI18n } from "../i18n/i18n";
 import { aboutTranslations } from "../i18n/translations/about";
@@ -43,6 +44,12 @@ export default function About() {
     translate("about.sections.founder.background"),
     translate("about.sections.founder.today"),
   ];
+  const founderLinks = [
+    { key: "vox", href: "https://vox.jobe.works" },
+    { key: "stockcast", href: "https://stockcast.com.br" },
+    { key: "linkedin", href: "https://www.linkedin.com/in/jebertacchi/" },
+    { key: "github", href: "https://github.com/joaobertacchi" },
+  ] as const;
 
   return (
     <main>
@@ -110,6 +117,34 @@ export default function About() {
                   {paragraph}
                 </Text>
               ))}
+              <nav aria-label={translate("about.sections.founder.linksLabel")}>
+                <ul className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:gap-x-6">
+                  {founderLinks.map(({ key, href }) => {
+                    const label = translate(
+                      `about.sections.founder.links.${key}`,
+                    );
+
+                    return (
+                      <li key={key}>
+                        {href.startsWith("http") ? (
+                          <TextLink
+                            href={href}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                            variant="secondary"
+                          >
+                            {label}
+                          </TextLink>
+                        ) : (
+                          <TextLink to={href} variant="secondary">
+                            {label}
+                          </TextLink>
+                        )}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
             </div>
           </section>
 

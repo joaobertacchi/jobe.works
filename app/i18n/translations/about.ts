@@ -18,6 +18,14 @@ export type AboutTranslation = {
       today: string;
       portraitAlt: string;
       portraitCaption: string;
+      linksLabel: string;
+      links: {
+        stockcast: string;
+        caseStudy: string;
+        vox: string;
+        linkedin: string;
+        github: string;
+      };
     };
     principles: { title: string; description: string };
     principlesList: {
@@ -65,6 +73,14 @@ export const aboutTranslations = {
           "Today, he combines leadership with hands-on engineering. He founded StockCast, a platform for Brazilian stock market investors with more than 10,000 downloads, building the mobile app, the backend, and an AI financial-analysis pipeline (Claude and Gemini) from scratch — and applying spec-driven development with AI agents every day.",
         portraitAlt: "Portrait of João Bertacchi in a white shirt and glasses",
         portraitCaption: "João Bertacchi · Founder",
+        linksLabel: "Founder products and profiles",
+        links: {
+          stockcast: "StockCast",
+          caseStudy: "StockCast case study",
+          vox: "JOBE Vox",
+          linkedin: "LinkedIn",
+          github: "GitHub",
+        },
       },
       principles: {
         title: "How JOBE works",
@@ -121,6 +137,14 @@ export const aboutTranslations = {
           "Hoje, une a visão de liderança à prática direta de engenharia. É fundador do StockCast, plataforma para investidores da B3 com mais de 9 mil downloads, onde construiu do zero o app mobile, o backend e um pipeline de análise financeira com IA (Claude e Gemini) — e aplica, no dia a dia, o desenvolvimento orientado por especificações com agentes de IA.",
         portraitAlt: "Retrato de João Bertacchi de camisa branca e óculos",
         portraitCaption: "João Bertacchi · Fundador",
+        linksLabel: "Produtos e perfis do fundador",
+        links: {
+          stockcast: "StockCast",
+          caseStudy: "Estudo de caso StockCast",
+          vox: "JOBE Vox",
+          linkedin: "LinkedIn",
+          github: "GitHub",
+        },
       },
       principles: {
         title: "Como a JOBE trabalha",
