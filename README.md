@@ -69,7 +69,7 @@ Use this order as a practical starting point. A coding agent may change several 
 ### 1. Site Identity and SEO
 
 - Set the site name and default social image in `app/seo/site-config.server.ts`.
-- Replace `public/favicon.ico` and `public/social-card.svg`.
+- Replace `public/favicon.ico` and `public/og-image.png`.
 - Set `SITE_ORIGIN` to the production HTTPS origin when building. Without it, the template uses `https://example.com`.
 - Keep every public page's localized SEO data explicit. See `app/seo/metadata.ts` and the route examples.
 

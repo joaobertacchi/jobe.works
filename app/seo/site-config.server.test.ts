@@ -7,7 +7,7 @@ describe("createSiteConfig", () => {
     expect(createSiteConfig()).toEqual({
       origin: "https://jobe.works",
       siteName: "JOBE",
-      defaultSocialImage: "/social-card.svg",
+      defaultSocialImage: "/og-image.png",
       xDefault: true,
     });
     expect(createSiteConfig("https://site.example/").origin).toBe(

@@ -26,7 +26,7 @@ export function createSiteConfig(
   return {
     origin: url.origin,
     siteName: "JOBE",
-    defaultSocialImage: "/social-card.svg",
+    defaultSocialImage: "/og-image.png",
     xDefault: true,
   };
 }
