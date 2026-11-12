@@ -16,6 +16,7 @@ export type AboutTranslation = {
       leadership: string;
       background: string;
       today: string;
+      vox: string;
       portraitAlt: string;
       portraitCaption: string;
       linksLabel: string;
@@ -71,6 +72,7 @@ export const aboutTranslations = {
           "Before that, he spent nearly nine years at Embraer — in R&D for the Defense & Security unit and then as technical lead for Digital Transformation, defining cloud architecture and quality standards for suppliers. He was also co-founder and CTO of an education startup and a professional worker at RWTH Aachen University in Germany. He holds a degree in Computer Engineering from Unicamp.",
         today:
           "Today, he combines leadership with hands-on engineering. He founded StockCast, a platform for Brazilian stock market investors with more than 10,000 downloads, building the mobile app, the backend, and an AI financial-analysis pipeline (Claude and Gemini) from scratch — and applying spec-driven development with AI agents every day.",
+        vox: "StockCast needed to transcribe about 180 hours of earnings calls each quarter. João built and operated an AI transcription pipeline for that workload, used benchmarks to measure transcription quality, and optimized processing costs. That internal infrastructure became JOBE Vox, a standalone commercial transcription API.",
         portraitAlt: "Portrait of João Bertacchi in a white shirt and glasses",
         portraitCaption: "João Bertacchi · Founder",
         linksLabel: "Founder products and profiles",
@@ -135,6 +137,7 @@ export const aboutTranslations = {
           "Antes disso, passou quase nove anos na Embraer — em P&D da unidade de Defesa e Segurança e depois como líder técnico de Transformação Digital, definindo arquitetura em nuvem e padrões de qualidade para fornecedores. Também foi cofundador e CTO de uma startup de educação e pesquisador na RWTH Aachen, na Alemanha. É formado em Engenharia de Computação pela Unicamp, com mestrado em Ciência da Computação.",
         today:
           "Hoje, une a visão de liderança à prática direta de engenharia. É fundador do StockCast, plataforma para investidores da B3 com mais de 9 mil downloads, onde construiu do zero o app mobile, o backend e um pipeline de análise financeira com IA (Claude e Gemini) — e aplica, no dia a dia, o desenvolvimento orientado por especificações com agentes de IA.",
+        vox: "O StockCast precisava transcrever cerca de 180 horas de teleconferências de resultados por trimestre. João desenvolveu e operou um pipeline de transcrição com IA para esse volume, mediu a qualidade das transcrições com benchmarks e otimizou os custos de processamento. Essa infraestrutura interna deu origem ao JOBE Vox, uma API comercial de transcrição oferecida como produto independente.",
         portraitAlt: "Retrato de João Bertacchi de camisa branca e óculos",
         portraitCaption: "João Bertacchi · Fundador",
         linksLabel: "Produtos e perfis do fundador",
