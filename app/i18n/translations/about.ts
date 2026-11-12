@@ -58,11 +58,11 @@ export const aboutTranslations = {
         introduction:
           "João Bertacchi is a software engineer with more than 20 years of experience turning ideas into products that work in production, for real users and for the business. Over his career, he has led the delivery of critical applications for global brands such as PepsiCo, Gatorade, Pfizer, Nestlé, Equinox, and BNP Paribas.",
         leadership:
-          "As Director of Technology at ProFUSION, he led more than 50 engineers across mobile, frontend, and backend teams, scaled the mobile engineering practice from 10 to more than 50 professionals, and defined architecture standards and best practices adopted company-wide.",
+          "As Director of Technology at ProFUSION, he led more than 50 engineers across mobile, frontend, and backend teams, scaled the engineering practice from 10 to more than 50 professionals, and defined architecture standards and best practices adopted company-wide.",
         background:
-          "Before that, he spent nearly nine years at Embraer — in R&D for the Defense & Security unit and then as technical lead for Digital Transformation, defining cloud architecture and quality standards for suppliers. He was also co-founder and CTO of an education startup and a researcher at RWTH Aachen University in Germany. He holds a degree in Computer Engineering from Unicamp and a master's in Computer Science.",
+          "Before that, he spent nearly nine years at Embraer — in R&D for the Defense & Security unit and then as technical lead for Digital Transformation, defining cloud architecture and quality standards for suppliers. He was also co-founder and CTO of an education startup and a professional worker at RWTH Aachen University in Germany. He holds a degree in Computer Engineering from Unicamp.",
         today:
-          "Today, he combines leadership with hands-on engineering. He founded StockCast, a platform for Brazilian stock market investors with more than 9,000 downloads, building the mobile app, the backend, and an AI financial-analysis pipeline (Claude and Gemini) from scratch — and applying spec-driven development with AI agents every day.",
+          "Today, he combines leadership with hands-on engineering. He founded StockCast, a platform for Brazilian stock market investors with more than 10,000 downloads, building the mobile app, the backend, and an AI financial-analysis pipeline (Claude and Gemini) from scratch — and applying spec-driven development with AI agents every day.",
         portraitAlt: "Portrait of João Bertacchi in a white shirt and glasses",
         portraitCaption: "João Bertacchi · Founder",
       },
