@@ -55,11 +55,3 @@ This repository is an AI-agent harness for localized static marketing and conten
 4. Run `npm run test:e2e` for browser-visible changes and verify them at all three layouts; new layout tests iterate over `tests/e2e/layouts.ts` instead of choosing ad-hoc widths. Specs import `test` and `expect` from `tests/e2e/fixtures.ts`, whose navigations wait for hydration.
 5. After deterministic validation passes, run the repository's `architecture-review` subagent against the current change and fix all high and medium findings.
 6. Do not weaken validation, thresholds, tests, or hooks to make changes pass.
-
-## graphify
-
-The project knowledge graph is in `graphify-out/`.
-
-- Before answering architecture or codebase questions, run `graphify update .` and read `graphify-out/GRAPH_REPORT.md`.
-- If `graphify-out/wiki/index.md` exists, navigate it instead of reading raw files.
-- For cross-module relationships, prefer `graphify query`, `graphify path`, or `graphify explain` over text search.
